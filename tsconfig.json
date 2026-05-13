@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    // "outDir": "js",
+    "target": "ES6",
+    "module": "commonjs",
+    "removeComments": true, //xáo bỏ comment
+    "esModuleInterop": true, //Dùng được từ khóa import thay cho require
+    "outDir": "dist"
+  }
+}
