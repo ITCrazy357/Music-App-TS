@@ -1,0 +1,58 @@
+/* Header */
+.header {
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.header .inner-logo img {
+  max-height: 50px;
+}
+
+.header .inner-menu > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.header .inner-menu > ul > li {
+  margin-left: 30px;
+}
+
+.header .inner-menu > ul > li > a {
+  color: #000;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Footer */
+.footer {
+  background: #343a40;
+  color: #fff;
+  margin-top: 40px;
+  padding: 15px 0;
+  font-size: 15px;
+  text-align: center;
+}
+
+/* Topic Card */
+.card {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+}

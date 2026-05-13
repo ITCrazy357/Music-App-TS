@@ -6,3 +6,14 @@ block main
         .row 
             .col-12 
                 +box-head(pageTitle)
+
+
+        .row
+            each topic in topics
+                .col-6.mb-3
+                    div(class="card")
+                        img(src=topic.avatar class="card-img-top")
+                        div(class="card-body")
+                            h5(class="card-title") #{topic.title}
+                            p(class="card-text") #{topic.description}
+                            a(href=`/songs/${topic.lug}` class="btn btn-primary") Xem chi tiết
