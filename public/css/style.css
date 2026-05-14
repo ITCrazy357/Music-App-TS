@@ -56,3 +56,59 @@
   height: 200px;
   object-fit: cover;
 }
+
+/* Song Item */
+.song-item {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.song-item .inner-image {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.song-item .inner-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.song-item .inner-content {
+  padding: 15px;
+  flex: 1;
+}
+
+.song-item .inner-title {
+  margin-bottom: 5px;
+}
+
+.song-item .inner-title a {
+  font-size: 18px;
+  font-weight: 700;
+  color: #212529;
+  text-decoration: none;
+}
+
+.song-item .inner-title a:hover {
+  color: #0d6efd;
+}
+
+.song-item .inner-singer,
+.song-item .inner-like,
+.song-item .inner-time {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 3px;
+}
+
+.song-item .inner-singer i,
+.song-item .inner-like i,
+.song-item .inner-time i {
+  margin-right: 5px;
+}
