@@ -11,9 +11,11 @@ block main
         .row
             each topic in topics
                 .col-6.mb-3
-                    div(class="card")
-                        img(src=topic.avatar class="card-img-top")
-                        div(class="card-body")
-                            h5(class="card-title") #{topic.title}
-                            p(class="card-text") #{topic.description}
-                            a(href=`/songs/${topic.slug}` class="btn btn-primary") Xem chi tiết
+                    div(class="topic-item")
+                        div(class="inner-image")
+                            a(href=`/songs/${topic.slug}`)
+                                img(src=topic.avatar alt=topic.title)
+                        div(class="inner-content")
+                            h3(class="inner-title")
+                                a(href=`/songs/${topic.slug}`) #{topic.title}
+                            p(class="inner-description") #{topic.description}

@@ -47,3 +47,70 @@ export const list = async (req: Request, res: Response) => {
     songs: songs,
   });
 };
+
+//[GET] /songs/detail/:slugSong
+export const detail = async (req: Request, res: Response) => {
+  const song = await Song.findOne({
+    slug: req.params.slugSong,
+    status: "active",
+    deleted: false,
+  }).select("-status -deleted");
+
+  if (!song) {
+    res.redirect("/songs");
+    return;
+  }
+
+  const singer = await Singer.findOne({
+    _id: song.singerId,
+    status: "active",
+    deleted: false,
+  }).select("-status -deleted");
+
+  const topic = await Topic.findOne({
+    _id: song.topicId,
+    status: "active",
+    deleted: false,
+  }).select("-status -deleted");
+
+  res.render("client/pages/songs/detail", {
+    pageTitle: "Bài hát đang phát",
+    song: song,
+    singer: singer,
+    topic: topic,
+  });
+};
+
+//[PATCH] /songs/like/:typeLike/:idSong
+export const like = async (req: Request, res: Response) => {
+  const idSong: string | string[] = req.params.idSong;
+  const typeLike: string | string[] = req.params.typeLike;
+
+  const song: any = await Song.findOne({
+    _id: idSong,
+    status: "active",
+    deleted: false,
+  });
+
+  if (!song) {
+    res.redirect("/songs");
+    return;
+  }
+
+  const newLike: number = typeLike === "like" ? song.like + 1 : song.like - 1;
+
+  await Song.updateOne(
+    {
+      _id: idSong,
+    },
+    {
+      like: newLike,
+    },
+  );
+
+  res.json({
+    code: 200,
+    like: newLike,
+    message: "suscess",
+  });
+};
