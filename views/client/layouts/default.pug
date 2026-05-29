@@ -5,8 +5,12 @@ html(lang="vi")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title #{pageTitle}
 
+        //====== Auth ====
+        link(href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css", rel="stylesheet")
         // ===== CSS =====
         link(rel="stylesheet", href="/css/style.css")
+        link(rel="stylesheet", href="/css/styleLogin.css")
+        link(rel="stylesheet", href="/css/alert.css")
         // Bootstrap & FontAwesome
         link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css")
         link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css")
@@ -17,7 +21,8 @@ html(lang="vi")
     body 
         include ../partials/header.pug
 
-        block main
+        .main
+            block main
 
         include ../partials/footer.pug
 

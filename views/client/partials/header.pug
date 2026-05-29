@@ -1,15 +1,57 @@
-header.header
+header.header.py-3
   .container
     .row.align-items-center
-      .col-3
+      .col-lg-3.col-md-4.col-6
         .inner-logo
-          a(href="/")
-            img(src="/images/logo.png", alt="Logo")
+          a.d-flex.align-items-center.gap-2(href="/")
+            img(
+              src="/images/logo.png",
+              alt="Music Streaming Logo",
+              width="50"
+            )
 
-      .col-9
-        .inner-menu
-          ul
+            span.logo-text Music Streaming
+
+      .col-lg-6.d-none.d-lg-block
+        nav.inner-menu
+          ul.d-flex.align-items-center.justify-content-center.gap-4.mb-0
             li
               a(href="/") Trang chủ
+
+            li
+              a(href="/songs") Bài hát
+
             li
               a(href="/topics") Chủ đề
+
+            li
+              a(href="/singers") Ca sĩ
+
+            li
+              a(href="/playlist") Playlist
+
+            li
+              a(href="/ranking") BXH
+
+      .col-lg-3.col-md-8.col-6
+        .header-actions.d-flex.align-items-center.justify-content-end.gap-3
+          form.search-form.d-none.d-md-flex(action="/search", method="GET")
+            input.form-control(
+              type="text",
+              name="keyword",
+              placeholder="Tìm kiếm bài hát..."
+            )
+
+            button.btn.btn-primary(type="submit")
+              i.fa-solid.fa-magnifying-glass
+
+          if user
+            a(href="/auth/info", class="inner-actions__item", title="Thông tin cá nhân") 
+              i.fa-solid.fa-circle-user
+            a(href="/auth/logout", class="inner-actions__item", title="Đăng xuất")
+              i.fa-solid.fa-right-from-bracket
+          else
+            a(href="/auth/login", class="inner-actions__item", title="Đăng nhập")
+              i.fa-solid.fa-user
+            a(href="/auth/register", class="inner-actions__item", title="Đăng ký")
+              i.fa-solid.fa-user-plus

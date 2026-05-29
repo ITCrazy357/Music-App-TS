@@ -11,7 +11,7 @@ export const list = async (req: Request, res: Response) => {
   });
 
   if (!topic) {
-    res.redirect("back"); // Nếu không tìm thấy topic, trả về trang trước đó
+    res.redirect("topics"); // Nếu không tìm thấy topic, trả về trang trước đó
     return;
   }
 

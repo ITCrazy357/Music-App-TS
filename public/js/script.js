@@ -60,3 +60,22 @@ if (buttonLike) {
       });
   });
 }
+
+// Show Alert
+const showAlerts = document.querySelectorAll("[show-alert]");
+if (showAlerts.length > 0) {
+  showAlerts.forEach((alert) => {
+    const time = parseInt(alert.getAttribute("data-time")) || 3000;
+    const closeAlert = alert.querySelector("[close-alert]");
+
+    setTimeout(() => {
+      alert.classList.add("alert-hidden");
+    }, time);
+
+    if (closeAlert) {
+      closeAlert.addEventListener("click", () => {
+        alert.classList.add("alert-hidden");
+      });
+    }
+  });
+}

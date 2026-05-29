@@ -1,0 +1,85 @@
+extends ../../layouts/default.auth.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main
+    +alert-error(5000)
+    +alert-success(5000)
+
+    .auth.auth-register
+        .auth-container
+            .auth-wrapper.wrapper
+                if message
+                    .auth-message #{message}
+                form.auth-form(
+                    action="/auth/register"
+                    method="POST"
+                )
+
+
+                    //- Header
+                    .auth-header
+                        +box-head(pageTitle)
+
+                    //- Full Name
+                    .auth-group.input-box
+                        .auth-input-group.inner-fullname
+                            input.auth-input(
+                                type="text"
+                                name="fullName"
+                                placeholder="Họ và tên"
+                                required
+                            )
+
+                            i.bx.bxs-user.auth-icon
+
+                    //- Email
+                    .auth-group.input-box
+                        .auth-input-group.inner-email
+                            input.auth-input(
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                required
+                            )
+
+                            i.bx.bxs-envelope.auth-icon
+
+                    //- Password
+                    .auth-group.input-box
+                        .auth-input-group.inner-password
+                            input.auth-input(
+                                type="password"
+                                name="password"
+                                placeholder="Mật khẩu"
+                                required
+                            )
+
+                            i.bx.bxs-lock-alt.auth-icon
+
+                    //- Confirm Password
+                    .auth-group.input-box
+                        .auth-input-group.inner-confirm-password
+                            input.auth-input(
+                                type="password"
+                                name="confirmPassword"
+                                placeholder="Nhập lại mật khẩu"
+                                required
+                            )
+
+                            i.bx.bxs-lock.auth-icon
+
+                    //- Button Register
+                    .auth-action
+                        button.auth-button.btn(
+                            type="submit"
+                        ) Đăng ký
+
+                    //- Login link
+                    .auth-footer.register-link
+                        p.auth-text
+                            | Bạn đã có tài khoản?
+
+                            a.auth-register-link(
+                                href="/auth/login"
+                            )  Đăng nhập
