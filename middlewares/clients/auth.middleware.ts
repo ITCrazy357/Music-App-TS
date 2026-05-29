@@ -10,6 +10,7 @@ export const requireAuth = async (
   const token = req.cookies.token;
 
   if (!token) {
+    req.flash("error", "Vui lòng đăng nhập để trải nghiệm bài hát!");
     res.redirect("/auth/login");
     return;
   }
@@ -23,5 +24,6 @@ export const requireAuth = async (
   }
 
   res.locals.user = user;
+
   next();
 };

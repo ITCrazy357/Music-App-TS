@@ -1,7 +1,7 @@
 header.header.py-3
-  .container
+  .container-fluid.px-4.px-lg-5
     .row.align-items-center
-      .col-lg-3.col-md-4.col-6
+      .col-lg-2.col-md-4.col-6
         .inner-logo
           a.d-flex.align-items-center.gap-2(href="/")
             img(
@@ -33,7 +33,7 @@ header.header.py-3
             li
               a(href="/ranking") BXH
 
-      .col-lg-3.col-md-8.col-6
+      .col-lg-4.col-md-8.col-6
         .header-actions.d-flex.align-items-center.justify-content-end.gap-3
           form.search-form.d-none.d-md-flex(action="/search", method="GET")
             input.form-control(
@@ -46,8 +46,10 @@ header.header.py-3
               i.fa-solid.fa-magnifying-glass
 
           if user
-            a(href="/auth/info", class="inner-actions__item", title="Thông tin cá nhân") 
-              i.fa-solid.fa-circle-user
+            a(href="/auth/info", class="inner-actions__item d-flex align-items-center gap-2", title="Thông tin cá nhân")
+              i.fa-solid.fa-user
+              span #{user.fullName}
+    
             a(href="/auth/logout", class="inner-actions__item", title="Đăng xuất")
               i.fa-solid.fa-right-from-bracket
           else
