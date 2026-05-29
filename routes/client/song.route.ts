@@ -10,4 +10,10 @@ router.get("/detail/:slugSong", requireAuth, controller.detail);
 
 router.patch("/like/:typeLike/:idSong", requireAuth, controller.like);
 
+router.patch(
+  "/favorite/:typeFavorite/:idSong",
+  requireAuth,
+  controller.favorite,
+);
+
 export const songRoutes: Router = router;

@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import Topic from "../../models/topic.model";
 import Song from "../../models/song.model";
 import Singer from "../../models/singer.model";
+import FavoriteSong from "../../models/favorite-song.model";
 
+//[GET] /songs/list
 export const list = async (req: Request, res: Response) => {
   const topic = await Topic.findOne({
     slug: req.params.slugTopic,
@@ -74,6 +76,12 @@ export const detail = async (req: Request, res: Response) => {
   }).select("-status -deleted");
 
   const isLiked = song.likes.includes(res.locals.user.id);
+  const isFavorite = await FavoriteSong.exists({
+    songId: song.id,
+    userId: res.locals.user.id,
+  });
+
+  (song as any).isFavorite = !!isFavorite;
 
   res.render("client/pages/songs/detail", {
     pageTitle: "Bài hát đang phát",
@@ -81,6 +89,7 @@ export const detail = async (req: Request, res: Response) => {
     singer: singer,
     topic: topic,
     isLiked: isLiked,
+    isFavorite: isFavorite,
   });
 };
 
@@ -136,6 +145,41 @@ export const like = async (req: Request, res: Response) => {
   res.json({
     code: 200,
     like: updateSong.likes.length,
+    message: "success",
+  });
+};
+
+//[PATCH] /songs/favorite/:typeFavorite/:idSong
+export const favorite = async (req: Request, res: Response) => {
+  const idSong: string | string[] = req.params.idSong;
+  const typeFavorite: string | string[] = req.params.typeFavorite;
+  const user = res.locals.user;
+
+  switch (typeFavorite) {
+    case "favorite":
+      const existFavoriteSong = await FavoriteSong.findOne({
+        songId: idSong,
+        userId: user.id,
+      });
+
+      if (!existFavoriteSong) {
+        const record = new FavoriteSong({
+          userId: user.id,
+          songId: idSong,
+        });
+        await record.save();
+      }
+      break;
+    case "unfavorite":
+      await FavoriteSong.deleteOne({
+        songId: idSong,
+        userId: user.id,
+      });
+      break;
+  }
+
+  res.json({
+    code: 200,
     message: "success",
   });
 };

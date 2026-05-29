@@ -868,12 +868,28 @@ a {
   font-weight: 900;
 }
 
+/* favorite */
+.singer-detail .inner-action.inner-heart {
+  cursor: pointer;
+}
+
+.singer-detail .inner-action.inner-heart i {
+  margin-right: 5px;
+  color: var(--danger);
+}
+
+.singer-detail .inner-action.inner-heart.active i {
+  font-weight: 900;
+}
+
 .singer-detail .inner-play {
   display: flex;
   align-items: center;
   gap: 30px;
 
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.24);
+
+  backdrop-filter: blur(20px);
 
   padding: 25px;
 
@@ -897,7 +913,7 @@ a {
 
   object-fit: cover;
 
-  border: 5px solid var(--white);
+  border: 5px solid rgba(255, 255, 255, 0);
 
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 
@@ -908,6 +924,7 @@ a {
 
 .singer-detail #aplayer {
   flex: 1;
+  background: rgba(255, 255, 255, 0.164);
 }
 
 .singer-detail .inner-desc {

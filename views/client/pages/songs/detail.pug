@@ -23,7 +23,8 @@ block main
                             i(class="fa-regular fa-thumbs-up")
                             span #{song.likes.length} lượt thích
 
-                        div(class="inner-action inner-heart")
+                        div(class=`inner-action inner-heart ${isFavorite ? "active" : ""}`
+                             button-favorite=song.id)
                             i(class="fa-regular fa-heart")
                             | Bài hát yêu thích
                         

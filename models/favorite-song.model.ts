@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const favoriteSongSchema = new mongoose.Schema(
   {
     userId: String,
@@ -10,12 +9,16 @@ const favoriteSongSchema = new mongoose.Schema(
       default: false,
     },
     deleteAt: Date,
-  }
+  },
   {
-    timestamps: true
-  }
-)
+    timestamps: true,
+  },
+);
 
-export const FavoriteSong = mongoose.model("FavoriteSong", favoriteSongSchema, "Favorite-songs");
+export const FavoriteSong = mongoose.model(
+  "FavoriteSong",
+  favoriteSongSchema,
+  "Favorite-songs",
+);
 
 export default FavoriteSong;
