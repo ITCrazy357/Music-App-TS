@@ -603,7 +603,9 @@ a {
   display: flex;
   align-items: center;
 
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+
+  backdrop-filter: blur(20px);
 
   border-radius: 18px;
 
@@ -623,6 +625,7 @@ a {
   border-color: var(--border);
 }
 
+/* ===== IMAGE ===== */
 .song-item .inner-image {
   width: 110px;
   height: 110px;
@@ -649,10 +652,12 @@ a {
   transform: scale(1.08);
 }
 
+/* ===== CONTENT ===== */
 .song-item .inner-content {
   flex: 1;
 }
 
+/* ===== TITLE ===== */
 .song-item .inner-title {
   font-size: 20px;
   font-weight: 700;
@@ -661,7 +666,7 @@ a {
 }
 
 .song-item .inner-title a {
-  color: var(--dark);
+  color: rgb(252, 252, 252);
 
   transition: color 0.3s ease;
 }
@@ -670,19 +675,67 @@ a {
   color: var(--primary);
 }
 
+/* ===== META ===== */
 .song-item .inner-singer,
 .song-item .inner-like,
 .song-item .inner-time {
-  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: white;
 
   font-size: 14px;
 
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+
+  transition: all 0.3s ease;
+}
+
+.song-item .inner-singer i,
+.song-item .inner-like i,
+.song-item .inner-time i {
+  font-size: 15px;
+}
+
+/* ===== LIKE ===== */
+.song-item .inner-like {
+  width: fit-content;
+
+  cursor: pointer;
+
+  user-select: none;
+}
+
+.song-item .inner-like:hover {
+  color: var(--primary);
+
+  transform: translateX(2px);
+}
+
+/* Khi đã like */
+.song-item .inner-like.active,
+.song-item .inner-like.active i,
+.song-item .inner-like.active span {
+  color: #0d6efd;
+}
+
+/* Icon khi active */
+.song-item .inner-like.active i {
+  font-weight: 900;
+}
+
+/* Animation nhẹ */
+.song-item .inner-like i,
+.song-item .inner-like span {
+  transition: all 0.3s ease;
 }
 
 /* ========== TOPIC ITEM ========== */
 .topic-item {
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+
+  backdrop-filter: blur(20px);
 
   border-radius: 18px;
 
@@ -729,7 +782,7 @@ a {
 }
 
 .topic-item .inner-title a {
-  color: var(--dark);
+  color: var(--white);
 
   transition: color 0.3s ease;
 }
@@ -739,7 +792,7 @@ a {
 }
 
 .topic-item .inner-description {
-  color: var(--muted);
+  color: var(--border);
 
   line-height: 1.7;
 
@@ -748,7 +801,9 @@ a {
 
 /* ========== SINGER DETAIL ========== */
 .singer-detail {
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+
+  backdrop-filter: blur(20px);
 
   border-radius: 24px;
 
@@ -778,7 +833,7 @@ a {
 
   font-size: 15px;
 
-  color: var(--muted);
+  color: var(--white);
 }
 
 .singer-detail .inner-action i {
@@ -786,11 +841,22 @@ a {
   color: var(--primary);
 }
 
+.singer-detail .inner-heart i {
+  margin-right: 5px;
+  color: var(--danger);
+}
+
+.singer-detail .inner-singer i {
+  margin-right: 5px;
+  color: var(--white);
+}
+
 .singer-detail .inner-action.inner-like {
   cursor: pointer;
 }
 
 .singer-detail .inner-action.inner-like i {
+  margin-right: 5px;
   color: var(--primary);
 }
 
@@ -854,13 +920,13 @@ a {
 
   margin-bottom: 12px;
 
-  color: var(--dark);
+  color: var(--white);
 }
 
 .singer-detail .inner-text {
   line-height: 1.8;
 
-  color: #475569;
+  color: var(--white);
 
   white-space: pre-wrap;
 }

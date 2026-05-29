@@ -73,11 +73,14 @@ export const detail = async (req: Request, res: Response) => {
     deleted: false,
   }).select("-status -deleted");
 
+  const isLiked = song.likes.includes(res.locals.user.id);
+
   res.render("client/pages/songs/detail", {
     pageTitle: "Bài hát đang phát",
     song: song,
     singer: singer,
     topic: topic,
+    isLiked: isLiked,
   });
 };
 
@@ -97,20 +100,42 @@ export const like = async (req: Request, res: Response) => {
     return;
   }
 
-  const newLike: number = typeLike === "like" ? song.like + 1 : song.like - 1;
+  const user = res.locals.user;
+  const isLiked = song.likes.includes(user.id);
 
-  await Song.updateOne(
-    {
-      _id: idSong,
-    },
-    {
-      like: newLike,
-    },
-  );
+  if (typeLike === "like" && !isLiked) {
+    await Song.updateOne(
+      {
+        _id: idSong,
+      },
+      {
+        $push: {
+          likes: user.id,
+        },
+      },
+    );
+  }
+
+  if (typeLike === "dislike" && isLiked) {
+    await Song.updateOne(
+      {
+        _id: idSong,
+      },
+      {
+        $pull: {
+          likes: user.id,
+        },
+      },
+    );
+  }
+
+  const updateSong: any = await Song.findOne({
+    _id: idSong,
+  });
 
   res.json({
     code: 200,
-    like: newLike,
-    message: "suscess",
+    like: updateSong.likes.length,
+    message: "success",
   });
 };

@@ -9,25 +9,27 @@ block main
                     .inner-title #{song.title}
 
                     .inner-actions
-                        div(class="inner-action inner-time")
-                            i(class="fa-regular fa-clock")
-                            | #{song.timestamps}
 
                         div(class="inner-action inner-singer")
                             i(class="fa-solid fa-microphone-lines")
-                            | #{song.singerId.fullName}
+                            | #{singer.fullName}
 
                         div(class="inner-action inner-topic")
                             i(class="fa-solid fa-music")
                             | #{song.topicId.title} 
 
-                        div(class="inner-action inner-like" button-like = song.id)
+                        div(class=`inner-action inner-like ${isLiked ? "active" : ""}`
+                            button-like=song.id)
                             i(class="fa-regular fa-thumbs-up")
-                            span #{song.like} lượt thích
+                            span #{song.likes.length} lượt thích
 
                         div(class="inner-action inner-heart")
                             i(class="fa-regular fa-heart")
                             | Bài hát yêu thích
+                        
+                        div(class="inner-action inner-time")
+                            i(class="fa-regular fa-clock")
+                            | #{song.timestamps}
 
                     .inner-play
                         .inner-avatar
