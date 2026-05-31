@@ -275,6 +275,8 @@ a {
   border-color: rgba(255, 255, 255, 0.3);
 
   background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  box-shadow: none;
 }
 
 .search-form button {
@@ -693,23 +695,10 @@ a {
   transition: all 0.3s ease;
 }
 
-.song-item .inner-heart i {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  color: var(--danger);
-
-  font-size: 14px;
-
-  margin-bottom: 8px;
-
-  transition: all 0.3s ease;
-}
-
 .song-item .inner-singer i,
 .song-item .inner-like i,
-.song-item .inner-time i {
+.song-item .inner-time i,
+.song-item .inner-heart i {
   font-size: 15px;
 }
 
@@ -743,6 +732,39 @@ a {
 /* Animation nhẹ */
 .song-item .inner-like i,
 .song-item .inner-like span {
+  transition: all 0.3s ease;
+}
+
+/* ===== HEART ===== */
+.song-item .inner-heart {
+  width: fit-content;
+
+  cursor: pointer;
+
+  user-select: none;
+}
+
+.song-item .inner-heart:hover {
+  color: var(--danger);
+
+  transform: translateX(2px);
+}
+
+/* Khi đã yêu thích */
+.song-item .inner-heart.active,
+.song-item .inner-heart.active i,
+.song-item .inner-heart.active span {
+  color: var(--danger);
+}
+
+/* Icon khi active */
+.song-item .inner-heart.active i {
+  font-weight: 900;
+}
+
+/* Animation nhẹ */
+.song-item .inner-heart i,
+.song-item .inner-heart span {
   transition: all 0.3s ease;
 }
 
@@ -853,12 +875,7 @@ a {
 
 .singer-detail .inner-action i {
   margin-right: 5px;
-  color: var(--primary);
-}
-
-.singer-detail .inner-heart i {
-  margin-right: 5px;
-  color: var(--danger);
+  color: var(--white);
 }
 
 .singer-detail .inner-singer i {
@@ -872,10 +889,12 @@ a {
 
 .singer-detail .inner-action.inner-like i {
   margin-right: 5px;
-  color: var(--primary);
+  color: var(--white);
+  transition: all 0.3s ease;
 }
 
-.singer-detail .inner-action.inner-like.active {
+.singer-detail .inner-action.inner-like.active,
+.singer-detail .inner-action.inner-like.active i {
   color: var(--primary);
 }
 
@@ -890,6 +909,12 @@ a {
 
 .singer-detail .inner-action.inner-heart i {
   margin-right: 5px;
+  color: var(--white);
+  transition: all 0.3s ease;
+}
+
+.singer-detail .inner-action.inner-heart.active,
+.singer-detail .inner-action.inner-heart.active i {
   color: var(--danger);
 }
 

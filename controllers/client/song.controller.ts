@@ -31,8 +31,10 @@ export const list = async (req: Request, res: Response) => {
     status: "active",
     deleted: false,
   })
-    .select("avatar title slug singerId like")
+    .select("avatar title slug singerId likes")
     .lean();
+
+  const user = res.locals.user;
 
   for (const song of songs as any[]) {
     const infoSinger = await Singer.findOne({
@@ -42,6 +44,7 @@ export const list = async (req: Request, res: Response) => {
     });
 
     song.infoSinger = infoSinger;
+    song.isLiked = user ? song.likes.includes(user.id) : false;
   }
 
   res.render("client/pages/songs/list", {

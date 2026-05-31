@@ -34,16 +34,18 @@ header.header.py-3
               a(href="/ranking") BXH
 
       .col-lg-4.col-md-8.col-6
-        .header-actions.d-flex.align-items-center.justify-content-end.gap-3
-          form.search-form.d-none.d-md-flex(action="/search", method="GET")
-            input.form-control(
-              type="text",
-              name="keyword",
-              placeholder="Tìm kiếm bài hát..."
-            )
+        .header-actions.d-flex.align-items-center.justify-content-end.gap-3 
+          .box-search
+            form.search-form.d-none.d-md-flex(action="/search/results", method="GET")
+              input.form-control(
+                type="text",
+                name="keyword",
+                placeholder="Tìm kiếm bài hát..."
+                value=keyword
+              )
 
-            button.btn.btn-primary(type="submit")
-              i.fa-solid.fa-magnifying-glass
+              button.btn.btn-primary(type="submit")
+                i.fa-solid.fa-magnifying-glass
 
           if user
             a(href="/auth/info", class="inner-actions__item d-flex align-items-center gap-2", title="Thông tin cá nhân")
