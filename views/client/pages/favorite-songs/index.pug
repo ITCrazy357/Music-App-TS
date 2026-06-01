@@ -23,9 +23,13 @@ block main
                                 i(class="fa-solid fa-microphone-lines")
                                 |  #{song.infoSinger.fullName}
 
+                            div(class=`inner-like ${song.isLiked ? 'active' : ''}` button-like=song._id)
+                                i(class="fa-solid fa-thumbs-up")
+                                span  #{song.likes ? song.likes.length : 0} lượt thích
+
                             div(class="inner-heart active" button-favorite = song._id)
                                 i(class="fa-solid fa-heart")
-                                |   Yêu thích
+                                span Yêu thích
                                 
                             div(class="inner-time")
                                 i(class="fa-regular fa-clock")

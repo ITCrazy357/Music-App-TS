@@ -27,6 +27,9 @@ block main
                                 i(class="fa-solid fa-thumbs-up")
                                 span  #{song.likes ? song.likes.length : 0} lượt thích
 
+                            div(class=`inner-heart ${song.isFavorite ? 'active' : ''}` button-favorite=song._id)
+                                i(class="fa-solid fa-heart")
+                                span Yêu thích
 
                             div(class="inner-time")
                                 i(class="fa-regular fa-clock")

@@ -28,10 +28,17 @@ block main
                                     i(class="fa-solid fa-thumbs-up")
                                     span  #{song.likes ? song.likes.length : 0} lượt thích
 
+                                div(class=`inner-heart ${song.isFavorite ? 'active' : ''}` button-favorite=song._id)
+                                    i(class="fa-solid fa-heart")
+                                    span Yêu thích
+
                                 div(class="inner-time")
                                     i(class="fa-regular fa-clock")
                                     |  Hôm nay
         else
             .row
                 .col-12
-                    .alert.alert-warning Không tìm thấy bài hát nào.
+                    div(class="box-no-results")
+                        i(class="fa-solid fa-magnifying-glass-minus")
+                        div(class="inner-title") Không tìm thấy kết quả cho "#{keyword}"
+                        div(class="inner-desc") Vui lòng thử lại với một từ khóa khác hoặc kiểm tra lỗi chính tả.

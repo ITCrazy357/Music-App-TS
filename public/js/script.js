@@ -120,3 +120,62 @@ if (listButtonFavorite.length > 0) {
     });
   });
 }
+
+// Suggest Search
+const boxSearch = document.querySelector(".box-search");
+if (boxSearch) {
+  const inputSearch = boxSearch.querySelector("input[name='keyword']");
+  const boxSuggest = boxSearch.querySelector(".inner-suggest");
+  const innerList = boxSearch.querySelector(".inner-suggest .inner-list");
+
+  inputSearch.addEventListener("keyup", () => {
+    const keyword = inputSearch.value.trim();
+
+    if (keyword) {
+      const link = `/search/suggest?keyword=${keyword}`;
+
+      fetch(link)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.code === 200) {
+            const songs = data.songs;
+            if (songs.length > 0) {
+              const html = songs
+                .map(
+                  (song) => `
+                <a href="/songs/detail/${song.slug}" class="inner-item">
+                  <div class="inner-image">
+                    <img src="${song.avatar}" alt="${song.title}" />
+                  </div>
+                  <div class="inner-info">
+                    <div class="inner-title">${song.title}</div>
+                    <div class="inner-author">
+                      <i class="fa-solid fa-microphone-lines"></i> ${song.infoSinger.fullName}
+                    </div>
+                  </div>
+                </a>
+              `,
+                )
+                .join("");
+
+              innerList.innerHTML = html;
+              boxSuggest.classList.add("show");
+            } else {
+              innerList.innerHTML = "";
+              boxSuggest.classList.remove("show");
+            }
+          }
+        });
+    } else {
+      innerList.innerHTML = "";
+      boxSuggest.classList.remove("show");
+    }
+  });
+
+  // Ẩn gợi ý khi click ra ngoài
+  document.addEventListener("click", (e) => {
+    if (!boxSearch.contains(e.target)) {
+      boxSuggest.classList.remove("show");
+    }
+  });
+}

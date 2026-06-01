@@ -248,7 +248,7 @@ a {
   margin-right: 10px;
 }
 
-.search-form input {
+.search-form input.form-control {
   width: 100%;
   height: 46px;
 
@@ -259,7 +259,7 @@ a {
 
   padding: 0 58px 0 20px;
 
-  color: #ffffff;
+  color: #ffffff !important;
   font-size: 14px;
 
   outline: none;
@@ -275,7 +275,7 @@ a {
   border-color: rgba(255, 255, 255, 0.3);
 
   background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
+  color: #ffffff !important;
   box-shadow: none;
 }
 
@@ -1030,59 +1030,133 @@ a {
   }
 }
 
-@media (max-width: 767.98px) {
-  .header .inner-logo img {
-    width: 44px;
-    height: 44px;
-  }
+/* ========== NO RESULTS ========== */
+.box-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-  .header .logo-text {
-    display: none;
-  }
+  padding: 60px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
 
-  .header-actions {
-    gap: 8px;
-  }
-
-  .header .btn {
-    padding: 0 14px;
-
-    height: 38px;
-
-    font-size: 13px;
-  }
-
-  .main {
-    padding-top: 100px;
-  }
-
-  .song-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .song-item .inner-image {
-    width: 100%;
-    height: 220px;
-
-    margin-right: 0;
-    margin-bottom: 15px;
-  }
-
-  .singer-detail {
-    padding: 20px;
-  }
-
-  .singer-detail .inner-title {
-    font-size: 26px;
-  }
-
-  .singer-detail .inner-avatar {
-    width: 140px;
-    height: 140px;
-  }
-
-  .footer {
-    text-align: left;
-  }
+  text-align: center;
+  margin-top: 20px;
 }
+
+.box-no-results i {
+  font-size: 60px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 20px;
+}
+
+.box-no-results .inner-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.box-no-results .inner-desc {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 400px;
+}
+
+/* ========== SUGGEST SEARCH ========== */
+.box-search {
+  position: relative;
+}
+
+.box-search .inner-suggest {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 300px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  margin-top: 8px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.box-search .inner-suggest.show {
+  display: block;
+}
+
+.box-search .inner-suggest::-webkit-scrollbar {
+  width: 6px;
+}
+
+.box-search .inner-suggest::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.box-search .inner-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.box-search .inner-item:last-child {
+  border-bottom: none;
+}
+
+.box-search .inner-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.box-search .inner-item .inner-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.box-search .inner-item .inner-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.box-search .inner-item .inner-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.box-search .inner-item .inner-title {
+  color: #ffffff !important;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: none;
+}
+
+.box-search .inner-item .inner-author {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.box-search .inner-item .inner-author i {
+  font-size: 12px;
+}
+
