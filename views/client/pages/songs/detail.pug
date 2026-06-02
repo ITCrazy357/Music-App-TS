@@ -30,7 +30,11 @@ block main
                         
                         div(class="inner-action inner-time")
                             i(class="fa-regular fa-clock")
-                            | #{song.timestamps}
+                            span #{song.timestamps}
+
+                        div(class="inner-action inner-listen")
+                            i(class="fa-solid fa-headphones")
+                            | #{song.listen} lượt nghe
 
                     .inner-play
                         .inner-avatar

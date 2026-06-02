@@ -16,4 +16,6 @@ router.patch(
   controller.favorite,
 );
 
+router.patch("/listen/:idSong", controller.listen);
+
 export const songRoutes: Router = router;

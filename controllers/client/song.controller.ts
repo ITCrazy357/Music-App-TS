@@ -186,3 +186,37 @@ export const favorite = async (req: Request, res: Response) => {
     message: "success",
   });
 };
+
+//[PATCH] /songs/listen/:idSong
+export const listen = async (req: Request, res: Response) => {
+  const idSong: string | string[] = req.params.idSong;
+  const song: any = await Song.findOne({
+    _id: idSong,
+  });
+
+  if (!song) {
+    res.redirect("/songs");
+    return;
+  }
+
+  const listenCount = song.listen + 1;
+
+  await Song.updateOne(
+    {
+      _id: idSong,
+    },
+    {
+      listen: listenCount,
+    },
+  );
+
+  const songNew: any = await Song.findOne({
+    _id: idSong,
+  });
+
+  res.json({
+    code: 200,
+    message: "success",
+    listen: songNew.listen,
+  });
+};

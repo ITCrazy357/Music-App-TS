@@ -11,6 +11,10 @@ const songSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    listen: {
+      type: Number,
+      default: 0,
+    },
     lyrics: String,
     audio: String,
     status: String,
