@@ -1,0 +1,27 @@
+header.header
+  .container-fluid.px-4
+    .row.align-items-center
+      .col-3
+        .inner-logo
+          a.d-flex.align-items-center.gap-2(href=`/${prefixAdmin}/dashboard`)
+            img(
+              src="/images/logo.png",
+              alt="Music Streaming Logo",
+              width="45"
+            )
+            span.logo-text Admin
+
+      .col-9
+        .header-actions.d-flex.align-items-center.justify-content-end.gap-3 
+          if user
+            a(href=`/${prefixAdmin}/profile`, class="inner-actions__item", title="Thông tin cá nhân")
+              i.fa-solid.fa-user.mr-2
+              span #{user.fullName}
+    
+            a(href=`/${prefixAdmin}/auth/logout`, class="inner-actions__item", title="Đăng xuất")
+              i.fa-solid.fa-right-from-bracket
+          else
+            a(href=`/${prefixAdmin}/auth/login`, class="inner-actions__item", title="Đăng nhập")
+              i.fa-solid.fa-user
+            a(href=`/${prefixAdmin}/auth/register`, class="inner-actions__item", title="Đăng ký")
+              i.fa-solid.fa-user-plus

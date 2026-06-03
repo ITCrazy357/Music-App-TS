@@ -1,7 +1,10 @@
 import express, { Express, Request, Response } from "express";
 import * as database from "./config/database";
 import dotenv from "dotenv";
+
 import clientRoutes from "./routes/client/index.route";
+import adminRouter from "./routes/admin/index.route";
+import { systemConfig } from "./config/config";
 
 import flash from "connect-flash";
 import session from "express-session";
@@ -39,8 +42,11 @@ app.use((req: Request, res: Response, next) => {
 
 app.set("views", "./views");
 app.set("view engine", "pug");
+app.locals.prefixAdmin = systemConfig.prefixAdmin;
 //client router
 clientRoutes(app);
+//admin router
+adminRouter(app);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
