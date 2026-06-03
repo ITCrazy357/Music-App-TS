@@ -1,0 +1,57 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+    .container-fluid.px-4.px-lg-5.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .card.mb-3
+            .card-header Chi tiết bài hát
+            .card-body
+                .row
+                    .col-lg-4
+                        if song.avatar
+                            img(src=song.avatar alt=song.title class="img-fluid rounded mb-3")
+                        if song.audio
+                            audio.controls(style="width: 100%;")
+                                source(src=song.audio)
+                                | Trình duyệt của bạn không hỗ trợ thẻ audio.
+                    .col-lg-8
+                        .mb-3
+                            h3.text-white #{song.title}
+                        if topic
+                            p
+                                strong Chủ đề: 
+                                span.text-light #{topic.title}
+                        if singer
+                            p
+                                strong Ca sĩ: 
+                                span.text-light #{singer.fullName}
+                        if song.listen !== undefined
+                            p
+                                strong Lượt nghe: 
+                                span.text-light #{song.listen}
+                        if song.status
+                            p
+                                strong Trạng thái: 
+                                if song.status === "active"
+                                    span.badge.badge-success Hoạt động
+                                else
+                                    span.badge.badge-danger Dừng hoạt động
+                        if song.description
+                            .mt-3
+                                h5.text-white Mô tả
+                                p.text-light #{song.description}
+                        if song.lyrics
+                            .mt-3
+                                h5.text-white Lời bài hát
+                                pre.text-light(style="white-space: pre-wrap;") #{song.lyrics}
+                        .mt-4
+                            a(href=`/${prefixAdmin}/songs/edit/${song.id}` class="btn btn-warning mr-2")
+                                i.fa-solid.fa-pen-to-square.mr-1
+                                | Chỉnh sửa
+                            a(href=`/${prefixAdmin}/songs` class="btn btn-secondary")
+                                i.fa-solid.fa-arrow-left.mr-1
+                                | Quay lại

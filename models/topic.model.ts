@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { title } from "node:process";
 
 const topicSchema = new mongoose.Schema(
   {
@@ -13,6 +12,27 @@ const topicSchema = new mongoose.Schema(
       default: false,
     },
     deleteAt: Date,
+    createdBy: {
+      account_id: String,
+      createdAt: {
+        type: Date,
+        default: new Date(),
+      },
+    },
+    updatedBy: {
+      account_id: String,
+      updatedAt: {
+        type: Date,
+        default: new Date(),
+      },
+    },
+    deletedBy: {
+      account_id: String,
+      deletedAt: {
+        type: Date,
+        default: new Date(),
+      },
+    },
   },
   {
     timestamps: true,

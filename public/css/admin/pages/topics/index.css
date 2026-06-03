@@ -1,0 +1,311 @@
+/* ========================================
+   TOPICS INDEX
+======================================== */
+
+.topic-index-page {
+  width: 100%;
+}
+
+.topic-index-card {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 24px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.topic-index-header {
+  padding: 24px 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.topic-index-header i {
+  color: var(--primary);
+}
+
+.topic-index-body {
+  padding: 30px;
+}
+
+/* ========================================
+   ACTION BAR
+======================================== */
+
+.topic-index-body .btn {
+  border-radius: 12px;
+
+  font-weight: 500;
+
+  transition: all 0.3s ease;
+}
+
+.topic-index-page .btn-outline-success {
+  border: 1px solid #22c55e;
+
+  color: #22c55e;
+
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.topic-index-page .btn-outline-success:hover {
+  background: #22c55e;
+
+  color: #fff;
+
+  transform: translateY(-2px);
+}
+
+.topic-index-page .btn-outline-danger {
+  border: 1px solid #ef4444;
+
+  color: #ef4444;
+
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.topic-index-page .btn-outline-danger:hover {
+  background: #ef4444;
+
+  color: #fff;
+
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   TABLE
+======================================== */
+
+.topic-index-page .table {
+  margin-top: 20px;
+
+  color: #fff;
+
+  border-collapse: separate;
+  border-spacing: 0 10px;
+
+  background: transparent;
+}
+
+.topic-index-page .table thead tr {
+  background: transparent;
+}
+
+.topic-index-page .table thead th {
+  color: rgba(255, 255, 255, 0.7);
+
+  border: none !important;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+
+  padding-bottom: 15px;
+}
+
+.topic-index-page .table tbody tr {
+  background: rgba(255, 255, 255, 0.04);
+
+  backdrop-filter: blur(10px);
+
+  transition: all 0.3s ease;
+}
+
+.topic-index-page .table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  transform: translateY(-2px);
+}
+
+.topic-index-page .table td {
+  border: none !important;
+
+  vertical-align: middle;
+
+  padding: 16px;
+}
+
+/* ========================================
+   IMAGE
+======================================== */
+
+.topic-index-page .table td img {
+  width: 90px;
+
+  height: 90px;
+
+  object-fit: cover;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  transition: all 0.4s ease;
+}
+
+.topic-index-page .table td img:hover {
+  transform: scale(1.05);
+}
+
+/* ========================================
+   STATUS
+======================================== */
+
+.topic-index-page .badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-width: 120px;
+
+  padding: 10px 15px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  transition: all 0.3s ease;
+}
+
+.topic-index-page .badge-success {
+  background: rgba(34, 197, 94, 0.12) !important;
+
+  border: 1px solid rgba(34, 197, 94, 0.3);
+
+  color: #22c55e !important;
+}
+
+.topic-index-page .badge-success:hover {
+  background: #22c55e !important;
+
+  color: #fff !important;
+}
+
+.topic-index-page .badge-danger {
+  background: rgba(239, 68, 68, 0.12) !important;
+
+  border: 1px solid rgba(239, 68, 68, 0.3);
+
+  color: #ef4444 !important;
+}
+
+.topic-index-page .badge-danger:hover {
+  background: #ef4444 !important;
+
+  color: #fff !important;
+}
+
+/* ========================================
+   ACTION BUTTONS
+======================================== */
+
+.topic-index-page .btn-sm {
+  padding: 8px 14px;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+
+  font-weight: 500;
+}
+
+.topic-index-page .btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: #fff;
+}
+
+.topic-index-page .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+
+  color: #fff;
+}
+
+.topic-index-page .btn-warning {
+  background: rgba(245, 158, 11, 0.15);
+
+  border: 1px solid rgba(245, 158, 11, 0.3);
+
+  color: #f59e0b;
+}
+
+.topic-index-page .btn-warning:hover {
+  background: #f59e0b;
+
+  color: #fff;
+}
+
+.topic-index-page .btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+
+  border: 1px solid rgba(239, 68, 68, 0.3);
+
+  color: #ef4444;
+}
+
+.topic-index-page .btn-danger:hover {
+  background: #ef4444;
+
+  color: #fff;
+}
+
+/* ========================================
+   EMPTY STATE
+======================================== */
+
+.topic-index-page .alert-secondary {
+  background: rgba(255, 255, 255, 0.05);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: #fff;
+
+  border-radius: 14px;
+
+  padding: 15px;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 992px) {
+  .topic-index-page .table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .topic-index-page .table td img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .topic-index-page .btn-sm {
+    margin-bottom: 5px;
+  }
+
+}

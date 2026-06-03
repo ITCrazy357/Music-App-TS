@@ -4,17 +4,20 @@ import dotenv from "dotenv";
 
 import clientRoutes from "./routes/client/index.route";
 import adminRouter from "./routes/admin/index.route";
-import { systemConfig } from "./config/config";
+import { systemConfig } from "./config/system";
 
 import flash from "connect-flash";
 import session from "express-session";
 import cookieParser from "cookie-parser";
+import methodOverride from "method-override";
 
 dotenv.config();
 database.connect();
 
 const app: Express = express();
 const port: number | string = process.env.PORT || 3000;
+
+app.use(methodOverride("_method"));
 
 // Cấu hình middleware để đọc dữ liệu từ req.body
 app.use(express.json());

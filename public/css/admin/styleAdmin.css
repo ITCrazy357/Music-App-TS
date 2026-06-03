@@ -1,0 +1,23 @@
+/* ========== BASE ========== */
+@import url('./base/variables.css');
+@import url('./base/reset.css');
+@import url('./base/typography.css');
+
+/* ========== COMPONENTS ========== */
+@import url('./components/alerts.css');
+@import url('./components/badges.css');
+@import url('./components/buttons.css');
+@import url('./components/cards.css');
+@import url('./components/forms.css');
+@import url('./components/tables.css');
+
+/* ========== LAYOUTS ========== */
+@import url('./layouts/dashboard.css');
+@import url('./layouts/header.css');
+@import url('./layouts/sidebar.css');
+@import url('./layouts/footer.css');
+
+/* ========== PAGES ========== */
+@import url('./pages/topics/index.css');
+@import url('./pages/topics/edit.css');
+@import url('./pages/topics/detail.css');

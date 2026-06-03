@@ -8,7 +8,7 @@ html(lang="vi")
         //====== Auth ====
         link(href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css", rel="stylesheet")
         // ===== CSS =====
-        link(rel="stylesheet", href="/css/styleAdmin.css")
+        link(rel="stylesheet", href="/css/admin/styleAdmin.css")
         link(rel="stylesheet", href="/css/styleLogin.css")
         link(rel="stylesheet", href="/css/alert.css")
         // Bootstrap & FontAwesome
@@ -20,6 +20,13 @@ html(lang="vi")
 
     body 
         include ../partials/header.pug
+        include ../mixins/alert.pug
+
+        if success
+            +alert-success(5000)
+
+        if error
+            +alert-error(5000)
 
         .body-layout
             include ../partials/sider.pug
@@ -38,3 +45,4 @@ html(lang="vi")
         
         // ===== JS (main) =====
         script(src="/js/script.js")
+        script(src="/admin/js/script.js")

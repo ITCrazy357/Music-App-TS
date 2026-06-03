@@ -1,0 +1,19 @@
+/* ========== ROOT ========== */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --dark: #0f172a;
+  --dark-light: #1e293b;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.1);
+  --background: #0f172a;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --danger: #ef4444;
+  --success: #22c55e;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  --header-height: 80px;
+  --sider-width: 260px;
+}

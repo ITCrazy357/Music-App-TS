@@ -1,0 +1,78 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+    .container-fluid.px-4.px-lg-5.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .card.mb-3.admin-form-card
+            .card-header Thêm mới bài hát
+            .card-body
+                if !topics.length
+                    div.alert.alert-warning Bạn cần có ít nhất một chủ đề trước khi tạo bài hát.
+                if !singers.length
+                    div.alert.alert-warning Bạn cần có ít nhất một ca sĩ trước khi tạo bài hát.
+                form.admin-form(
+                    action=`/${prefixAdmin}/songs/create`
+                    method="POST"
+                    enctype="multipart/form-data"
+                )
+                    .row
+                        .col-md-6
+                            .form-group
+                                label(for="title") Tiêu đề
+                                input(
+                                    type="text"
+                                    class="form-control"
+                                    id="title"
+                                    name="title"
+                                    required
+                                )
+                        .col-md-6
+                            .form-group
+                                label(for="topicId") Chủ đề
+                                select.form-control(name="topicId" id="topicId" required)
+                                    option(value="") Chọn chủ đề
+                                    each topic in topics
+                                        option(value=topic.id) #{topic.title}
+                        .col-md-6
+                            .form-group
+                                label(for="singerId") Ca sĩ
+                                select.form-control(name="singerId" id="singerId" required)
+                                    option(value="") Chọn ca sĩ
+                                    each singer in singers
+                                        option(value=singer.id) #{singer.fullName}
+                        .col-md-6
+                            .form-group
+                                label(for="status") Trạng thái
+                                .d-flex.align-items-center
+                                    .form-check.form-check-inline
+                                        input.form-check-input(type="radio" id="statusActive" name="status" value="active" checked)
+                                        label.form-check-label(for="statusActive") Hoạt động
+                                    .form-check.form-check-inline.ml-3
+                                        input.form-check-input(type="radio" id="statusInactive" name="status" value="inactive")
+                                        label.form-check-label(for="statusInactive") Dừng hoạt động
+                    .form-group
+                        label(for="description") Mô tả
+                        textarea.form-control(id="description" name="description" rows="4")
+                    .form-group
+                        label(for="lyrics") Lời bài hát
+                        textarea.form-control(id="lyrics" name="lyrics" rows="4")
+                    .row
+                        .col-md-6
+                            .form-group
+                                label(for="avatar") Ảnh bìa
+                                input.form-control-file(type="file" id="avatar" name="avatar" accept="image/*")
+                        .col-md-6
+                            .form-group
+                                label(for="audio") File audio
+                                input.form-control-file(type="file" id="audio" name="audio" accept="audio/*")
+                    .form-group.mt-4
+                        button(type="submit" class="btn btn-primary")
+                            i.fa-solid.fa-plus.mr-1
+                            | Thêm mới
+                        a(href=`/${prefixAdmin}/songs` class="btn btn-secondary ml-2")
+                            i.fa-solid.fa-arrow-left.mr-1
+                            | Hủy

@@ -1,0 +1,98 @@
+extends ../../layouts/default.pug
+
+include ../../mixins/box-head.pug
+
+block main
+    .topic-edit-page
+
+        .row.mb-4
+            .col-12
+                +box-head(pageTitle)
+
+        .topic-edit-card
+
+            .topic-edit-header
+                i.fa-solid.fa-pen-to-square
+                span Chỉnh sửa chủ đề
+
+            form.topic-edit-form(
+                action=`/${prefixAdmin}/topics/edit/${topic.id}?_method=PATCH`
+                method="POST"
+                enctype="multipart/form-data"
+            )
+
+                .row
+
+                    .col-lg-8
+
+                        .form-group
+                            label Tiêu đề chủ đề
+
+                            input.form-control(
+                                type="text"
+                                name="title"
+                                value=topic.title
+                                required
+                            )
+
+                        .form-group
+                            label Mô tả
+
+                            textarea.form-control(
+                                name="description"
+                                rows="12"
+                            ) #{topic.description}
+
+                        .form-group
+                            label Trạng thái
+
+                            .status-group
+
+                                label.status-item
+                                    input(
+                                        type="radio"
+                                        name="status"
+                                        value="active"
+                                        checked=(topic.status==="active")
+                                    )
+
+                                    span Hoạt động
+
+                                label.status-item
+                                    input(
+                                        type="radio"
+                                        name="status"
+                                        value="inactive"
+                                        checked=(topic.status==="inactive")
+                                    )
+
+                                    span Dừng hoạt động
+
+                    .col-lg-4
+
+                        .upload-box
+
+                            h5 Ảnh chủ đề
+
+                            input(
+                                type="file"
+                                name="avatar"
+                                accept="image/*"
+                                class="form-control-file"
+                            )
+
+                            if topic.avatar
+                                .image-preview
+                                    img(src=topic.avatar)
+
+                .action-buttons
+
+                    button.btn-save(type="submit")
+                        i.fa-solid.fa-floppy-disk
+                        span Cập nhật
+
+                    a.btn-cancel(
+                        href=`/${prefixAdmin}/topics`
+                    )
+                        i.fa-solid.fa-arrow-left
+                        span Quay lại

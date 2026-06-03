@@ -1,0 +1,80 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+    .container-fluid.px-4.px-lg-5.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .card.mb-3.admin-form-card
+            .card-header Thêm mới chủ đề
+            .card-body
+                form.admin-form(
+                    action=`/${prefixAdmin}/topics/create`
+                    method="POST"
+                    enctype="multipart/form-data"
+                )
+                    div(class="form-group")
+                        label(for="title") Tiêu đề
+                        input(
+                            type="text"
+                            class="form-control"
+                            id="title"
+                            name="title"
+                            required
+                        )
+                    
+                    div(class="form-group")
+                        label(for="description") Mô tả
+                        textarea(
+                            class="form-control"
+                            id="description"
+                            name="description"
+                            rows="5"
+                        )
+                        
+                    div(class="form-group")
+                        label(for="avatar") Hình ảnh
+                        input(
+                            type="file"
+                            class="form-control-file"
+                            id="avatar"
+                            name="avatar"
+                            accept="image/*"
+                        )
+                        
+                    div(class="form-group form-check form-check-inline")
+                        input(
+                            type="radio"
+                            class="form-check-input"
+                            id="statusActive"
+                            name="status"
+                            value="active"
+                            checked
+                        )
+                        label(for="statusActive" class="form-check-label") Hoạt động
+                        
+                    div(class="form-group form-check form-check-inline")
+                        input(
+                            type="radio"
+                            class="form-check-input"
+                            id="statusInActive"
+                            name="status"
+                            value="inactive"
+                        )
+                        label(for="statusInActive" class="form-check-label") Dừng hoạt động
+
+                    div(class="form-group mt-4")
+                        button(
+                            type="submit"
+                            class="btn btn-primary"
+                        )
+                            i.fa-solid.fa-plus.mr-1
+                            | Thêm mới
+                        a(
+                            href=`/${prefixAdmin}/topics`
+                            class="btn btn-secondary ml-2"
+                        )
+                            i.fa-solid.fa-arrow-left.mr-1
+                            | Hủy
