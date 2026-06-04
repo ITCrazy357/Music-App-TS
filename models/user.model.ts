@@ -5,7 +5,12 @@ const userSchema = new mongoose.Schema(
     fullName: String,
     email: String,
     password: String,
-    role_id: String,
+    role_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Role",
+    },
+    avatar: String,
+    description: String,
     status: String,
     deleted: {
       type: Boolean,

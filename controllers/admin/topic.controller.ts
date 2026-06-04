@@ -140,15 +140,22 @@ export const detail = async (req: Request, res: Response) => {
 export const changeStatus = async (req: Request, res: Response) => {
   try {
     const { status, id } = req.params;
-    await Topic.updateOne({ _id: id }, { status });
-    req.flash("success", "Cập nhật trạng thái thành công.");
-    res.redirect("back");
+    const updateBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+    };
+
+    await Topic.updateOne(
+      { _id: id },
+      { status: status, $push: { updatedBy: updateBy } },
+    );
+    req.flash("success", "Đã thay đổi trạng thái.");
+    res.redirect(req.get("referer") || `/${systemConfig.prefixAdmin}/topics`);
   } catch (error) {
-    req.flash("error", "Không thể cập nhật trạng thái.");
-    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
+    req.flash("error", "Không thể thay đổi trạng thái.");
+    res.redirect(req.get("referer") || `/${systemConfig.prefixAdmin}/topics`);
   }
 };
-
 // [DELETE] /admin/topics/delete/:id
 export const deleteItem = async (req: Request, res: Response) => {
   try {

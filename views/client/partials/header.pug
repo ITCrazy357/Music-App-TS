@@ -50,6 +50,11 @@ header.header.py-3
               .inner-list
 
           if user
+            if role && role.title === 'Admin'
+              a(href=`/${prefixAdmin}/dashboard`, class="inner-actions__item d-flex align-items-center gap-2", title="Quản trị")
+                i.fa-solid.fa-user-shield
+                span Quản trị
+                
             a(href="/auth/info", class="inner-actions__item d-flex align-items-center gap-2", title="Thông tin cá nhân")
               i.fa-solid.fa-user
               span #{user.fullName}
