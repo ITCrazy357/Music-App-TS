@@ -74,11 +74,15 @@ block main
                         .col-md-6
                             .form-group
                                 label(for="avatar") Ảnh bìa
-                                input.form-control-file(type="file" id="avatar" name="avatar" accept="image/*")
+                                input.form-control-file.upload-image-input(type="file" id="avatar" name="avatar" accept="image/*")
+                                    img.admin-preview-image.upload-image-preview(src="#" alt="Ảnh bìa sẽ hiển thị ở đây" style="display: none; max-width: 200px; margin-top: 10px;")
                         .col-md-6
                             .form-group
                                 label(for="audio") File audio
-                                input.form-control-file(type="file" id="audio" name="audio" accept="audio/*")
+                                input.form-control-file.upload-audio-input(type="file" id="audio" name="audio" accept="audio/*")
+                                    audio.admin-preview-audio.upload-audio-preview(controls class="admin-preview-audio")
+                                        source(src="#")
+                                        | Trình duyệt của bạn không hỗ trợ thẻ audio.
                     .form-group.mt-4
                         button(type="submit" class="btn btn-primary")
                             i.fa-solid.fa-plus.mr-1

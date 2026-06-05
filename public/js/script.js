@@ -196,3 +196,37 @@ if (boxSearch) {
     }
   });
 }
+
+// Admin - Preview Image
+const uploadImageInput = document.querySelector(".upload-image-input");
+const uploadImagePreview = document.querySelector(".upload-image-preview");
+
+if (uploadImageInput && uploadImagePreview) {
+  uploadImageInput.addEventListener("change", (e) => {
+    if (e.target.files.length) {
+      const image = URL.createObjectURL(e.target.files[0]);
+      uploadImagePreview.src = image;
+      uploadImagePreview.style.display = "block";
+    }
+  });
+}
+
+// Admin - Preview Audio
+const uploadAudioInput = document.querySelector(".upload-audio-input");
+const uploadAudioPreview = document.querySelector(".upload-audio-preview");
+
+if (uploadAudioInput && uploadAudioPreview) {
+  const source = uploadAudioPreview.querySelector("source");
+  uploadAudioInput.addEventListener("change", (e) => {
+    if (e.target.files.length) {
+      const audio = URL.createObjectURL(e.target.files[0]);
+      if (source) {
+        source.src = audio;
+      } else {
+        uploadAudioPreview.src = audio;
+      }
+      uploadAudioPreview.load();
+      uploadAudioPreview.style.display = "block";
+    }
+  });
+}

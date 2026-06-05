@@ -58,17 +58,15 @@ block main
                         .col-md-6
                             .form-group
                                 label(for="avatar") Ảnh bìa
-                                input.form-control-file(type="file" id="avatar" name="avatar" accept="image/*")
-                                if song.avatar
-                                    img.admin-preview-image(src=song.avatar)
+                                input.form-control-file.upload-image-input(type="file" id="avatar" name="avatar" accept="image/*")
+                                img.admin-preview-image.upload-image-preview(src="")
                         .col-md-6
                             .form-group
                                 label(for="audio") File audio
-                                input.form-control-file(type="file" id="audio" name="audio" accept="audio/*")
-                                if song.audio
-                                    audio(controls class="admin-preview-audio")
-                                        source(src=song.audio)
-                                        | Trình duyệt của bạn không hỗ trợ thẻ audio.
+                                input.form-control-file.upload-audio-input(type="file" id="audio" name="audio" accept="audio/*")
+                                audio.admin-preview-audio.upload-audio-preview(controls class="admin-preview-audio")
+                                    source(src="")
+                                    | Trình duyệt của bạn không hỗ trợ thẻ audio.
                     .form-group.mt-4
                         button(type="submit" class="btn btn-warning")
                             i.fa-solid.fa-save.mr-1
