@@ -268,7 +268,7 @@
 }
 
 .topic-index-page .btn-danger:hover {
-  background: #ef4444;
+  background: rgba(239, 68, 68, 0.3);
 
   color: #fff;
 }
@@ -307,5 +307,4 @@
   .topic-index-page .btn-sm {
     margin-bottom: 5px;
   }
-
 }

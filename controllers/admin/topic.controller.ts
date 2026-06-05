@@ -14,7 +14,7 @@ export const index = async (req: Request, res: Response) => {
     });
   } catch (error) {
     req.flash("error", "Không tải được danh sách chủ đề.");
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   }
 };
 
@@ -31,7 +31,7 @@ export const createPost = async (req: Request, res: Response) => {
     const { title, description, status } = req.body;
     if (!title) {
       req.flash("error", "Tiêu đề là bắt buộc.");
-      return res.redirect("back");
+      return res.redirect(`/${systemConfig.prefixAdmin}/topics`);
     }
 
     const payload: any = {
@@ -45,14 +45,19 @@ export const createPost = async (req: Request, res: Response) => {
       payload.avatar = req.body.avatar;
     }
 
-    const topic = new Topic(payload);
+    const createdBy = {
+      account_id: res.locals.user._id,
+      createdAt: new Date(),
+    };
+
+    const topic = new Topic(...payload, createdBy);
     await topic.save();
     req.flash("success", "Thêm chủ đề thành công.");
     res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   } catch (error) {
     console.error(error);
     req.flash("error", "Không thể thêm mới chủ đề.");
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   }
 };
 
@@ -83,9 +88,14 @@ export const editPatch = async (req: Request, res: Response) => {
     const id = req.params.id;
     const { title, description, status } = req.body;
 
+    const updateBy = {
+      account_id: res.locals.user._id,
+      updatedAt: new Date(),
+    };
+
     if (!title) {
       req.flash("error", "Tiêu đề là bắt buộc.");
-      return res.redirect("back");
+      return res.redirect(`/${systemConfig.prefixAdmin}/topics`);
     }
 
     const payload: any = {
@@ -99,13 +109,16 @@ export const editPatch = async (req: Request, res: Response) => {
       payload.avatar = req.body.avatar;
     }
 
-    await Topic.updateOne({ _id: id }, payload);
+    await Topic.updateOne(
+      { _id: id },
+      { ...payload, $push: { updatedBy: updateBy } },
+    );
     req.flash("success", "Cập nhật chủ đề thành công.");
     res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   } catch (error) {
     console.error(error);
     req.flash("error", "Không thể cập nhật chủ đề.");
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   }
 };
 
@@ -123,7 +136,7 @@ export const detail = async (req: Request, res: Response) => {
 
     if (!topic) {
       req.flash("error", "Chủ đề không tồn tại.");
-      return res.redirect(`/${systemConfig.prefixAdmin}/`);
+      return res.redirect(`/${systemConfig.prefixAdmin}/topics`);
     }
 
     res.render("admin/pages/topics/detail", {
@@ -141,7 +154,7 @@ export const changeStatus = async (req: Request, res: Response) => {
   try {
     const { status, id } = req.params;
     const updateBy = {
-      account_id: res.locals.user.id,
+      account_id: res.locals.user._id,
       updatedAt: new Date(),
     };
 
@@ -160,12 +173,20 @@ export const changeStatus = async (req: Request, res: Response) => {
 export const deleteItem = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    await Topic.updateOne({ _id: id }, { deleted: true, deleteAt: new Date() });
+
+    const deletedBy = {
+      account_id: res.locals.user._id,
+      deletedAt: new Date(),
+    };
+    await Topic.updateOne(
+      { _id: id },
+      { deleted: true, deleteAt: new Date(), $push: { deletedBy: deletedBy } },
+    );
     req.flash("success", "Chủ đề đã được chuyển vào thùng rác.");
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   } catch (error) {
     req.flash("error", "Không thể xóa chủ đề.");
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   }
 };
 
@@ -180,7 +201,7 @@ export const trash = async (req: Request, res: Response) => {
     });
   } catch (error) {
     req.flash("error", "Không thể tải thùng rác chủ đề.");
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   }
 };
 
@@ -190,10 +211,10 @@ export const restore = async (req: Request, res: Response) => {
     const id = req.params.id;
     await Topic.updateOne({ _id: id }, { deleted: false });
     req.flash("success", "Đã khôi phục chủ đề.");
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   } catch (error) {
     req.flash("error", "Không thể khôi phục chủ đề.");
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   }
 };
 
@@ -201,11 +222,12 @@ export const restore = async (req: Request, res: Response) => {
 export const deletePermanent = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
+
     await Topic.deleteOne({ _id: id });
     req.flash("success", "Đã xóa vĩnh viễn chủ đề.");
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   } catch (error) {
     req.flash("error", "Không thể xóa vĩnh viễn chủ đề.");
-    res.redirect("back");
+    res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   }
 };

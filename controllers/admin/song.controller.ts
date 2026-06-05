@@ -14,7 +14,7 @@ export const index = async (req: Request, res: Response) => {
     });
   } catch (error) {
     req.flash("error", "Không tải được danh sách bài hát.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   }
 };
 
@@ -41,12 +41,12 @@ export const createPost = async (req: Request, res: Response) => {
 
     if (!title || !topicId || !singerId) {
       req.flash("error", "Tiêu đề, chủ đề và ca sĩ là bắt buộc.");
-      return res.redirect("back");
+      return res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
     }
 
     if (!req.body.audio) {
       req.flash("error", "File audio là bắt buộc.");
-      return res.redirect("back");
+      return res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
     }
 
     const payload: any = {
@@ -67,7 +67,11 @@ export const createPost = async (req: Request, res: Response) => {
       payload.audio = req.body.audio;
     }
 
-    const song = new Song(payload);
+    const createdBy = {
+      accountId: res.locals.user._id,
+      createdAt: new Date(),
+    };
+    const song = new Song({ ...payload, createdBy });
     await song.save();
 
     req.flash("success", "Thêm mới bài hát thành công.");
@@ -75,7 +79,7 @@ export const createPost = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     req.flash("error", "Không thể thêm mới bài hát.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   }
 };
 
@@ -114,12 +118,20 @@ export const editPatch = async (req: Request, res: Response) => {
 
     if (!title || !topicId || !singerId) {
       req.flash("error", "Tiêu đề, chủ đề và ca sĩ là bắt buộc.");
-      return res.redirect("back");
+      return res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
+    }
+
+    let baseSlug = req.body.slug ? convertToSlug(req.body.slug.trim()) : convertToSlug(title);
+    let slug = baseSlug;
+    let count = 1;
+    while (await Song.exists({ slug: slug, _id: { $ne: id } })) {
+      slug = `${baseSlug}-${count}`;
+      count++;
     }
 
     const payload: any = {
       title,
-      slug: convertToSlug(title),
+      slug: slug,
       topicId,
       singerId,
       description,
@@ -127,6 +139,15 @@ export const editPatch = async (req: Request, res: Response) => {
       status: status || "inactive",
     };
 
+    const updatedSong = {
+      accountId: res.locals.user._id,
+      updatedAt: new Date(),
+    };
+
+    if (!updatedSong) {
+      req.flash("error", "Bài hát không tồn tại.");
+      return res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
+    }
     if (req.body.avatar) {
       payload.avatar = req.body.avatar;
     }
@@ -135,13 +156,19 @@ export const editPatch = async (req: Request, res: Response) => {
       payload.audio = req.body.audio;
     }
 
-    await Song.updateOne({ _id: id }, payload);
+    await Song.updateOne(
+      { _id: id },
+      {
+        ...payload,
+        $push: { updatedBy: updatedSong },
+      }
+    );
     req.flash("success", "Cập nhật bài hát thành công.");
     res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   } catch (error) {
     console.error(error);
     req.flash("error", "Không thể cập nhật bài hát.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   }
 };
 
@@ -176,12 +203,21 @@ export const detail = async (req: Request, res: Response) => {
 export const changeStatus = async (req: Request, res: Response) => {
   try {
     const { status, id } = req.params;
-    await Song.updateOne({ _id: id }, { status });
+
+    const updatedSong = {
+      accountId: res.locals.user._id,
+      updatedAt: new Date(),
+    };
+
+    await Song.updateOne(
+      { _id: id },
+      { status, $push: { updatedBy: updatedSong } },
+    );
     req.flash("success", "Cập nhật trạng thái thành công.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   } catch (error) {
     req.flash("error", "Không thể cập nhật trạng thái.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   }
 };
 
@@ -189,12 +225,19 @@ export const changeStatus = async (req: Request, res: Response) => {
 export const deleteItem = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    await Song.updateOne({ _id: id }, { deleted: true, deleteAt: new Date() });
+    const deletedBy = {
+      accountId: res.locals.user._id,
+      deletedAt: new Date(),
+    };
+    await Song.updateOne(
+      { _id: id },
+      { deleted: true, $push: { deletedBy: deletedBy } },
+    );
     req.flash("success", "Bài hát đã được chuyển vào thùng rác.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   } catch (error) {
     req.flash("error", "Không thể xóa bài hát.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   }
 };
 
@@ -205,10 +248,17 @@ export const trash = async (req: Request, res: Response) => {
 
     const items = await Promise.all(
       songs.map(async (song) => {
-        const topic = await Topic.findOne({ _id: song.topicId, deleted: false }).select("title");
-        const singer = await Singer.findOne({ _id: song.singerId, deleted: false }).select("fullName");
+        const topic = await Topic.findOne({
+          _id: song.topicId,
+          deleted: false,
+        }).select("title");
+        const singer = await Singer.findOne({
+          _id: song.singerId,
+          deleted: false,
+        }).select("fullName");
         return {
           ...song.toObject(),
+          id: song.id,
           topicName: topic ? topic.title : "-",
           singerName: singer ? singer.fullName : "-",
         } as any;
@@ -221,7 +271,7 @@ export const trash = async (req: Request, res: Response) => {
     });
   } catch (error) {
     req.flash("error", "Không thể tải thùng rác bài hát.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   }
 };
 
@@ -231,10 +281,10 @@ export const restore = async (req: Request, res: Response) => {
     const id = req.params.id;
     await Song.updateOne({ _id: id }, { deleted: false });
     req.flash("success", "Đã khôi phục bài hát.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   } catch (error) {
     req.flash("error", "Không thể khôi phục bài hát.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   }
 };
 
@@ -244,9 +294,9 @@ export const deletePermanent = async (req: Request, res: Response) => {
     const id = req.params.id;
     await Song.deleteOne({ _id: id });
     req.flash("success", "Đã xóa vĩnh viễn bài hát.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   } catch (error) {
     req.flash("error", "Không thể xóa bài hát vĩnh viễn.");
-    res.redirect("back");
+    res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   }
 };

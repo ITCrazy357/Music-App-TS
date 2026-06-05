@@ -17,10 +17,16 @@
 @import url("./layouts/sidebar.css");
 @import url("./layouts/footer.css");
 
-/* ========== PAGES ========== */
+/* ========== TOPIC ========== */
 @import url("./pages/topics/index.css");
 @import url("./pages/topics/edit.css");
 @import url("./pages/topics/detail.css");
 
 /* ========== SONGS ============ */
 @import url("./pages/songs/index.css");
+@import url("./pages/songs/edit.css");
+@import url("./pages/songs/detail.css");
+
+/* TRASH */
+@import url("./pages/trash/trash.topic.css");
+@import url("./pages/trash/trash.song.css");

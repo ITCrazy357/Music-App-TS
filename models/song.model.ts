@@ -19,6 +19,24 @@ const songSchema = new mongoose.Schema(
     audio: String,
     status: String,
     slug: String,
+    createdBy: {
+      account_id: String,
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+    updatedBy: {
+      account_id: String,
+      updatedAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+    deletedBy: {
+      account_id: String,
+      deletedAt: Date,
+    },
     deleted: {
       type: Boolean,
       default: false,

@@ -41,7 +41,7 @@ block main
                             img(src=song.avatar alt=song.title)
 
                         //- Audio Player
-                        div(id="aplayer" data-song=song data-singer=singer)
+                        div(id="aplayer" data-song=song ? JSON.stringify(song) : '' data-singer=singer ? JSON.stringify(singer) : '')
 
                     .inner-desc
                         .inner-label Mô tả

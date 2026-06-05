@@ -18,11 +18,11 @@ export const uploadFields = async (req: Request, res: Response, next: NextFuncti
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     try {
       if (files['avatar'] && files['avatar'][0]) {
-        const resultAvatar = await uploadToCloudinary(files['avatar'][0].buffer);
+        const resultAvatar = await uploadToCloudinary(files['avatar'][0].buffer, "image");
         req.body.avatar = resultAvatar;
       }
       if (files['audio'] && files['audio'][0]) {
-        const resultAudio = await uploadToCloudinary(files['audio'][0].buffer);
+        const resultAudio = await uploadToCloudinary(files['audio'][0].buffer, "video");
         req.body.audio = resultAudio;
       }
     } catch (error) {

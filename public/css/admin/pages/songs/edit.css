@@ -1,0 +1,184 @@
+/* ========================================
+   SONG EDIT PAGE (ADMIN)
+======================================== */
+
+.song-edit-page {
+  width: 100%;
+}
+
+/* FIX LAYOUT CONFLICT WITHOUT !IMPORTANT */
+/* Overrides height: 100% from .card in cards.css */
+.card.admin-form-card {
+  height: auto;
+  
+  /* Glassmorphism */
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Header Card */
+.card.admin-form-card .card-header {
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 24px 30px;
+}
+
+.card.admin-form-card .card-body {
+  padding: 30px;
+}
+
+/* Form Styles */
+.admin-form .form-group {
+  margin-bottom: 25px;
+}
+
+.admin-form label {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* Form Input - override global forms.css which uses !important */
+.admin-form .form-control {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
+  border-radius: 12px;
+  padding: 14px 18px;
+  transition: all 0.3s ease;
+  height: auto;
+}
+
+.admin-form .form-control:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.admin-form .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Select */
+.admin-form select.form-control option {
+  background: #0f172a;
+  color: #fff;
+}
+
+/* Textarea */
+.admin-form textarea.form-control {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* File Upload & Preview */
+.admin-form .form-control-file {
+  width: 100%;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.admin-preview-image {
+  margin-top: 15px;
+  width: 180px;
+  max-width: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  display: block;
+}
+
+.admin-preview-audio {
+  display: block;
+  width: 100%;
+  margin-top: 15px;
+}
+
+/* Radio Buttons */
+.admin-form .form-check {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.admin-form .form-check-input {
+  accent-color: var(--primary);
+  margin-right: 8px;
+  background: transparent;
+}
+
+.admin-form .form-check-label {
+  color: #fff;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+/* Buttons - Matches topics/index.css style */
+.admin-form .btn {
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-form .btn:hover {
+  transform: translateY(-2px);
+}
+
+.admin-form .btn-warning {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
+}
+
+.admin-form .btn-warning:hover {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.admin-form .btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.admin-form .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* Empty State / Alerts */
+.admin-form .alert-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-radius: 14px;
+  padding: 15px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .card.admin-form-card .card-body {
+    padding: 20px;
+  }
+  .admin-form .btn {
+    width: 100%;
+    margin-bottom: 10px;
+    justify-content: center;
+  }
+  .admin-form .btn-secondary {
+    margin-left: 0 !important;
+  }
+}

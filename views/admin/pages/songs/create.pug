@@ -32,6 +32,16 @@ block main
                                 )
                         .col-md-6
                             .form-group
+                                label(for="slug") Slug
+                                input(
+                                    type="text"
+                                    class="form-control"
+                                    id="slug"
+                                    name="slug"
+                                    placeholder="Tự động tạo từ tiêu đề nếu để trống"
+                                )
+                        .col-md-6
+                            .form-group
                                 label(for="topicId") Chủ đề
                                 select.form-control(name="topicId" id="topicId" required)
                                     option(value="") Chọn chủ đề

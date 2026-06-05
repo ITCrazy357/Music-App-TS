@@ -22,6 +22,10 @@ block main
                                 input.form-control(type="text" id="title" name="title" required value=song.title)
                         .col-md-6
                             .form-group
+                                label(for="slug") Slug
+                                input.form-control(type="text" id="slug" name="slug" placeholder="Tự động tạo từ tiêu đề nếu để trống" value=song.slug)
+                        .col-md-6
+                            .form-group
                                 label(for="topicId") Chủ đề
                                 select.form-control(name="topicId" id="topicId" required)
                                     option(value="") Chọn chủ đề
@@ -62,7 +66,7 @@ block main
                                 label(for="audio") File audio
                                 input.form-control-file(type="file" id="audio" name="audio" accept="audio/*")
                                 if song.audio
-                                    audio.controls.admin-preview-audio
+                                    audio(controls class="admin-preview-audio")
                                         source(src=song.audio)
                                         | Trình duyệt của bạn không hỗ trợ thẻ audio.
                     .form-group.mt-4

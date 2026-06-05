@@ -1,23 +1,98 @@
-/* ========== LAYOUT ========== */
-.body-layout {
+/* ==================================
+   DASHBOARD
+================================== */
+
+.dashboard-card {
+  background: rgba(15, 23, 42, 0.75) !important;
+
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+  border-radius: 24px;
+
+  overflow: hidden;
+
+  min-height: 260px;
+
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.dashboard-card .card-header {
+  background: rgba(255, 255, 255, 0.04) !important;
+
+  color: #ffffff !important;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  font-size: 18px;
+
+  font-weight: 600;
+
+  padding: 18px 24px;
+}
+
+.dashboard-card .card-body {
+  color: #ffffff;
+
+  padding: 28px 24px;
+}
+
+.dashboard-number {
+  font-size: 52px;
+
+  font-weight: 800;
+
+  line-height: 1;
+
+  margin-bottom: 24px;
+
+  color: #60a5fa;
+}
+
+.dashboard-stats {
   display: flex;
-  flex: 1;
-  padding-top: var(--header-height);
-  min-height: 100vh;
+
+  flex-direction: column;
+
+  gap: 12px;
 }
 
-/* ========== MAIN ========== */
-.main {
-  flex: 1;
-  margin-left: var(--sider-width);
-  padding: 30px;
-  width: calc(100% - var(--sider-width));
+.dashboard-stats p {
+  margin: 0;
+
+  font-size: 15px;
+
+  font-weight: 500;
 }
 
-@media (max-width: 991px) {
-  .main {
-    margin-left: 0;
-    width: 100%;
-    padding: 20px;
+.active-count {
+  color: #22c55e;
+}
+
+.inactive-count {
+  color: #ef4444;
+}
+
+/* ==================================
+   MOBILE
+================================== */
+
+@media (max-width: 992px) {
+  .dashboard-number {
+    font-size: 42px;
   }
 }
