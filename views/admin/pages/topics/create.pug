@@ -38,10 +38,15 @@ block main
                         label(for="avatar") Hình ảnh
                         input(
                             type="file"
-                            class="form-control-file"
+                            class="form-control-file upload-image-input"
                             id="avatar"
                             name="avatar"
                             accept="image/*"
+                        )
+                        img(
+                            src="#"
+                            class="admin-preview-image upload-image-preview"
+                            style="display: none; max-width: 200px; margin-top: 10px;"
                         )
                         
                     div(class="form-group form-check form-check-inline")

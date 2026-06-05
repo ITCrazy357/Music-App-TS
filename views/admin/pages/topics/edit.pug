@@ -78,12 +78,15 @@ block main
                                 type="file"
                                 name="avatar"
                                 accept="image/*"
-                                class="form-control-file"
+                                class="form-control-file upload-image-input"
                             )
 
-                            if topic.avatar
-                                .image-preview
-                                    img(src=topic.avatar)
+                            .image-preview
+                                img(
+                                    src=(topic.avatar ? topic.avatar : "")
+                                    class="upload-image-preview"
+                                    style=(topic.avatar ? "max-width: 200px; margin-top: 10px;" : "display: none; max-width: 200px; margin-top: 10px;")
+                                )
 
                 .action-buttons
 
