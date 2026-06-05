@@ -2,53 +2,60 @@ extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 
 block main
-    .singer-detail
-        .container.my-3
+    .singer-detail.modern-player
+        .container.my-4
             .row
-                .col-12
-                    .inner-title #{song.title}
+                // Left Column: Player Info & Controls
+                .col-lg-5.mb-4
+                    .player-left-panel
+                        .inner-play
+                            .inner-avatar
+                                img(src=song.avatar alt=song.title)
 
-                    .inner-actions
+                        .song-info-panel
+                            .inner-title #{song.title}
+                            .inner-actions
+                                div(class="inner-action inner-singer")
+                                    i(class="fa-solid fa-microphone-lines")
+                                    | #{singer.fullName}
 
-                        div(class="inner-action inner-singer")
-                            i(class="fa-solid fa-microphone-lines")
-                            | #{singer.fullName}
+                                div(class="inner-action inner-topic")
+                                    i(class="fa-solid fa-music")
+                                    | #{song.topicId.title} 
 
-                        div(class="inner-action inner-topic")
-                            i(class="fa-solid fa-music")
-                            | #{song.topicId.title} 
+                                div(class=`inner-action inner-like ${isLiked ? "active" : ""}`
+                                    button-like=song.id)
+                                    i(class="fa-regular fa-thumbs-up")
+                                    span #{song.likes.length} lượt thích
 
-                        div(class=`inner-action inner-like ${isLiked ? "active" : ""}`
-                            button-like=song.id)
-                            i(class="fa-regular fa-thumbs-up")
-                            span #{song.likes.length} lượt thích
+                                div(class=`inner-action inner-heart ${isFavorite ? "active" : ""}`
+                                     button-favorite=song.id)
+                                    i(class="fa-regular fa-heart")
+                                    span Yêu thích
+                                
+                                div(class="inner-action inner-time")
+                                    i(class="fa-regular fa-clock")
+                                    span #{song.timestamps || ""}
 
-                        div(class=`inner-action inner-heart ${isFavorite ? "active" : ""}`
-                             button-favorite=song.id)
-                            i(class="fa-regular fa-heart")
-                            | Bài hát yêu thích
-                        
-                        div(class="inner-action inner-time")
-                            i(class="fa-regular fa-clock")
-                            span #{song.timestamps}
+                                div(class="inner-action inner-listen")
+                                    i(class="fa-solid fa-headphones")
+                                    span #{song.listen} lượt nghe
 
-                        div(class="inner-action inner-listen")
-                            i(class="fa-solid fa-headphones")
-                            | #{song.listen} lượt nghe
+                        // Audio Player
+                        .player-wrapper
+                            div(id="aplayer" data-song=song ? JSON.stringify(song) : '' data-singer=singer ? JSON.stringify(singer) : '')
 
-                    .inner-play
-                        .inner-avatar
-                            img(src=song.avatar alt=song.title)
+                        if song.description
+                            .inner-desc.mt-4
+                                .inner-label Mô tả
+                                .inner-text
+                                    | #{song.description}
 
-                        //- Audio Player
-                        div(id="aplayer" data-song=song ? JSON.stringify(song) : '' data-singer=singer ? JSON.stringify(singer) : '')
-
-                    .inner-desc
-                        .inner-label Mô tả
-                        .inner-text
-                            | #{song.description}
-
-                    .inner-desc
-                        .inner-label Lời bài hát
-                        .inner-text
-                            | #{song.lyrics || "Nội dung lời bài hát..."}
+                // Right Column: Lyrics
+                .col-lg-7
+                    .lyrics-panel
+                        .lyrics-header 
+                            i(class="fa-solid fa-align-left mr-2")
+                            span Lời bài hát
+                        .lyrics-content(id="lyrics-container" data-lyrics=song.lyrics || "")
+                            // Lyrics will be rendered here by JS

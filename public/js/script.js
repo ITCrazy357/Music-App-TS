@@ -23,13 +23,15 @@ if (aplayer) {
 
   const avatar = document.querySelector(".singer-detail .inner-avatar img");
 
-  ap.on("play", function () {
-    avatar.style.animationPlayState = "running";
-  });
+  if (avatar) {
+    ap.on("play", function () {
+      avatar.style.animationPlayState = "running";
+    });
 
-  ap.on("pause", function () {
-    avatar.style.animationPlayState = "paused";
-  });
+    ap.on("pause", function () {
+      avatar.style.animationPlayState = "paused";
+    });
+  }
 
   ap.on("ended", function () {
     const link = `/songs/listen/${dataSong._id}`;
@@ -42,11 +44,114 @@ if (aplayer) {
       .then((res) => res.json())
       .then((data) => {
         const listenElement = document.querySelector(
-          ".inner-detail .inner-listen span",
+          ".inner-action.inner-listen span",
         );
-        listenElement.innerHTML = ` ${data.listen} lượt nghe`;
+        if (listenElement) {
+          listenElement.innerHTML = ` ${data.listen} lượt nghe`;
+        }
       });
   });
+
+  // ===== CUSTOM LYRICS SYNC LOGIC =====
+  const lyricsContainer = document.querySelector("#lyrics-container");
+  if (lyricsContainer) {
+    const rawLyrics = lyricsContainer.getAttribute("data-lyrics");
+
+    // Check if it's LRC format (contains [mm:ss.xx] or [mm:ss])
+    const lrcRegex = /\[\d{2}:\d{2}(?:\.\d{1,3})?\]/;
+    const isLrc = lrcRegex.test(rawLyrics);
+
+    if (isLrc) {
+      // Parse LRC
+      const lines = rawLyrics.split("\n");
+      const parsedLyrics = [];
+      const timeRegex = /\[(\d{2}):(\d{2})(?:\.(\d{1,3}))?\]/;
+
+      lines.forEach((line) => {
+        const match = timeRegex.exec(line);
+        if (match) {
+          const minutes = parseInt(match[1]);
+          const seconds = parseInt(match[2]);
+          const msStr = match[3] || "0";
+          const milliseconds = parseInt(msStr.padEnd(3, '0'));
+          const timeInSeconds = minutes * 60 + seconds + milliseconds / 1000;
+          const text = line.replace(timeRegex, "").trim();
+
+          parsedLyrics.push({ time: timeInSeconds, text: text || "&nbsp;" });
+        }
+      });
+
+      // Render lyrics HTML
+      if (parsedLyrics.length > 0) {
+        lyricsContainer.innerHTML = parsedLyrics
+          .map(
+            (lyric, index) =>
+              `<div class="lyric-line" data-index="${index}" data-time="${lyric.time}">${lyric.text}</div>`,
+          )
+          .join("");
+
+        const lyricElements = lyricsContainer.querySelectorAll(".lyric-line");
+        let currentIndex = -1;
+
+        // Click to seek
+        lyricElements.forEach((el) => {
+          el.addEventListener("click", () => {
+            const time = parseFloat(el.getAttribute("data-time"));
+            ap.seek(time);
+            ap.play();
+          });
+        });
+
+        // Sync with audio time
+        ap.on("timeupdate", () => {
+          const currentTime = ap.audio.currentTime;
+
+          // Find current lyric index
+          let newIndex = -1;
+          for (let i = 0; i < parsedLyrics.length; i++) {
+            if (currentTime >= parsedLyrics[i].time) {
+              newIndex = i;
+            } else {
+              break;
+            }
+          }
+
+          if (newIndex !== currentIndex && newIndex !== -1) {
+            // Remove old classes
+            lyricElements.forEach((el, idx) => {
+              el.classList.remove("active");
+              if (idx < newIndex) {
+                el.classList.add("passed");
+              } else {
+                el.classList.remove("passed");
+              }
+            });
+
+            // Add active class
+            const currentEl = lyricElements[newIndex];
+            currentEl.classList.add("active");
+
+            // Auto scroll to center
+            const containerHeight = lyricsContainer.clientHeight;
+            const elOffsetTop = currentEl.offsetTop;
+            const elHeight = currentEl.clientHeight;
+
+            lyricsContainer.scrollTo({
+              top: elOffsetTop - containerHeight / 2 + elHeight / 2,
+              behavior: "smooth",
+            });
+
+            currentIndex = newIndex;
+          }
+        });
+      } else {
+        lyricsContainer.innerHTML = `<div class="inner-text" style="color: var(--white); line-height: 1.8; font-size: 16px; white-space: pre-wrap;">${rawLyrics}</div>`;
+      }
+    } else {
+      // Not LRC, just render plain text with nice formatting
+      lyricsContainer.innerHTML = `<div class="inner-text" style="color: rgba(255,255,255,0.8); line-height: 2.2; font-size: 18px; white-space: pre-wrap; text-align: center; padding: 20px;">${rawLyrics || "Đang cập nhật lời bài hát..."}</div>`;
+    }
+  }
 }
 
 // Show Alert
