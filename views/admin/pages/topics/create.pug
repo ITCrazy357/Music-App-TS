@@ -24,11 +24,21 @@ block main
                             name="title"
                             required
                         )
+                        
+                    div(class="form-group")
+                        label(for="slug") Slug
+                        input(
+                            type="text"
+                            class="form-control"
+                            id="slug"
+                            name="slug"
+                            placeholder="Tự động tạo từ tiêu đề nếu để trống"
+                        )
                     
                     div(class="form-group")
                         label(for="description") Mô tả
                         textarea(
-                            class="form-control"
+                            class="form-control textarea-mce"
                             id="description"
                             name="description"
                             rows="5"

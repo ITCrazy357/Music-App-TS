@@ -73,7 +73,7 @@ if (aplayer) {
           const minutes = parseInt(match[1]);
           const seconds = parseInt(match[2]);
           const msStr = match[3] || "0";
-          const milliseconds = parseInt(msStr.padEnd(3, '0'));
+          const milliseconds = parseInt(msStr.padEnd(3, "0"));
           const timeInSeconds = minutes * 60 + seconds + milliseconds / 1000;
           const text = line.replace(timeRegex, "").trim();
 
@@ -149,7 +149,7 @@ if (aplayer) {
       }
     } else {
       // Not LRC, just render plain text with nice formatting
-      lyricsContainer.innerHTML = `<div class="inner-text" style="color: rgba(255,255,255,0.8); line-height: 2.2; font-size: 18px; white-space: pre-wrap; text-align: center; padding: 20px;">${rawLyrics || "Đang cập nhật lời bài hát..."}</div>`;
+      lyricsContainer.innerHTML = `<div class="inner-text" style="color: rgba(255,255,255,0.8); line-height: 2.2; font-size: 16 px; white-space: pre-wrap; text-align: center; padding: 20px;">${rawLyrics || "Đang cập nhật lời bài hát..."}</div>`;
     }
   }
 }

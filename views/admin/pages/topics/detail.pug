@@ -56,7 +56,7 @@ block main
                             span Mô tả chủ đề
 
                         .description-content
-                            = topic.description || 'Không có mô tả nào cho chủ đề này.'
+                            != topic.description || 'Không có mô tả nào cho chủ đề này.'
 
                 .topic-actions
 

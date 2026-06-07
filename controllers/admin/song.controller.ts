@@ -3,6 +3,7 @@ import Song from "../../models/song.model";
 import Topic from "../../models/topic.model";
 import Singer from "../../models/singer.model";
 import { convertToSlug } from "../../helpers/convertToSlug";
+import sanitizeHtml from "sanitize-html";
 
 //[GET] /admin/songs
 export const index = async (req: Request, res: Response) => {
@@ -49,9 +50,17 @@ export const createPost = async (req: Request, res: Response) => {
       return res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
     }
 
+    let baseSlug = req.body.slug ? convertToSlug(req.body.slug.trim()) : convertToSlug(title);
+    let slug = baseSlug;
+    let count = 1;
+    while (await Song.exists({ slug: slug })) {
+      slug = `${baseSlug}-${count}`;
+      count++;
+    }
+
     const payload: any = {
       title,
-      slug: convertToSlug(title),
+      slug: slug,
       topicId,
       singerId,
       description,
@@ -68,7 +77,7 @@ export const createPost = async (req: Request, res: Response) => {
     }
 
     const createdBy = {
-      accountId: res.locals.user._id,
+      accountId: res.locals.user ? res.locals.user._id : "mockId",
       createdAt: new Date(),
     };
     const song = new Song({ ...payload, createdBy });
@@ -134,13 +143,19 @@ export const editPatch = async (req: Request, res: Response) => {
       slug: slug,
       topicId,
       singerId,
-      description,
-      lyrics,
+      description: description ? sanitizeHtml(description, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+        allowedAttributes: {
+          ...sanitizeHtml.defaults.allowedAttributes,
+          img: ['src', 'alt', 'width', 'height', 'style', 'class']
+        }
+      }) : "",
+      lyrics: lyrics ? sanitizeHtml(lyrics, { allowedTags: [], allowedAttributes: {} }) : "",
       status: status || "inactive",
     };
 
     const updatedSong = {
-      accountId: res.locals.user._id,
+      accountId: res.locals.user ? res.locals.user._id : "mockId",
       updatedAt: new Date(),
     };
 
@@ -160,7 +175,7 @@ export const editPatch = async (req: Request, res: Response) => {
       { _id: id },
       {
         ...payload,
-        $push: { updatedBy: updatedSong },
+        updatedBy: updatedSong,
       }
     );
     req.flash("success", "Cập nhật bài hát thành công.");
@@ -205,13 +220,13 @@ export const changeStatus = async (req: Request, res: Response) => {
     const { status, id } = req.params;
 
     const updatedSong = {
-      accountId: res.locals.user._id,
+      accountId: res.locals.user ? res.locals.user._id : "mockId",
       updatedAt: new Date(),
     };
 
     await Song.updateOne(
       { _id: id },
-      { status, $push: { updatedBy: updatedSong } },
+      { status, updatedBy: updatedSong },
     );
     req.flash("success", "Cập nhật trạng thái thành công.");
     res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
@@ -226,12 +241,12 @@ export const deleteItem = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const deletedBy = {
-      accountId: res.locals.user._id,
+      accountId: res.locals.user ? res.locals.user._id : "mockId",
       deletedAt: new Date(),
     };
     await Song.updateOne(
       { _id: id },
-      { deleted: true, $push: { deletedBy: deletedBy } },
+      { deleted: true, deletedBy: deletedBy },
     );
     req.flash("success", "Bài hát đã được chuyển vào thùng rác.");
     res.redirect(`/${req.app.locals.prefixAdmin}/songs`);

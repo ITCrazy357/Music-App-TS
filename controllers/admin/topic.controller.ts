@@ -2,6 +2,7 @@ import { Response, Request } from "express";
 import Topic from "../../models/topic.model";
 import { convertToSlug } from "../../helpers/convertToSlug";
 import { systemConfig } from "../../config/system";
+import sanitizeHtml from "sanitize-html";
 
 //[GET] /admin/topics
 export const index = async (req: Request, res: Response) => {
@@ -34,11 +35,27 @@ export const createPost = async (req: Request, res: Response) => {
       return res.redirect(`/${systemConfig.prefixAdmin}/topics`);
     }
 
+    let baseSlug = req.body.slug
+      ? convertToSlug(req.body.slug.trim())
+      : convertToSlug(title);
+    let slug = baseSlug;
+    let count = 1;
+    while (await Topic.exists({ slug: slug })) {
+      slug = `${baseSlug}-${count}`;
+      count++;
+    }
+
     const payload: any = {
       title,
-      description,
+      description: description ? sanitizeHtml(description, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+        allowedAttributes: {
+          ...sanitizeHtml.defaults.allowedAttributes,
+          img: ['src', 'alt', 'width', 'height', 'style', 'class']
+        }
+      }) : "",
       status: status || "inactive",
-      slug: convertToSlug(title),
+      slug: slug,
     };
 
     if (req.body.avatar) {
@@ -46,16 +63,16 @@ export const createPost = async (req: Request, res: Response) => {
     }
 
     const createdBy = {
-      account_id: res.locals.user._id,
+      accountId: res.locals.user ? res.locals.user._id : "mockId",
       createdAt: new Date(),
     };
 
-    const topic = new Topic(...payload, createdBy);
+    const topic = new Topic({ ...payload, createdBy });
     await topic.save();
     req.flash("success", "Thêm chủ đề thành công.");
     res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   } catch (error) {
-    console.error(error);
+    console.error("Error creating topic:", error);
     req.flash("error", "Không thể thêm mới chủ đề.");
     res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   }
@@ -88,8 +105,8 @@ export const editPatch = async (req: Request, res: Response) => {
     const id = req.params.id;
     const { title, description, status } = req.body;
 
-    const updateBy = {
-      account_id: res.locals.user._id,
+    const updatedBy = {
+      account_id: res.locals.user ? res.locals.user._id : "mockId",
       updatedAt: new Date(),
     };
 
@@ -98,21 +115,34 @@ export const editPatch = async (req: Request, res: Response) => {
       return res.redirect(`/${systemConfig.prefixAdmin}/topics`);
     }
 
+    let baseSlug = req.body.slug
+      ? convertToSlug(req.body.slug.trim())
+      : convertToSlug(title);
+    let slug = baseSlug;
+    let count = 1;
+    while (await Topic.exists({ slug: slug, _id: { $ne: id } })) {
+      slug = `${baseSlug}-${count}`;
+      count++;
+    }
+
     const payload: any = {
       title,
-      description,
+      description: description ? sanitizeHtml(description, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+        allowedAttributes: {
+          ...sanitizeHtml.defaults.allowedAttributes,
+          img: ['src', 'alt', 'width', 'height', 'style', 'class']
+        }
+      }) : "",
       status: status || "inactive",
-      slug: convertToSlug(title),
+      slug: slug,
     };
 
     if (req.body.avatar) {
       payload.avatar = req.body.avatar;
     }
 
-    await Topic.updateOne(
-      { _id: id },
-      { ...payload, $push: { updatedBy: updateBy } },
-    );
+    await Topic.updateOne({ _id: id }, { ...payload, updatedBy: updatedBy });
     req.flash("success", "Cập nhật chủ đề thành công.");
     res.redirect(`/${systemConfig.prefixAdmin}/topics`);
   } catch (error) {
@@ -130,9 +160,6 @@ export const detail = async (req: Request, res: Response) => {
       _id: id,
       deleted: false,
     });
-
-    console.log(typeof topic.description);
-    console.log(topic.description);
 
     if (!topic) {
       req.flash("error", "Chủ đề không tồn tại.");
@@ -154,14 +181,11 @@ export const changeStatus = async (req: Request, res: Response) => {
   try {
     const { status, id } = req.params;
     const updateBy = {
-      account_id: res.locals.user._id,
+      account_id: res.locals.user ? res.locals.user._id : "mockId",
       updatedAt: new Date(),
     };
 
-    await Topic.updateOne(
-      { _id: id },
-      { status: status, $push: { updatedBy: updateBy } },
-    );
+    await Topic.updateOne({ _id: id }, { status: status, updatedBy: updateBy });
     req.flash("success", "Đã thay đổi trạng thái.");
     res.redirect(req.get("referer") || `/${systemConfig.prefixAdmin}/topics`);
   } catch (error) {
@@ -175,12 +199,12 @@ export const deleteItem = async (req: Request, res: Response) => {
     const id = req.params.id;
 
     const deletedBy = {
-      account_id: res.locals.user._id,
+      account_id: res.locals.user ? res.locals.user._id : "mockId",
       deletedAt: new Date(),
     };
     await Topic.updateOne(
       { _id: id },
-      { deleted: true, deleteAt: new Date(), $push: { deletedBy: deletedBy } },
+      { deleted: true, deleteAt: new Date(), deletedBy: deletedBy },
     );
     req.flash("success", "Chủ đề đã được chuyển vào thùng rác.");
     res.redirect(`/${systemConfig.prefixAdmin}/topics`);

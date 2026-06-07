@@ -50,10 +50,15 @@ block main
                                         label.form-check-label(for="statusInactive") Dừng hoạt động
                     .form-group
                         label(for="description") Mô tả
-                        textarea.form-control(id="description" name="description" rows="4") #{song.description}
+                        textarea.form-control.textarea-mce(id="description" name="description" rows="4") #{song.description}
                     .form-group
                         label(for="lyrics") Lời bài hát
-                        textarea.form-control(id="lyrics" name="lyrics" rows="4") #{song.lyrics}
+                        textarea.form-control(
+                            id="lyrics" 
+                            name="lyrics" 
+                            rows="20"
+                            placeholder="Nhập lời bài hát...\nCó thể dùng định dạng LRC kèm timestamp (VD: [00:12.50] Lời bài hát) để đồng bộ lyrics."
+                        ) #{song.lyrics}
                     .row
                         .col-md-6
                             .form-group
