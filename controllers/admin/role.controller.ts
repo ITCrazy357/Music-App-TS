@@ -2,18 +2,94 @@ import { Request, Response } from "express";
 import Role from "../../models/role.model";
 import { systemConfig } from "../../config/system";
 
+import { pagination } from "../../helpers/pagination";
+
 // [GET] /admin/roles
 export const index = async (req: Request, res: Response) => {
   try {
-    const roles = await Role.find({ deleted: false });
+    const find: any = { deleted: false };
+
+    // Search
+    let keyword = "";
+    if (req.query.keyword) {
+      keyword = req.query.keyword as string;
+      const regex = new RegExp(keyword, "i");
+      find.$or = [{ title: regex }, { description: regex }];
+    }
+
+    // Filter Status
+    const filterStatus = [
+      { name: "Tất cả", status: "", class: "" },
+      { name: "Hoạt động", status: "active", class: "" },
+      { name: "Dừng hoạt động", status: "inactive", class: "" },
+    ];
+    if (req.query.status) {
+      find.status = req.query.status;
+      const index = filterStatus.findIndex((item) => item.status === find.status);
+      if (index !== -1) {
+        filterStatus[index].class = "active";
+      }
+    } else {
+      filterStatus[0].class = "active";
+    }
+
+    // Pagination
+    const countRecords = await Role.countDocuments(find);
+    const objectPagination = pagination(
+      {
+        currentPage: 1,
+        limitItems: 4,
+      },
+      req.query,
+      countRecords,
+    );
+
+    const roles = await Role.find(find)
+      .limit(objectPagination.limitItems)
+      .skip(objectPagination.skip);
 
     res.render("admin/pages/roles/index", {
       pageTitle: "Nhóm quyền",
       roles,
+      keyword,
+      filterStatus,
+      pagination: objectPagination,
     });
   } catch (error) {
     req.flash("error", "Không tải được danh sách nhóm quyền.");
     res.redirect(`/${systemConfig.prefixAdmin}/dashboard`);
+  }
+};
+
+// [PATCH] /admin/roles/change-multi
+export const changeMulti = async (req: Request, res: Response) => {
+  try {
+    const type = req.body.type;
+    const ids = req.body.ids.split(", ");
+    
+    const updatedBy = {
+      accountId: res.locals.user ? res.locals.user._id : "mockId",
+      updatedAt: new Date(),
+    };
+
+    switch (type) {
+      case "active":
+      case "inactive":
+        await Role.updateMany({ _id: { $in: ids } }, { status: type, updatedBy });
+        req.flash("success", `Cập nhật trạng thái thành công cho ${ids.length} nhóm quyền!`);
+        break;
+      case "delete-all":
+        await Role.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date(), deletedBy: updatedBy });
+        req.flash("success", `Đã xóa thành công ${ids.length} nhóm quyền!`);
+        break;
+      default:
+        break;
+    }
+
+    res.redirect("back");
+  } catch (error) {
+    req.flash("error", "Thao tác thất bại!");
+    res.redirect("back");
   }
 };
 
@@ -149,11 +225,25 @@ export const deleteItem = async (req: Request, res: Response) => {
 // [GET] /admin/roles/trash
 export const trash = async (req: Request, res: Response) => {
   try {
-    const roles = await Role.find({ deleted: true });
+    const find: any = { deleted: true };
+    const countRecords = await Role.countDocuments(find);
+    const objectPagination = pagination(
+      {
+        currentPage: 1,
+        limitItems: 4,
+      },
+      req.query,
+      countRecords,
+    );
+
+    const roles = await Role.find(find)
+      .limit(objectPagination.limitItems)
+      .skip(objectPagination.skip);
 
     res.render("admin/pages/roles/trash", {
       pageTitle: "Thùng rác nhóm quyền",
       roles,
+      pagination: objectPagination,
     });
   } catch (error) {
     req.flash("error", "Lỗi tải thùng rác.");

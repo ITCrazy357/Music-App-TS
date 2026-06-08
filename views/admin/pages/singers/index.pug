@@ -1,5 +1,8 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
+include ../../mixins/pagination.pug
+include ../../mixins/filter-status.pug
+include ../../mixins/form-change-multi.pug
 
 block main
     .container-fluid.px-4.px-lg-5.my-3
@@ -8,22 +11,46 @@ block main
             .col-12
                 +box-head(pageTitle)
 
+        .card.mb-3
+            .card-header Bộ lọc và Tìm kiếm
+            .card-body
+                .row
+                    .col-6
+                        +filter-status(filterStatus)
+                    .col-6
+                        form(id="form-search")
+                            .input-group
+                                input(
+                                    type="text"
+                                    placeholder="Nhập từ khóa"
+                                    name="keyword"
+                                    class="form-control"
+                                    value=keyword
+                                )
+                                .input-group-append
+                                    button(
+                                        class="btn btn-success"
+                                        type="submit"
+                                    ) Tìm
+
         .card.custom-list-card.mb-3
             .card-header
                 | Danh sách ca sĩ
 
             .card-body
 
-                .custom-actions.d-flex.justify-content-between.mb-3
-                    div
-                    div
-                        if role && (role.permissions.includes("singers_create") || role.title === "superAdmin")
+                .row.mb-3
+                    .col-8
+                        if role && (role.permissions.includes("singers_edit") || role.title === "superAdmin" || role.title === "Admin")
+                            +form-change-multi(`/${prefixAdmin}/singers/change-multi?_method=PATCH`)
+                    .col-4.text-right
+                        if role && (role.permissions.includes("singers_create") || role.title === "superAdmin" || role.title === "Admin")
                             a.btn.btn-outline-success.mr-2(
                                 href=`/${prefixAdmin}/singers/create`
                             )
                                 i.fa-solid.fa-plus.me-1
                                 | Thêm mới
-                        if role && (role.permissions.includes("singers_delete") || role.title === "superAdmin")
+                        if role && (role.permissions.includes("singers_delete") || role.title === "superAdmin" || role.title === "Admin")
                             a.btn.btn-outline-danger(
                                 href=`/${prefixAdmin}/singers/trash`
                             )
@@ -31,9 +58,11 @@ block main
                                 | Thùng rác
 
                 if singers && singers.length > 0
-                    table.table.custom-table.table-hover
+                    table.table.custom-table.table-hover(checkbox-multi)
                         thead
                             tr
+                                th
+                                    input(type="checkbox" name="checkall")
                                 th STT
                                 th Hình ảnh
                                 th Tên ca sĩ
@@ -43,12 +72,19 @@ block main
                         tbody
                             each item, index in singers
                                 tr
+                                    td
+                                        input(
+                                            type="checkbox"
+                                            name="id"
+                                            value=item.id
+                                        )
                                     td #{index + 1}
 
                                     td
                                         img.custom-avatar(
                                             src=(item.avatar ? item.avatar : "/admin/images/avatar-default.jpg")
                                             alt=item.fullName
+                                            style="width: 100px; height: auto; border-radius: 8px;"
                                         )
 
                                     td.custom-title
@@ -56,8 +92,8 @@ block main
 
                                     td
                                         if (item.status === "active")
-                                            if role && (role.permissions.includes("singers_edit") || role.title === "superAdmin")
-                                                a.custom-status-active(
+                                            if role && (role.permissions.includes("singers_edit") || role.title === "superAdmin" || role.title === "Admin")
+                                                a.badge.badge-success(
                                                     href="javascript:;"
                                                     button-change-status
                                                     data-status="active"
@@ -66,8 +102,8 @@ block main
                                             else 
                                                 span.badge.badge-success Hoạt động
                                         else
-                                            if role && (role.permissions.includes("singers_edit") || role.title === "superAdmin")
-                                                a.custom-status-inactive(
+                                            if role && (role.permissions.includes("singers_edit") || role.title === "superAdmin" || role.title === "Admin")
+                                                a.badge.badge-danger(
                                                     href="javascript:;"
                                                     button-change-status
                                                     data-status="inactive"
@@ -78,20 +114,20 @@ block main
 
                                     td
                                         .custom-actions-group
-                                            a.btn.btn-secondary.btn-sm(
+                                            a.btn.btn-secondary.btn-sm.mr-1(
                                                 href=`/${prefixAdmin}/singers/detail/${item.id}`
                                             ) 
                                                 i.fa-solid.fa-circle-info
                                                 span Chi tiết
 
-                                            if role && (role.permissions.includes("singers_edit") || role.title === "superAdmin")
-                                                a.btn.btn-warning.btn-sm(
+                                            if role && (role.permissions.includes("singers_edit") || role.title === "Admin" || role.title === "Content" || role.title === "superAdmin")
+                                                a.btn.btn-warning.btn-sm.mr-1(
                                                     href=`/${prefixAdmin}/singers/edit/${item.id}`
                                                 ) 
                                                     i.fa-solid.fa-pen-to-square
                                                     span Sửa
 
-                                            if role && (role.permissions.includes("singers_delete") || role.title === "superAdmin")
+                                            if role && (role.permissions.includes("singers_delete") || role.title === "Admin" || role.title === "superAdmin")
                                                 button.btn.btn-danger.btn-sm(
                                                     button-delete
                                                     data-id=item.id
@@ -100,7 +136,9 @@ block main
                                                     span Xóa
 
                 else
-                    .custom-empty.mt-3 Không có ca sĩ nào.
+                    .custom-empty.mt-3.alert.alert-secondary Không có ca sĩ nào.
+
+        +pagination(pagination)
 
         form(
             id="form-change-status"

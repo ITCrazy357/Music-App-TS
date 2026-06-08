@@ -55,12 +55,31 @@ header.header.py-3
                 i.fa-solid.fa-user-shield
                 span Quản trị
                 
-            a(href="/auth/info", class="inner-actions__item d-flex align-items-center gap-2", title="Thông tin cá nhân")
-              i.fa-solid.fa-user
-              span #{user.fullName}
-    
-            a(href="/auth/logout", class="inner-actions__item", title="Đăng xuất")
-              i.fa-solid.fa-right-from-bracket
+            .dropdown
+              a.dropdown-toggle.header-user(
+                href="#"
+                data-bs-toggle="dropdown"
+              )
+                i.fa-solid.fa-user.user-icon
+                span.user-name #{user.fullName}
+
+              ul.dropdown-menu.dropdown-menu-end
+                if(role && role.title === 'Admin' || role && role.title === 'Content' || role && role.title === 'Account')
+                  li
+                    hr.dropdown-divider
+
+                  li 
+                    a.dropdown-item(href=`/${prefixAdmin}/dashboard`)
+                      i.fa-solid.fa-user-shield
+                      span Dashboard quản trị
+
+                li
+                  hr.dropdown-divider
+
+                li
+                  a.dropdown-item(href="/auth/logout")
+                    i.fa-solid.fa-right-from-bracket
+                    span Đăng xuất
           else
             a(href="/auth/login", class="inner-actions__item", title="Đăng nhập")
               i.fa-solid.fa-user

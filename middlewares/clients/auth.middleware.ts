@@ -72,7 +72,9 @@ export const requirePermission = (permission: string) => {
 
     if (
       (role && role.permissions.includes(permission)) ||
-      role.title === "Quản trị viên cấp cao"
+      role.title === "Admin" ||
+      role.title === "Account" ||
+      role.title === "Content"
     ) {
       next();
     } else {

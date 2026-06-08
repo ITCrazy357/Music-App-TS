@@ -1,5 +1,8 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
+include ../../mixins/pagination.pug
+include ../../mixins/filter-status.pug
+include ../../mixins/form-change-multi.pug
 
 block main 
     .topic-index-page
@@ -7,26 +10,52 @@ block main
             .col-12 
                 +box-head(pageTitle)
 
+        .card.mb-3
+            .card-header Bộ lọc và Tìm kiếm
+            .card-body
+                .row
+                    .col-6
+                        +filter-status(filterStatus)
+                    .col-6
+                        form(id="form-search")
+                            .input-group
+                                input(
+                                    type="text"
+                                    placeholder="Nhập từ khóa"
+                                    name="keyword"
+                                    class="form-control"
+                                    value=keyword
+                                )
+                                .input-group-append
+                                    button(
+                                        class="btn btn-success"
+                                        type="submit"
+                                    ) Tìm
+
         .topic-index-card
             .topic-index-header
                 i.fa-solid.fa-list
                 span Danh sách chủ đề
             .topic-index-body
-                .row 
+                .row.mb-3
                     .col-8 
+                        if role && (role.permissions.includes("topics_edit") || role.title === "Admin" || role.title === "Content")
+                            +form-change-multi(`/${prefixAdmin}/topics/change-multi?_method=PATCH`)
                     .col-4.text-right 
-                        a(
-                            href=`/${prefixAdmin}/topics/create`
-                            class="btn btn-outline-success mr-2"
-                        )
-                            i.fa-solid.fa-plus.mr-1
-                            | Thêm mới
-                        a(
-                            href=`/${prefixAdmin}/topics/trash`
-                            class="btn btn-outline-danger"
-                        )
-                            i.fa-solid.fa-trash-can.mr-1
-                            | Thùng rác
+                        if role && (role.permissions.includes("topics_create") || role.title === "Admin" || role.title === "Content")
+                            a(
+                                href=`/${prefixAdmin}/topics/create`
+                                class="btn btn-outline-success mr-2"
+                            )
+                                i.fa-solid.fa-plus.mr-1
+                                | Thêm mới
+                        if role && (role.permissions.includes("topics_delete") || role.title === "Admin")
+                            a(
+                                href=`/${prefixAdmin}/topics/trash`
+                                class="btn btn-outline-danger"
+                            )
+                                i.fa-solid.fa-trash-can.mr-1
+                                | Thùng rác
 
                 if topics.length > 0
                     table(
@@ -35,6 +64,8 @@ block main
                     )
                         thead
                             tr
+                                th
+                                    input(type="checkbox" name="checkall")
                                 th STT
                                 th Hình ảnh
                                 th Tiêu đề
@@ -43,6 +74,12 @@ block main
                         tbody
                             each item, index in topics
                                 tr 
+                                    td
+                                        input(
+                                            type="checkbox"
+                                            name="id"
+                                            value=item.id
+                                        )
                                     td #{index + 1}
                                     td
                                         img(
@@ -75,11 +112,12 @@ block main
                                             href=`/${prefixAdmin}/topics/detail/${item.id}`
                                             class="btn btn-secondary btn-sm mr-1"
                                         ) Chi tiết
-                                        a(
-                                            href=`/${prefixAdmin}/topics/edit/${item.id}`
-                                            class="btn btn-warning btn-sm mr-1"
-                                        ) Sửa
-                                        if(role.permissions.includes("topics_delete"))
+                                        if role && (role.permissions.includes("topics_edit") || role.title === "Admin" || role.title === "Content")
+                                            a(
+                                                href=`/${prefixAdmin}/topics/edit/${item.id}`
+                                                class="btn btn-warning btn-sm mr-1"
+                                            ) Sửa
+                                        if role && (role.permissions.includes("topics_delete") || role.title === "Admin")
                                             button(
                                                 class="btn btn-danger btn-sm"
                                                 button-delete
@@ -87,6 +125,8 @@ block main
                                             ) Xóa
                 else
                     div.alert.alert-secondary.mt-3 Không có chủ đề nào.
+
+        +pagination(pagination)
 
         form(
             action=""

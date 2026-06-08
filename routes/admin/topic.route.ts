@@ -34,6 +34,7 @@ router.patch("/restore/:id", requirePermission("topics_delete"), controller.rest
 router.delete("/delete-permanent/:id", requirePermission("topics_delete"), controller.deletePermanent);
 
 router.patch("/change-status/:status/:id", requirePermission("topics_edit"), controller.changeStatus);
+router.patch("/change-multi", requirePermission("topics_edit"), controller.changeMulti);
 
 router.delete("/delete/:id", requirePermission("topics_delete"), controller.deleteItem);
 

@@ -3,15 +3,58 @@ import Topic from "../../models/topic.model";
 import { convertToSlug } from "../../helpers/convertToSlug";
 import { systemConfig } from "../../config/system";
 import sanitizeHtml from "sanitize-html";
+import { pagination } from "../../helpers/pagination";
 
 //[GET] /admin/topics
 export const index = async (req: Request, res: Response) => {
   try {
-    const topics = await Topic.find({ deleted: false });
+    const find: any = { deleted: false };
+
+    // Search
+    let keyword = "";
+    if (req.query.keyword) {
+      keyword = req.query.keyword as string;
+      const regex = new RegExp(keyword, "i");
+      find.$or = [{ title: regex }, { slug: regex }];
+    }
+
+    // Filter
+    const filterStatus = [
+      { name: "Tất cả", status: "", class: "" },
+      { name: "Hoạt động", status: "active", class: "" },
+      { name: "Dừng hoạt động", status: "inactive", class: "" },
+    ];
+    if (req.query.status) {
+      find.status = req.query.status;
+      const index = filterStatus.findIndex((item) => item.status === find.status);
+      if (index !== -1) {
+        filterStatus[index].class = "active";
+      }
+    } else {
+      filterStatus[0].class = "active";
+    }
+
+    // Pagination
+    const countRecords = await Topic.countDocuments(find);
+    const objectPagination = pagination(
+      {
+        currentPage: 1,
+        limitItems: 4,
+      },
+      req.query,
+      countRecords,
+    );
+
+    const topics = await Topic.find(find)
+      .limit(objectPagination.limitItems)
+      .skip(objectPagination.skip);
 
     res.render("admin/pages/topics/index", {
       pageTitle: "Quản lý chủ đề",
       topics,
+      keyword,
+      filterStatus,
+      pagination: objectPagination,
     });
   } catch (error) {
     req.flash("error", "Không tải được danh sách chủ đề.");
@@ -193,6 +236,39 @@ export const changeStatus = async (req: Request, res: Response) => {
     res.redirect(req.get("referer") || `/${systemConfig.prefixAdmin}/topics`);
   }
 };
+
+// [PATCH] /admin/topics/change-multi
+export const changeMulti = async (req: Request, res: Response) => {
+  try {
+    const type = req.body.type;
+    const ids = req.body.ids.split(", ");
+    
+    const updatedBy = {
+      account_id: res.locals.user ? res.locals.user._id : "mockId",
+      updatedAt: new Date(),
+    };
+
+    switch (type) {
+      case "active":
+      case "inactive":
+        await Topic.updateMany({ _id: { $in: ids } }, { status: type, updatedBy });
+        req.flash("success", `Cập nhật trạng thái thành công cho ${ids.length} chủ đề!`);
+        break;
+      case "delete-all":
+        await Topic.updateMany({ _id: { $in: ids } }, { deleted: true, deleteAt: new Date(), deletedBy: updatedBy });
+        req.flash("success", `Đã xóa thành công ${ids.length} chủ đề!`);
+        break;
+      default:
+        break;
+    }
+
+    res.redirect(req.get("referer") || `/${systemConfig.prefixAdmin}/topics`);
+  } catch (error) {
+    req.flash("error", "Thao tác thất bại!");
+    res.redirect(req.get("referer") || `/${systemConfig.prefixAdmin}/topics`);
+  }
+};
+
 // [DELETE] /admin/topics/delete/:id
 export const deleteItem = async (req: Request, res: Response) => {
   try {
@@ -217,11 +293,25 @@ export const deleteItem = async (req: Request, res: Response) => {
 // [GET] /admin/topics/trash
 export const trash = async (req: Request, res: Response) => {
   try {
-    const topics = await Topic.find({ deleted: true });
+    const find: any = { deleted: true };
+    const countRecords = await Topic.countDocuments(find);
+    const objectPagination = pagination(
+      {
+        currentPage: 1,
+        limitItems: 4,
+      },
+      req.query,
+      countRecords,
+    );
+
+    const topics = await Topic.find(find)
+      .limit(objectPagination.limitItems)
+      .skip(objectPagination.skip);
 
     res.render("admin/pages/topics/trash", {
       pageTitle: "Thùng rác chủ đề",
       topics,
+      pagination: objectPagination,
     });
   } catch (error) {
     req.flash("error", "Không thể tải thùng rác chủ đề.");

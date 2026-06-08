@@ -4,18 +4,94 @@ import { systemConfig } from "../../config/system";
 import sanitizeHtml from "sanitize-html";
 import { convertToSlug } from "../../helpers/convertToSlug";
 
+import { pagination } from "../../helpers/pagination";
+
 // [GET] /admin/singers
 export const index = async (req: Request, res: Response) => {
   try {
-    const singers = await Singer.find({ deleted: false });
+    const find: any = { deleted: false };
+
+    // Search
+    let keyword = "";
+    if (req.query.keyword) {
+      keyword = req.query.keyword as string;
+      const regex = new RegExp(keyword, "i");
+      find.$or = [{ fullName: regex }, { slug: regex }];
+    }
+
+    // Filter
+    const filterStatus = [
+      { name: "Tất cả", status: "", class: "" },
+      { name: "Hoạt động", status: "active", class: "" },
+      { name: "Dừng hoạt động", status: "inactive", class: "" },
+    ];
+    if (req.query.status) {
+      find.status = req.query.status;
+      const index = filterStatus.findIndex((item) => item.status === find.status);
+      if (index !== -1) {
+        filterStatus[index].class = "active";
+      }
+    } else {
+      filterStatus[0].class = "active";
+    }
+
+    // Pagination
+    const countRecords = await Singer.countDocuments(find);
+    const objectPagination = pagination(
+      {
+        currentPage: 1,
+        limitItems: 4,
+      },
+      req.query,
+      countRecords,
+    );
+
+    const singers = await Singer.find(find)
+      .limit(objectPagination.limitItems)
+      .skip(objectPagination.skip);
 
     res.render("admin/pages/singers/index", {
       pageTitle: "Quản lý ca sĩ",
       singers,
+      keyword,
+      filterStatus,
+      pagination: objectPagination,
     });
   } catch (error) {
     req.flash("error", "Không tải được danh sách ca sĩ.");
     res.redirect(`/${systemConfig.prefixAdmin}/singers`);
+  }
+};
+
+// [PATCH] /admin/singers/change-multi
+export const changeMulti = async (req: Request, res: Response) => {
+  try {
+    const type = req.body.type;
+    const ids = req.body.ids.split(", ");
+    
+    const updatedBy = {
+      accountId: res.locals.user ? res.locals.user._id : "mockId",
+      updatedAt: new Date(),
+    };
+
+    switch (type) {
+      case "active":
+      case "inactive":
+        await Singer.updateMany({ _id: { $in: ids } }, { status: type, updatedBy });
+        req.flash("success", `Cập nhật trạng thái thành công cho ${ids.length} ca sĩ!`);
+        break;
+      case "delete-all":
+        await Singer.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date(), deletedBy: updatedBy });
+        req.flash("success", `Đã xóa thành công ${ids.length} ca sĩ!`);
+        break;
+      default:
+        break;
+    }
+
+    res.redirect("back");
+  } catch (error) {
+    req.flash("error", "Thao tác thất bại!");
+    res.redirect("back");
   }
 };
 
@@ -201,11 +277,25 @@ export const deleteItem = async (req: Request, res: Response) => {
 // [GET] /admin/singers/trash
 export const trash = async (req: Request, res: Response) => {
   try {
-    const singers = await Singer.find({ deleted: true });
+    const find: any = { deleted: true };
+    const countRecords = await Singer.countDocuments(find);
+    const objectPagination = pagination(
+      {
+        currentPage: 1,
+        limitItems: 4,
+      },
+      req.query,
+      countRecords,
+    );
+
+    const singers = await Singer.find(find)
+      .limit(objectPagination.limitItems)
+      .skip(objectPagination.skip);
 
     res.render("admin/pages/singers/trash", {
       pageTitle: "Thùng rác ca sĩ",
       singers,
+      pagination: objectPagination,
     });
   } catch (error) {
     req.flash("error", "Không thể tải thùng rác ca sĩ.");

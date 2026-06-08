@@ -1,5 +1,8 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
+include ../../mixins/pagination.pug
+include ../../mixins/filter-status.pug
+include ../../mixins/form-change-multi.pug
 
 block main
     .container-fluid.px-4.px-lg-5.my-3
@@ -8,15 +11,43 @@ block main
             .col-12
                 +box-head(pageTitle)
 
+        .card.mb-3
+            .card-header Bộ lọc và Tìm kiếm
+            .card-body
+                .row
+                    .col-4
+                        +filter-status(filterStatus)
+                    .col-8
+                        form(id="form-search")
+                            .input-group
+                                select(name="role_id" class="form-select" style="max-width: 200px;")
+                                    option(value="") -- Tất cả nhóm quyền --
+                                    if roles
+                                        each item in roles
+                                            option(value=item.id selected=(item.id == roleId)) #{item.title}
+                                input(
+                                    type="text"
+                                    placeholder="Nhập từ khóa"
+                                    name="keyword"
+                                    class="form-control"
+                                    value=keyword
+                                )
+                                .input-group-append
+                                    button(
+                                        class="btn btn-success"
+                                        type="submit"
+                                    ) Tìm
+
         .card.custom-list-card.mb-3
             .card-header
                 | Danh sách tài khoản
 
             .card-body
 
-                .custom-actions.d-flex.justify-content-between.mb-3
-                    div
-                    div
+                .row.mb-3
+                    .col-8
+                        +form-change-multi(`/${prefixAdmin}/users/change-multi?_method=PATCH`)
+                    .col-4.text-right
                         a.btn.btn-outline-success.mr-2(
                             href=`/${prefixAdmin}/users/create`
                         )
@@ -29,9 +60,11 @@ block main
                             | Thùng rác
 
                 if users && users.length > 0
-                    table.table.custom-table.table-hover
+                    table.table.custom-table.table-hover(checkbox-multi)
                         thead
                             tr
+                                th
+                                    input(type="checkbox" name="checkall")
                                 th STT
                                 th Hình ảnh
                                 th Họ tên
@@ -43,12 +76,19 @@ block main
                         tbody
                             each item, index in users
                                 tr
+                                    td
+                                        input(
+                                            type="checkbox"
+                                            name="id"
+                                            value=item.id
+                                        )
                                     td #{index + 1}
 
                                     td
                                         img.custom-avatar(
                                             src=(item.avatar ? item.avatar : "/admin/images/avatar-default.jpg")
                                             alt=item.fullName
+                                            style="width: 100px; height: auto; border-radius: 8px;"
                                         )
 
                                     td.custom-title
@@ -62,14 +102,14 @@ block main
 
                                     td
                                         if (item.status === "active")
-                                            a.custom-status-active(
+                                            a.badge.badge-success(
                                                 href="javascript:;"
                                                 button-change-status
                                                 data-status="active"
                                                 data-id=item.id
                                             ) Hoạt động
                                         else
-                                            a.custom-status-inactive(
+                                            a.badge.badge-danger(
                                                 href="javascript:;"
                                                 button-change-status
                                                 data-status="inactive"
@@ -78,13 +118,13 @@ block main
 
                                     td
                                         .custom-actions-group
-                                            a.btn.btn-secondary.btn-sm(
+                                            a.btn.btn-secondary.btn-sm.mr-1(
                                                 href=`/${prefixAdmin}/users/detail/${item.id}`
                                             ) 
                                                 i.fa-solid.fa-circle-info
                                                 span Chi tiết
 
-                                            a.btn.btn-warning.btn-sm(
+                                            a.btn.btn-warning.btn-sm.mr-1(
                                                 href=`/${prefixAdmin}/users/edit/${item.id}`
                                             ) 
                                                 i.fa-solid.fa-pen-to-square
@@ -98,7 +138,9 @@ block main
                                                 span Xóa
 
                 else
-                    .custom-empty.mt-3 Không có tài khoản nào.
+                    .custom-empty.mt-3.alert.alert-secondary Không có tài khoản nào.
+
+        +pagination(pagination)
 
         form(
             id="form-change-status"

@@ -33,6 +33,12 @@ router.patch(
 router.get("/detail/:id", requirePermission("users_view"), controller.detail);
 
 router.patch(
+  "/change-multi",
+  requirePermission("users_edit"),
+  controller.changeMulti,
+);
+
+router.patch(
   "/change-status/:status/:id",
   requirePermission("users_edit"),
   controller.changeStatus,

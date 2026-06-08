@@ -4,21 +4,105 @@ import Role from "../../models/role.model";
 import { systemConfig } from "../../config/system";
 import bcrypt from "bcrypt";
 
+import { pagination } from "../../helpers/pagination";
+
 // [GET] /admin/users
 export const index = async (req: Request, res: Response) => {
   try {
-    const users = await User.find({ deleted: false }).populate(
-      "role_id",
-      "title",
+    const find: any = { deleted: false };
+
+    // Search
+    let keyword = "";
+    if (req.query.keyword) {
+      keyword = req.query.keyword as string;
+      const regex = new RegExp(keyword, "i");
+      find.$or = [{ fullName: regex }, { email: regex }];
+    }
+
+    // Filter Status
+    const filterStatus = [
+      { name: "Tất cả", status: "", class: "" },
+      { name: "Hoạt động", status: "active", class: "" },
+      { name: "Dừng hoạt động", status: "inactive", class: "" },
+    ];
+    if (req.query.status) {
+      find.status = req.query.status;
+      const index = filterStatus.findIndex((item) => item.status === find.status);
+      if (index !== -1) {
+        filterStatus[index].class = "active";
+      }
+    } else {
+      filterStatus[0].class = "active";
+    }
+
+    // Filter Role
+    let roleId = "";
+    if (req.query.role_id) {
+      roleId = req.query.role_id as string;
+      find.role_id = roleId;
+    }
+    const roles = await Role.find({ deleted: false });
+
+    // Pagination
+    const countRecords = await User.countDocuments(find);
+    const objectPagination = pagination(
+      {
+        currentPage: 1,
+        limitItems: 4,
+      },
+      req.query,
+      countRecords,
     );
+
+    const users = await User.find(find)
+      .populate("role_id", "title")
+      .limit(objectPagination.limitItems)
+      .skip(objectPagination.skip);
 
     res.render("admin/pages/users/index", {
       pageTitle: "Quản lý tài khoản",
       users,
+      keyword,
+      filterStatus,
+      roleId,
+      roles,
+      pagination: objectPagination,
     });
   } catch (error) {
     req.flash("error", "Không tải được danh sách tài khoản.");
     res.redirect(`/${systemConfig.prefixAdmin}/dashboard`);
+  }
+};
+
+// [PATCH] /admin/users/change-multi
+export const changeMulti = async (req: Request, res: Response) => {
+  try {
+    const type = req.body.type;
+    const ids = req.body.ids.split(", ");
+    
+    const updatedBy = {
+      accountId: res.locals.user ? res.locals.user._id : "mockId",
+      updatedAt: new Date(),
+    };
+
+    switch (type) {
+      case "active":
+      case "inactive":
+        await User.updateMany({ _id: { $in: ids } }, { status: type, updatedBy });
+        req.flash("success", `Cập nhật trạng thái thành công cho ${ids.length} tài khoản!`);
+        break;
+      case "delete-all":
+        await User.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date(), deletedBy: updatedBy });
+        req.flash("success", `Đã xóa thành công ${ids.length} tài khoản!`);
+        break;
+      default:
+        break;
+    }
+
+    res.redirect("back");
+  } catch (error) {
+    req.flash("error", "Thao tác thất bại!");
+    res.redirect("back");
   }
 };
 
@@ -197,14 +281,26 @@ export const deleteItem = async (req: Request, res: Response) => {
 // [GET] /admin/users/trash
 export const trash = async (req: Request, res: Response) => {
   try {
-    const users = await User.find({ deleted: true }).populate(
-      "role_id",
-      "title",
+    const find: any = { deleted: true };
+    const countRecords = await User.countDocuments(find);
+    const objectPagination = pagination(
+      {
+        currentPage: 1,
+        limitItems: 4,
+      },
+      req.query,
+      countRecords,
     );
+
+    const users = await User.find(find)
+      .populate("role_id", "title")
+      .limit(objectPagination.limitItems)
+      .skip(objectPagination.skip);
 
     res.render("admin/pages/users/trash", {
       pageTitle: "Thùng rác tài khoản",
       users,
+      pagination: objectPagination,
     });
   } catch (error) {
     req.flash("error", "Lỗi tải thùng rác.");

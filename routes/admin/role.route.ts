@@ -14,6 +14,7 @@ router.patch("/edit/:id", requirePermission("roles_edit"), controller.editPatch)
 
 router.get("/detail/:id", requirePermission("roles_view"), controller.detail);
 
+router.patch("/change-multi", requirePermission("roles_edit"), controller.changeMulti);
 router.patch("/change-status/:status/:id", requirePermission("roles_edit"), controller.changeStatus);
 router.delete("/delete/:id", requirePermission("roles_delete"), controller.deleteItem);
 

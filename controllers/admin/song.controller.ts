@@ -5,17 +5,94 @@ import Singer from "../../models/singer.model";
 import { convertToSlug } from "../../helpers/convertToSlug";
 import sanitizeHtml from "sanitize-html";
 
+import { pagination } from "../../helpers/pagination";
+
 //[GET] /admin/songs
 export const index = async (req: Request, res: Response) => {
   try {
-    const songs = await Song.find({ deleted: false });
+    const find: any = { deleted: false };
+
+    // Search
+    let keyword = "";
+    if (req.query.keyword) {
+      keyword = req.query.keyword as string;
+      const regex = new RegExp(keyword, "i");
+      find.$or = [{ title: regex }, { slug: regex }];
+    }
+
+    // Filter
+    const filterStatus = [
+      { name: "Tất cả", status: "", class: "" },
+      { name: "Hoạt động", status: "active", class: "" },
+      { name: "Dừng hoạt động", status: "inactive", class: "" },
+    ];
+    if (req.query.status) {
+      find.status = req.query.status;
+      const index = filterStatus.findIndex((item) => item.status === find.status);
+      if (index !== -1) {
+        filterStatus[index].class = "active";
+      }
+    } else {
+      filterStatus[0].class = "active";
+    }
+
+    // Pagination
+    const countRecords = await Song.countDocuments(find);
+    const objectPagination = pagination(
+      {
+        currentPage: 1,
+        limitItems: 4,
+      },
+      req.query,
+      countRecords,
+    );
+
+    const songs = await Song.find(find)
+      .limit(objectPagination.limitItems)
+      .skip(objectPagination.skip);
+
     res.render("admin/pages/songs/index", {
       pageTitle: "Quản lý bài hát",
       songs,
+      keyword,
+      filterStatus,
+      pagination: objectPagination,
     });
   } catch (error) {
     req.flash("error", "Không tải được danh sách bài hát.");
     res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
+  }
+};
+
+// [PATCH] /admin/songs/change-multi
+export const changeMulti = async (req: Request, res: Response) => {
+  try {
+    const type = req.body.type;
+    const ids = req.body.ids.split(", ");
+    
+    const updatedBy = {
+      accountId: res.locals.user ? res.locals.user._id : "mockId",
+      updatedAt: new Date(),
+    };
+
+    switch (type) {
+      case "active":
+      case "inactive":
+        await Song.updateMany({ _id: { $in: ids } }, { status: type, updatedBy });
+        req.flash("success", `Cập nhật trạng thái thành công cho ${ids.length} bài hát!`);
+        break;
+      case "delete-all":
+        await Song.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date(), deletedBy: updatedBy });
+        req.flash("success", `Đã xóa thành công ${ids.length} bài hát!`);
+        break;
+      default:
+        break;
+    }
+
+    res.redirect(req.get("referer") || `/${req.app.locals.prefixAdmin}/songs`);
+  } catch (error) {
+    req.flash("error", "Thao tác thất bại!");
+    res.redirect(req.get("referer") || `/${req.app.locals.prefixAdmin}/songs`);
   }
 };
 
@@ -259,7 +336,20 @@ export const deleteItem = async (req: Request, res: Response) => {
 // [GET] /admin/songs/trash
 export const trash = async (req: Request, res: Response) => {
   try {
-    const songs = await Song.find({ deleted: true });
+    const find: any = { deleted: true };
+    const countRecords = await Song.countDocuments(find);
+    const objectPagination = pagination(
+      {
+        currentPage: 1,
+        limitItems: 4,
+      },
+      req.query,
+      countRecords,
+    );
+
+    const songs = await Song.find(find)
+      .limit(objectPagination.limitItems)
+      .skip(objectPagination.skip);
 
     const items = await Promise.all(
       songs.map(async (song) => {
@@ -283,6 +373,7 @@ export const trash = async (req: Request, res: Response) => {
     res.render("admin/pages/songs/trash", {
       pageTitle: "Thùng rác bài hát",
       songs: items,
+      pagination: objectPagination,
     });
   } catch (error) {
     req.flash("error", "Không thể tải thùng rác bài hát.");

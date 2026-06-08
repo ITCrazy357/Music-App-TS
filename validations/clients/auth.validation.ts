@@ -80,3 +80,20 @@ export const loginValidation = async (
 
   next();
 };
+
+export const resetPasswordValidation = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (req.body.password !== req.body.confirmPassword) {
+    req.flash("error", "Mật khẩu xác nhận không khớp");
+    res.redirect("/auth/reset-password");
+  }
+
+  if (!req.body.password || !req.body.confirmPassword) {
+    req.flash("error", "Vui lòng nhập đầy đủ thông tin");
+    res.redirect("/auth/reset-password");
+  }
+  next();
+};

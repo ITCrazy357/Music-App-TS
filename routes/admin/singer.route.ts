@@ -27,6 +27,8 @@ router.patch(
 );
 router.get("/detail/:id", requirePermission("singers_view"), controller.detail);
 
+router.patch("/change-multi", requirePermission("singers_edit"), controller.changeMulti);
+
 router.patch("/change-status/:status/:id", requirePermission("singers_edit"), controller.changeStatus);
 router.delete("/delete/:id", requirePermission("singers_delete"), controller.deleteItem);
 

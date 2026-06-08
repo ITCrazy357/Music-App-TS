@@ -1,5 +1,6 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
+include ../../mixins/pagination.pug
 
 block main
     .container-fluid.px-4.px-lg-5.my-3
@@ -57,7 +58,9 @@ block main
                                                 span Xóa vĩnh viễn
 
                 else
-                    .custom-empty.mt-3 Thùng rác trống.
+                    .custom-empty.mt-3.alert.alert-secondary Thùng rác trống.
+
+        +pagination(pagination)
 
         form(
             id="form-restore-item"

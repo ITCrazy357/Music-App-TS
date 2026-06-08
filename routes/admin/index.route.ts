@@ -6,6 +6,7 @@ import { songRoutes } from "./song.route";
 import { singerRoutes } from "./singer.route";
 import { userRoutes } from "./user.route";
 import { roleRoutes } from "./role.route";
+import { profileRoutes } from "./profile.route";
 import {
   requireAuth,
   requireAdmin,
@@ -27,6 +28,7 @@ const adminRouter = (app: Express): void => {
   app.use(PATH_ADMIN + "/singers", requireAuth, requireAdmin, singerRoutes);
   app.use(PATH_ADMIN + "/users", requireAuth, requireAdmin, userRoutes);
   app.use(PATH_ADMIN + "/roles", requireAuth, requireAdmin, roleRoutes);
+  app.use(PATH_ADMIN + "/profile", requireAuth, requireAdmin, profileRoutes);
 };
 
 export default adminRouter;

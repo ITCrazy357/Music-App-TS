@@ -3,23 +3,38 @@ header.header
     .row.align-items-center
       .col-3
         .inner-logo
-          a.d-flex.align-items-center.gap-2(href=`/${prefixAdmin}/dashboard`)
+          a.d-flex.align-items-center.gap-2(href=`/topics`)
             img(
               src="/images/logo.png",
               alt="Music Streaming Logo",
               width="45"
             )
-            span.logo-text Admin
+            span.logo-text Trang chủ
 
       .col-9
         .header-actions.d-flex.align-items-center.justify-content-end.gap-3 
           if user
-            a(href=`/${prefixAdmin}/profile`, class="inner-actions__item", title="Thông tin cá nhân")
-              i.fa-solid.fa-user.mr-2
-              span #{user.fullName}
-    
-            a(href=`/auth/logout`, class="inner-actions__item", title="Đăng xuất")
-              i.fa-solid.fa-right-from-bracket
+            .dropdown
+              a.dropdown-toggle.header-user(
+                href="#"
+                data-bs-toggle="dropdown"
+              )
+                i.fa-solid.fa-user.user-icon
+                span.user-name #{user.fullName}
+
+              ul.dropdown-menu.dropdown-menu-end
+                li
+                  a.dropdown-item(href=`/${prefixAdmin}/profile`)
+                    i.fa-solid.fa-user
+                    span Thông tin cá nhân
+
+                li
+                  hr.dropdown-divider
+
+                li
+                  a.dropdown-item(href="/auth/logout")
+                    i.fa-solid.fa-right-from-bracket
+                    span Đăng xuất
           else
             a(href=`/${prefixAdmin}/auth/login`, class="inner-actions__item", title="Đăng nhập")
               i.fa-solid.fa-user
