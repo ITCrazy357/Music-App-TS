@@ -11,12 +11,30 @@ const userSchema = new mongoose.Schema(
     },
     avatar: String,
     description: String,
-    status: String,
+    status: {
+      type: String,
+      default: "active",
+    },
     deleted: {
       type: Boolean,
       default: false,
     },
-    deleteAt: Date,
+    deletedAt: Date,
+    createdBy: {
+      accountId: String,
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+    updatedBy: {
+      accountId: String,
+      updatedAt: Date,
+    },
+    deletedBy: {
+      accountId: String,
+      deletedAt: Date,
+    },
   },
   {
     timestamps: true,

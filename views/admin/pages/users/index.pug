@@ -1,0 +1,115 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+
+        .row
+            .col-12
+                +box-head(pageTitle)
+
+        .card.custom-list-card.mb-3
+            .card-header
+                | Danh sách tài khoản
+
+            .card-body
+
+                .custom-actions.d-flex.justify-content-between.mb-3
+                    div
+                    div
+                        a.btn.btn-outline-success.mr-2(
+                            href=`/${prefixAdmin}/users/create`
+                        )
+                            i.fa-solid.fa-plus.me-1
+                            | Thêm mới
+                        a.btn.btn-outline-danger(
+                            href=`/${prefixAdmin}/users/trash`
+                        )
+                            i.fa-solid.fa-trash-can.me-1
+                            | Thùng rác
+
+                if users && users.length > 0
+                    table.table.custom-table.table-hover
+                        thead
+                            tr
+                                th STT
+                                th Hình ảnh
+                                th Họ tên
+                                th Email
+                                th Nhóm quyền
+                                th Trạng thái
+                                th Hành động
+
+                        tbody
+                            each item, index in users
+                                tr
+                                    td #{index + 1}
+
+                                    td
+                                        img.custom-avatar(
+                                            src=(item.avatar ? item.avatar : "/admin/images/avatar-default.jpg")
+                                            alt=item.fullName
+                                        )
+
+                                    td.custom-title
+                                        = item.fullName
+
+                                    td.custom-listen
+                                        = item.email
+
+                                    td.custom-listen
+                                        = item.role_id ? item.role_id.title : ''
+
+                                    td
+                                        if (item.status === "active")
+                                            a.custom-status-active(
+                                                href="javascript:;"
+                                                button-change-status
+                                                data-status="active"
+                                                data-id=item.id
+                                            ) Hoạt động
+                                        else
+                                            a.custom-status-inactive(
+                                                href="javascript:;"
+                                                button-change-status
+                                                data-status="inactive"
+                                                data-id=item.id
+                                            ) Dừng hoạt động
+
+                                    td
+                                        .custom-actions-group
+                                            a.btn.btn-secondary.btn-sm(
+                                                href=`/${prefixAdmin}/users/detail/${item.id}`
+                                            ) 
+                                                i.fa-solid.fa-circle-info
+                                                span Chi tiết
+
+                                            a.btn.btn-warning.btn-sm(
+                                                href=`/${prefixAdmin}/users/edit/${item.id}`
+                                            ) 
+                                                i.fa-solid.fa-pen-to-square
+                                                span Sửa
+
+                                            button.btn.btn-danger.btn-sm(
+                                                button-delete
+                                                data-id=item.id
+                                            ) 
+                                                i.fa-solid.fa-trash
+                                                span Xóa
+
+                else
+                    .custom-empty.mt-3 Không có tài khoản nào.
+
+        form(
+            id="form-change-status"
+            method="POST"
+            action=""
+            data-path=`/${prefixAdmin}/users/change-status`
+        ) 
+
+        form(
+            id="form-delete-item"
+            method="POST"
+            action=""
+            data-path=`/${prefixAdmin}/users/delete`
+        )

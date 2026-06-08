@@ -1,0 +1,42 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .custom-detail-card.mb-3
+            .card-header 
+                i.fa-solid.fa-circle-info.mr-2
+                | Chi tiết tài khoản
+            .card-body
+                .row
+                    .col-lg-3.text-center
+                        if user.avatar
+                            img(src=user.avatar alt=user.fullName class="img-fluid rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.2);")
+                    .col-lg-9
+                        .mb-3
+                            h3.text-white #{user.fullName}
+                        p
+                            strong Email: 
+                            span.text-light #{user.email}
+                        p
+                            strong Nhóm quyền: 
+                            span.badge.badge-info #{user.role}
+                        if user.status
+                            p
+                                strong Trạng thái: 
+                                if user.status === "active"
+                                    span.badge.badge-success Hoạt động
+                                else
+                                    span.badge.badge-danger Dừng hoạt động
+                        
+                        .mt-4
+                            a(href=`/${prefixAdmin}/users/edit/${user.id}` class="btn btn-warning mr-2")
+                                i.fa-solid.fa-pen-to-square.mr-1
+                                | Chỉnh sửa
+                            a(href=`/${prefixAdmin}/users` class="btn btn-secondary")
+                                i.fa-solid.fa-arrow-left.mr-1
+                                | Quay lại

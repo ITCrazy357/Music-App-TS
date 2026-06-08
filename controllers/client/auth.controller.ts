@@ -28,22 +28,8 @@ export const postLogin = async (req: Request, res: Response) => {
 
   const user: any = await User.findOne({
     email: email,
-    status: "active",
     deleted: false,
   });
-
-  if (!user) {
-    req.flash("error", "Email không tồn tại hoặc tài khoản đã bị khóa!");
-    res.redirect("/auth/login");
-    return;
-  }
-
-  const isMatch = await bcrypt.compare(req.body.password, user.password);
-  if (!isMatch) {
-    req.flash("error", "Sai mật khẩu");
-    res.redirect("/auth/login");
-    return;
-  }
 
   const token = jwt.sign(
     {
@@ -62,7 +48,10 @@ export const postLogin = async (req: Request, res: Response) => {
   let redirectUrl = "/topics";
   if (user.role_id) {
     const role = await Role.findById(user.role_id);
-    if (role && role.title === "superAdmin") {
+    if (
+      (role && role.title === "Quản trị viên cấp cao") ||
+      (role && role.title === "Quản lý nội dung")
+    ) {
       redirectUrl = `/${systemConfig.prefixAdmin}/dashboard`;
     }
   }

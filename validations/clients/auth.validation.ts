@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from "express";
+import User from "../../models/user.model";
+import bcrypt from "bcrypt";
 
 export const registerValidation = (
   req: Request,
@@ -43,7 +45,7 @@ export const registerValidation = (
   next();
 };
 
-export const loginValidation = (
+export const loginValidation = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -54,6 +56,27 @@ export const loginValidation = (
     res.redirect("/auth/login");
     return;
   }
+  const user: any = await User.findOne({
+    email: email,
+    deleted: false,
+  });
+
+  if (!user) {
+    req.flash("error", "Email không tồn tại !");
+    res.redirect("/auth/login");
+    return;
+  } else if (user.status === "inactive") {
+    req.flash("error", "Tài khoản của bạn đã bị khóa!");
+    res.redirect("/auth/login");
+    return;
+  }
+
+  const isMatch = await bcrypt.compare(req.body.password, user.password);
+  if (!isMatch) {
+    req.flash("error", "Sai mật khẩu");
+    res.redirect("/auth/login");
+    return;
+  }
+
   next();
 };
-

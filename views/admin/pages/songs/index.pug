@@ -88,13 +88,13 @@ block main
                                             )
                                                 i.fa-solid.fa-pen-to-square
                                                 span Sửa
-
-                                            button.btn.btn-danger.btn-sm(
-                                                button-delete
-                                                data-id=item.id
-                                            )
-                                                i.fa-solid.fa-trash
-                                                span Xóa
+                                            if(role.permissions.includes("songs_delete"))
+                                                button.btn.btn-danger.btn-sm(
+                                                    button-delete
+                                                    data-id=item.id
+                                                )
+                                                    i.fa-solid.fa-trash
+                                                    span Xóa
 
                 else
 

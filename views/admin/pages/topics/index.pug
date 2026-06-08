@@ -79,11 +79,12 @@ block main
                                             href=`/${prefixAdmin}/topics/edit/${item.id}`
                                             class="btn btn-warning btn-sm mr-1"
                                         ) Sửa
-                                        button(
-                                            class="btn btn-danger btn-sm"
-                                            button-delete
-                                            data-id=item.id
-                                        ) Xóa
+                                        if(role.permissions.includes("topics_delete"))
+                                            button(
+                                                class="btn btn-danger btn-sm"
+                                                button-delete
+                                                data-id=item.id
+                                            ) Xóa
                 else
                     div.alert.alert-secondary.mt-3 Không có chủ đề nào.
 

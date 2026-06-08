@@ -5,27 +5,33 @@
         a(href=`/${prefixAdmin}/dashboard`)
           i.fa-solid.fa-chart-line
           span Tổng quan
-      li
-        a(href=`/${prefixAdmin}/songs`)
-          i.fa-solid.fa-music
-          span Bài hát
-      li
-        a(href=`/${prefixAdmin}/topics`)
-          i.fa-solid.fa-icons
-          span Chủ đề
-      li
-        a(href=`/${prefixAdmin}/singers`)
-          i.fa-solid.fa-microphone-lines
-          span Ca sĩ
-      li
-        a(href=`/${prefixAdmin}/users`)
-          i.fa-solid.fa-users
-          span Tài khoản
-      li
-        a(href=`/${prefixAdmin}/roles`)
-          i.fa-solid.fa-user-shield
-          span Nhóm quyền
-      li
-        a(href=`/${prefixAdmin}/roles/permissions`)
-          i.fa-solid.fa-key
-          span Phân quyền
+      if role && (role.permissions.includes("songs_view") || role.title === "superAdmin")
+        li
+          a(href=`/${prefixAdmin}/songs`)
+            i.fa-solid.fa-music
+            span Bài hát
+      if role && (role.permissions.includes("topics_view") || role.title === "superAdmin")
+        li
+          a(href=`/${prefixAdmin}/topics`)
+            i.fa-solid.fa-icons
+            span Chủ đề
+      if role && (role.permissions.includes("singers_view") || role.title === "superAdmin")
+        li
+          a(href=`/${prefixAdmin}/singers`)
+            i.fa-solid.fa-microphone-lines
+            span Ca sĩ
+      if role && (role.permissions.includes("users_view") || role.title === "superAdmin")
+        li
+          a(href=`/${prefixAdmin}/users`)
+            i.fa-solid.fa-users
+            span Tài khoản
+      if role && (role.permissions.includes("roles_view") || role.title === "superAdmin")
+        li
+          a(href=`/${prefixAdmin}/roles`)
+            i.fa-solid.fa-user-shield
+            span Nhóm quyền
+      if role && (role.permissions.includes("roles_permissions") || role.title === "superAdmin")
+        li
+          a(href=`/${prefixAdmin}/roles/permissions`)
+            i.fa-solid.fa-key
+            span Phân quyền

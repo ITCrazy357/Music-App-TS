@@ -1,0 +1,47 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .card.admin-form-card
+            .card-header 
+                i.fa-solid.fa-pen-to-square.mr-2
+                | Chỉnh sửa ca sĩ
+            .card-body
+                form.admin-form(action=`/${prefixAdmin}/singers/edit/${singer.id}?_method=PATCH` method="POST" enctype="multipart/form-data")
+                    .row
+                        .col-md-8
+                            .form-group
+                                label Họ tên ca sĩ
+                                input.form-control(type="text" name="fullName" required value=singer.fullName)
+                            
+                            .form-group
+                                label Mô tả
+                                textarea.form-control.textarea-mce(name="description" rows="5") #{singer.description}
+                                
+                            .form-group
+                                label Trạng thái
+                                .d-flex.align-items-center
+                                    .form-check.form-check-inline
+                                        input.form-check-input(type="radio" id="statusActive" name="status" value="active" checked=(singer.status === "active"))
+                                        label.form-check-label(for="statusActive") Hoạt động
+                                    .form-check.form-check-inline.ml-3
+                                        input.form-check-input(type="radio" id="statusInactive" name="status" value="inactive" checked=(singer.status === "inactive"))
+                                        label.form-check-label(for="statusInactive") Dừng hoạt động
+                        .col-md-4
+                            .form-group
+                                label Ảnh đại diện
+                                input.form-control-file.upload-image-input(type="file" name="avatar" accept="image/*")
+                                img.admin-preview-image.upload-image-preview(src=singer.avatar style="max-width: 200px; margin-top: 10px; border-radius: 8px;")
+                                
+                    .form-group.mt-4
+                        button(type="submit" class="btn btn-warning")
+                            i.fa-solid.fa-floppy-disk.mr-1
+                            | Cập nhật
+                        a(href=`/${prefixAdmin}/singers` class="btn btn-secondary ml-2")
+                            i.fa-solid.fa-arrow-left.mr-1
+                            | Quay lại

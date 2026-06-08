@@ -1,0 +1,104 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+
+        .row
+            .col-12
+                +box-head(pageTitle)
+
+        .card.custom-list-card.mb-3
+            .card-header
+                | Danh sách nhóm quyền
+
+            .card-body
+
+                .custom-actions.d-flex.justify-content-between.mb-3
+                    div
+                    div
+                        a.btn.btn-outline-success.mr-2(
+                            href=`/${prefixAdmin}/roles/create`
+                        )
+                            i.fa-solid.fa-plus.me-1
+                            | Thêm mới
+                        a.btn.btn-outline-danger(
+                            href=`/${prefixAdmin}/roles/trash`
+                        )
+                            i.fa-solid.fa-trash-can.me-1
+                            | Thùng rác
+
+                if roles && roles.length > 0
+                    table.table.custom-table.table-hover
+                        thead
+                            tr
+                                th STT
+                                th Tiêu đề
+                                th Mô tả
+                                th Trạng thái
+                                th Hành động
+
+                        tbody
+                            each item, index in roles
+                                tr
+                                    td #{index + 1}
+
+                                    td.custom-title
+                                        = item.title
+
+                                    td.custom-listen
+                                        = item.description
+
+                                    td
+                                        if (item.status === "active")
+                                            a.custom-status-active(
+                                                href="javascript:;"
+                                                button-change-status
+                                                data-status="active"
+                                                data-id=item.id
+                                            ) Hoạt động
+                                        else
+                                            a.custom-status-inactive(
+                                                href="javascript:;"
+                                                button-change-status
+                                                data-status="inactive"
+                                                data-id=item.id
+                                            ) Dừng hoạt động
+
+                                    td
+                                        .custom-actions-group
+                                            a.btn.btn-secondary.btn-sm(
+                                                href=`/${prefixAdmin}/roles/detail/${item.id}`
+                                            ) 
+                                                i.fa-solid.fa-circle-info
+                                                span Chi tiết
+
+                                            a.btn.btn-warning.btn-sm(
+                                                href=`/${prefixAdmin}/roles/edit/${item.id}`
+                                            ) 
+                                                i.fa-solid.fa-pen-to-square
+                                                span Sửa
+
+                                            button.btn.btn-danger.btn-sm(
+                                                button-delete
+                                                data-id=item.id
+                                            ) 
+                                                i.fa-solid.fa-trash
+                                                span Xóa
+
+                else
+                    .custom-empty.mt-3 Không có nhóm quyền nào.
+
+        form(
+            id="form-change-status"
+            method="POST"
+            action=""
+            data-path=`/${prefixAdmin}/roles/change-status`
+        ) 
+
+        form(
+            id="form-delete-item"
+            method="POST"
+            action=""
+            data-path=`/${prefixAdmin}/roles/delete`
+        )

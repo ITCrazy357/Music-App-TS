@@ -3,6 +3,9 @@ import { dashboardRoutes } from "./dashboard.route";
 import { systemConfig } from "../../config/system";
 import { topicRoutes } from "./topic.route";
 import { songRoutes } from "./song.route";
+import { singerRoutes } from "./singer.route";
+import { userRoutes } from "./user.route";
+import { roleRoutes } from "./role.route";
 import {
   requireAuth,
   requireAdmin,
@@ -18,9 +21,12 @@ const adminRouter = (app: Express): void => {
     requireAdmin,
     dashboardRoutes,
   );
-  app.use(PATH_ADMIN + "/topics", topicRoutes);
+  app.use(PATH_ADMIN + "/topics", requireAuth, requireAdmin, topicRoutes);
   app.use(PATH_ADMIN + "/songs", requireAuth, requireAdmin, songRoutes);
   app.use(PATH_ADMIN + "/upload", requireAuth, requireAdmin, uploadRoutes);
+  app.use(PATH_ADMIN + "/singers", requireAuth, requireAdmin, singerRoutes);
+  app.use(PATH_ADMIN + "/users", requireAuth, requireAdmin, userRoutes);
+  app.use(PATH_ADMIN + "/roles", requireAuth, requireAdmin, roleRoutes);
 };
 
 export default adminRouter;

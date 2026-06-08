@@ -1,0 +1,40 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .card.admin-form-card
+            .card-header 
+                i.fa-solid.fa-pen-to-square.mr-2
+                | Chỉnh sửa nhóm quyền
+            .card-body
+                form.admin-form(action=`/${prefixAdmin}/roles/edit/${role.id}?_method=PATCH` method="POST")
+                    .form-group
+                        label Tiêu đề
+                        input.form-control(type="text" name="title" required value=role.title)
+                        
+                    .form-group
+                        label Mô tả
+                        textarea.form-control(name="description" rows="3") #{role.description}
+                            
+                    .form-group
+                        label Trạng thái
+                        .d-flex.align-items-center
+                            .form-check.form-check-inline
+                                input.form-check-input(type="radio" id="statusActive" name="status" value="active" checked=(role.status === "active"))
+                                label.form-check-label(for="statusActive") Hoạt động
+                            .form-check.form-check-inline.ml-3
+                                input.form-check-input(type="radio" id="statusInactive" name="status" value="inactive" checked=(role.status === "inactive"))
+                                label.form-check-label(for="statusInactive") Dừng hoạt động
+                                
+                    .form-group.mt-4
+                        button(type="submit" class="btn btn-warning")
+                            i.fa-solid.fa-floppy-disk.mr-1
+                            | Cập nhật
+                        a(href=`/${prefixAdmin}/roles` class="btn btn-secondary ml-2")
+                            i.fa-solid.fa-arrow-left.mr-1
+                            | Quay lại

@@ -22,7 +22,13 @@ export const requireAuth = async (
       token,
       process.env.JWT_SECRET as string,
     );
-    const user = await User.findById(decodedToken.id);
+    const user: any = await User.findById(decodedToken.id);
+
+    if (user.status === "inactive") {
+      req.flash("error", "Tài khoản của bạn đã bị khóa!");
+      res.redirect("/auth/login");
+      return;
+    }
 
     if (!user) {
       res.clearCookie("token");
@@ -52,10 +58,26 @@ export const requireAdmin = (
 ) => {
   const role = res.locals.role;
 
-  if (role && role.title === "superAdmin") {
+  if (role) {
     next();
   } else {
     req.flash("error", "Bạn không có quyền truy cập trang này!");
     res.redirect("/topics");
   }
+};
+
+export const requirePermission = (permission: string) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const role = res.locals.role;
+
+    if (
+      (role && role.permissions.includes(permission)) ||
+      role.title === "Quản trị viên cấp cao"
+    ) {
+      next();
+    } else {
+      req.flash("error", "Bạn không có quyền thực hiện hành động này!");
+      res.redirect(`/${systemConfig.prefixAdmin}/dashboard`);
+    }
+  };
 };

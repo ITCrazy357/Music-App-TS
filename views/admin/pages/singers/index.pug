@@ -1,0 +1,117 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+
+        .row
+            .col-12
+                +box-head(pageTitle)
+
+        .card.custom-list-card.mb-3
+            .card-header
+                | Danh sách ca sĩ
+
+            .card-body
+
+                .custom-actions.d-flex.justify-content-between.mb-3
+                    div
+                    div
+                        if role && (role.permissions.includes("singers_create") || role.title === "superAdmin")
+                            a.btn.btn-outline-success.mr-2(
+                                href=`/${prefixAdmin}/singers/create`
+                            )
+                                i.fa-solid.fa-plus.me-1
+                                | Thêm mới
+                        if role && (role.permissions.includes("singers_delete") || role.title === "superAdmin")
+                            a.btn.btn-outline-danger(
+                                href=`/${prefixAdmin}/singers/trash`
+                            )
+                                i.fa-solid.fa-trash-can.me-1
+                                | Thùng rác
+
+                if singers && singers.length > 0
+                    table.table.custom-table.table-hover
+                        thead
+                            tr
+                                th STT
+                                th Hình ảnh
+                                th Tên ca sĩ
+                                th Trạng thái
+                                th Hành động
+
+                        tbody
+                            each item, index in singers
+                                tr
+                                    td #{index + 1}
+
+                                    td
+                                        img.custom-avatar(
+                                            src=(item.avatar ? item.avatar : "/admin/images/avatar-default.jpg")
+                                            alt=item.fullName
+                                        )
+
+                                    td.custom-title
+                                        = item.fullName
+
+                                    td
+                                        if (item.status === "active")
+                                            if role && (role.permissions.includes("singers_edit") || role.title === "superAdmin")
+                                                a.custom-status-active(
+                                                    href="javascript:;"
+                                                    button-change-status
+                                                    data-status="active"
+                                                    data-id=item.id
+                                                ) Hoạt động
+                                            else 
+                                                span.badge.badge-success Hoạt động
+                                        else
+                                            if role && (role.permissions.includes("singers_edit") || role.title === "superAdmin")
+                                                a.custom-status-inactive(
+                                                    href="javascript:;"
+                                                    button-change-status
+                                                    data-status="inactive"
+                                                    data-id=item.id
+                                                ) Dừng hoạt động
+                                            else 
+                                                span.badge.badge-danger Dừng hoạt động
+
+                                    td
+                                        .custom-actions-group
+                                            a.btn.btn-secondary.btn-sm(
+                                                href=`/${prefixAdmin}/singers/detail/${item.id}`
+                                            ) 
+                                                i.fa-solid.fa-circle-info
+                                                span Chi tiết
+
+                                            if role && (role.permissions.includes("singers_edit") || role.title === "superAdmin")
+                                                a.btn.btn-warning.btn-sm(
+                                                    href=`/${prefixAdmin}/singers/edit/${item.id}`
+                                                ) 
+                                                    i.fa-solid.fa-pen-to-square
+                                                    span Sửa
+
+                                            if role && (role.permissions.includes("singers_delete") || role.title === "superAdmin")
+                                                button.btn.btn-danger.btn-sm(
+                                                    button-delete
+                                                    data-id=item.id
+                                                ) 
+                                                    i.fa-solid.fa-trash
+                                                    span Xóa
+
+                else
+                    .custom-empty.mt-3 Không có ca sĩ nào.
+
+        form(
+            id="form-change-status"
+            method="POST"
+            action=""
+            data-path=`/${prefixAdmin}/singers/change-status`
+        ) 
+
+        form(
+            id="form-delete-item"
+            method="POST"
+            action=""
+            data-path=`/${prefixAdmin}/singers/delete`
+        )
