@@ -1,17 +1,27 @@
-# TODO - Admin Dashboard
+# TODO - Rà soát & hoàn thiện quên mật khẩu
 
-## Plan triển khai
+## Phần 1: Rà soát luồng + refactor tối thiểu
 
-- [x] Bước A: Đọc dashboard hiện tại + model fields liên quan (Song/Topic/Singer/User/Role).
+- [ ] Kiểm tra route/middleware của quên mật khẩu: `/forgot-password`, `/otp`, `/reset-password`.
+- [x] Đọc `routes/client/auth.route.ts`.
+- [x] Đọc `controllers/client/auth.controller.ts`.
+- [x] Đọc `models/user.model.ts`.
+- [x] Đọc `models/forgot-password.model.ts`.
+- [x] Đọc `helpers/sendMail.ts`.
+- [x] Đọc `views/client/pages/auth/forgot-password.pug`, `otp-password.pug`, `reset-password.pug`.
+- [x] Đọc `validations/clients/auth.validation.ts`.
+- [x] Đọc `middlewares/clients/auth.middleware.ts`.
+- [x] Refactor tối thiểu để tránh crash/logic thừa trong `postOtpPassword`.
 
-- [ ] Bước B: Cập nhật `controllers/admin/dashboard.controller.ts` để lấy thống kê thật từ MongoDB (countDocuments/aggregate), không hard-code.
+## Phần 2: Giao diện quên mật khẩu
 
-- [ ] Bước C: Cập nhật `views/admin/pages/dashboard/index.pug`:
-  - Thay toàn bộ số cứng bằng biến từ controller.
-  - Thêm phần Deleted/Active/Inactive theo status/deleted.
-  - Thêm danh sách Bài hát mới nhất, Chủ đề mới nhất.
-  - Thêm thống kê tương tác (Top listen / Top like) nếu data tồn tại.
-  - Thêm Activity gần đây theo createdBy/updatedBy.
-  - (Nếu có vùng chart trong dashboard hiện tại thì render dữ liệu thật; nếu không thì bỏ qua.)
-- [ ] Bước D: Kiểm tra build/run (npm test hoặc npm run dev tùy dự án).
-- [ ] Bước E: Liệt kê thống kê đã render, query đã dùng, file đã sửa, và trích code thay đổi.
+- [ ] Đồng bộ UI (dark theme + glassmorphism) cho `forgot-password`, `otp-password`, `reset-password`.
+
+## Phần 3: CSS đồng bộ các module (Pagination/Search/Filter/Bulk Actions...)
+
+- [ ] Kiểm tra CSS admin (Dashboard/Topics/Songs/Singers/Accounts) và đồng bộ style chung.
+- [ ] Tránh tạo style mới hoàn toàn khác; không đổi màu/layout đã thống nhất.
+
+## Xong
+
+- [ ] Tổng hợp danh sách route/controller/optimization/files CSS/mixins đã chỉnh.

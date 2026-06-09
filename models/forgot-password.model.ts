@@ -6,7 +6,7 @@ export const forgotPasswordSchema = new mongoose.Schema(
     otp: String,
     expiresAt: {
       type: Date,
-      expires: 0,
+      expires: 60,
     },
   },
   {

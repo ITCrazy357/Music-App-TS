@@ -3,6 +3,7 @@ include ../../mixins/box-head.pug
 include ../../mixins/pagination.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/form-change-multi.pug
+include ../../mixins/search.pug
 
 block main
     .container-fluid.px-4.px-lg-5.my-3
@@ -11,35 +12,17 @@ block main
             .col-12
                 +box-head(pageTitle)
 
-        .card.mb-3
-            .card-header Bộ lọc và Tìm kiếm
+        .song-list-card.mb-4
+            .card-header
+                i.fa-solid.fa-filter.mr-2
+                | Bộ lọc & Công cụ
             .card-body
-                .row
+                .row.mb-3
                     .col-6
                         +filter-status(filterStatus)
                     .col-6
-                        form(id="form-search")
-                            .input-group
-                                input(
-                                    type="text"
-                                    placeholder="Nhập từ khóa"
-                                    name="keyword"
-                                    class="form-control"
-                                    value=keyword
-                                )
-                                .input-group-append
-                                    button(
-                                        class="btn btn-success"
-                                        type="submit"
-                                    ) Tìm
-
-        .card.song-list-card.mb-3
-            .card-header
-                | Danh sách bài hát
-
-            .card-body
-
-                .row.mb-3
+                        +search(keyword)
+                .row
                     .col-8 
                         if role && (role.permissions.includes("songs_edit") || role.title === "Admin" || role.title === "Content")
                             +form-change-multi(`/${prefixAdmin}/songs/change-multi?_method=PATCH`)
@@ -56,6 +39,13 @@ block main
                             )
                                 i.fa-solid.fa-trash-can.me-1
                                 | Thùng rác
+
+        .song-list-card
+            .card-header
+                i.fa-solid.fa-list.mr-2
+                | Danh sách bài hát
+
+            .card-body
 
                 if songs.length > 0
 

@@ -3,6 +3,7 @@ include ../../mixins/box-head.pug
 include ../../mixins/pagination.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/form-change-multi.pug
+include ../../mixins/search.pug
 
 block main 
     .topic-index-page
@@ -10,34 +11,17 @@ block main
             .col-12 
                 +box-head(pageTitle)
 
-        .card.mb-3
-            .card-header Bộ lọc và Tìm kiếm
-            .card-body
-                .row
+        .topic-index-card.mb-4
+            .topic-index-header
+                i.fa-solid.fa-filter
+                span Bộ lọc & Công cụ
+            .topic-index-body
+                .row.mb-3
                     .col-6
                         +filter-status(filterStatus)
                     .col-6
-                        form(id="form-search")
-                            .input-group
-                                input(
-                                    type="text"
-                                    placeholder="Nhập từ khóa"
-                                    name="keyword"
-                                    class="form-control"
-                                    value=keyword
-                                )
-                                .input-group-append
-                                    button(
-                                        class="btn btn-success"
-                                        type="submit"
-                                    ) Tìm
-
-        .topic-index-card
-            .topic-index-header
-                i.fa-solid.fa-list
-                span Danh sách chủ đề
-            .topic-index-body
-                .row.mb-3
+                        +search(keyword)
+                .row
                     .col-8 
                         if role && (role.permissions.includes("topics_edit") || role.title === "Admin" || role.title === "Content")
                             +form-change-multi(`/${prefixAdmin}/topics/change-multi?_method=PATCH`)
@@ -57,6 +41,11 @@ block main
                                 i.fa-solid.fa-trash-can.mr-1
                                 | Thùng rác
 
+        .topic-index-card
+            .topic-index-header
+                i.fa-solid.fa-list
+                span Danh sách chủ đề
+            .topic-index-body
                 if topics.length > 0
                     table(
                         class="table table-hover table-sm mt-3"

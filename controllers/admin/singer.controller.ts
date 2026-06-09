@@ -27,7 +27,9 @@ export const index = async (req: Request, res: Response) => {
     ];
     if (req.query.status) {
       find.status = req.query.status;
-      const index = filterStatus.findIndex((item) => item.status === find.status);
+      const index = filterStatus.findIndex(
+        (item) => item.status === find.status,
+      );
       if (index !== -1) {
         filterStatus[index].class = "active";
       }
@@ -40,7 +42,7 @@ export const index = async (req: Request, res: Response) => {
     const objectPagination = pagination(
       {
         currentPage: 1,
-        limitItems: 4,
+        limitItems: 10,
       },
       req.query,
       countRecords,
@@ -68,7 +70,7 @@ export const changeMulti = async (req: Request, res: Response) => {
   try {
     const type = req.body.type;
     const ids = req.body.ids.split(", ");
-    
+
     const updatedBy = {
       accountId: res.locals.user ? res.locals.user._id : "mockId",
       updatedAt: new Date(),
@@ -77,11 +79,20 @@ export const changeMulti = async (req: Request, res: Response) => {
     switch (type) {
       case "active":
       case "inactive":
-        await Singer.updateMany({ _id: { $in: ids } }, { status: type, updatedBy });
-        req.flash("success", `Cập nhật trạng thái thành công cho ${ids.length} ca sĩ!`);
+        await Singer.updateMany(
+          { _id: { $in: ids } },
+          { status: type, updatedBy },
+        );
+        req.flash(
+          "success",
+          `Cập nhật trạng thái thành công cho ${ids.length} ca sĩ!`,
+        );
         break;
       case "delete-all":
-        await Singer.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date(), deletedBy: updatedBy });
+        await Singer.updateMany(
+          { _id: { $in: ids } },
+          { deleted: true, deletedAt: new Date(), deletedBy: updatedBy },
+        );
         req.flash("success", `Đã xóa thành công ${ids.length} ca sĩ!`);
         break;
       default:
@@ -122,13 +133,15 @@ export const createPost = async (req: Request, res: Response) => {
 
     const payload: any = {
       fullName,
-      description: description ? sanitizeHtml(description, {
-        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
-        allowedAttributes: {
-          ...sanitizeHtml.defaults.allowedAttributes,
-          img: ['src', 'alt', 'width', 'height', 'style', 'class']
-        }
-      }) : "",
+      description: description
+        ? sanitizeHtml(description, {
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+            allowedAttributes: {
+              ...sanitizeHtml.defaults.allowedAttributes,
+              img: ["src", "alt", "width", "height", "style", "class"],
+            },
+          })
+        : "",
       status: status || "inactive",
       slug: slug,
     };
@@ -193,13 +206,15 @@ export const editPatch = async (req: Request, res: Response) => {
 
     const payload: any = {
       fullName,
-      description: description ? sanitizeHtml(description, {
-        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
-        allowedAttributes: {
-          ...sanitizeHtml.defaults.allowedAttributes,
-          img: ['src', 'alt', 'width', 'height', 'style', 'class']
-        }
-      }) : "",
+      description: description
+        ? sanitizeHtml(description, {
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+            allowedAttributes: {
+              ...sanitizeHtml.defaults.allowedAttributes,
+              img: ["src", "alt", "width", "height", "style", "class"],
+            },
+          })
+        : "",
       status: status || "inactive",
     };
 
@@ -265,7 +280,10 @@ export const deleteItem = async (req: Request, res: Response) => {
       deletedAt: new Date(),
     };
 
-    await Singer.updateOne({ _id: id }, { deleted: true, deletedAt: new Date(), deletedBy });
+    await Singer.updateOne(
+      { _id: id },
+      { deleted: true, deletedAt: new Date(), deletedBy },
+    );
     req.flash("success", "Ca sĩ đã được chuyển vào thùng rác.");
     res.redirect("back");
   } catch (error) {

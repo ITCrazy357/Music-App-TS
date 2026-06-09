@@ -89,11 +89,13 @@ export const resetPasswordValidation = (
   if (req.body.password !== req.body.confirmPassword) {
     req.flash("error", "Mật khẩu xác nhận không khớp");
     res.redirect("/auth/reset-password");
+    return;
   }
 
   if (!req.body.password || !req.body.confirmPassword) {
     req.flash("error", "Vui lòng nhập đầy đủ thông tin");
     res.redirect("/auth/reset-password");
+    return;
   }
   next();
 };

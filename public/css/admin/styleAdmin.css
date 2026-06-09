@@ -12,6 +12,10 @@
 @import url("./components/tables.css");
 @import url("./components/custom-list.css");
 @import url("./components/custom-detail.css");
+@import url("./components/pagination.css");
+@import url("./components/filters.css");
+@import url("./components/checkbox.css");
+@import url("./components/search.css");
 
 /* ========== LAYOUTS ========== */
 @import url("./layouts/dashboard.css");

@@ -28,7 +28,9 @@ export const index = async (req: Request, res: Response) => {
     ];
     if (req.query.status) {
       find.status = req.query.status;
-      const index = filterStatus.findIndex((item) => item.status === find.status);
+      const index = filterStatus.findIndex(
+        (item) => item.status === find.status,
+      );
       if (index !== -1) {
         filterStatus[index].class = "active";
       }
@@ -41,7 +43,7 @@ export const index = async (req: Request, res: Response) => {
     const objectPagination = pagination(
       {
         currentPage: 1,
-        limitItems: 4,
+        limitItems: 10,
       },
       req.query,
       countRecords,
@@ -69,7 +71,7 @@ export const changeMulti = async (req: Request, res: Response) => {
   try {
     const type = req.body.type;
     const ids = req.body.ids.split(", ");
-    
+
     const updatedBy = {
       accountId: res.locals.user ? res.locals.user._id : "mockId",
       updatedAt: new Date(),
@@ -78,11 +80,20 @@ export const changeMulti = async (req: Request, res: Response) => {
     switch (type) {
       case "active":
       case "inactive":
-        await Song.updateMany({ _id: { $in: ids } }, { status: type, updatedBy });
-        req.flash("success", `Cập nhật trạng thái thành công cho ${ids.length} bài hát!`);
+        await Song.updateMany(
+          { _id: { $in: ids } },
+          { status: type, updatedBy },
+        );
+        req.flash(
+          "success",
+          `Cập nhật trạng thái thành công cho ${ids.length} bài hát!`,
+        );
         break;
       case "delete-all":
-        await Song.updateMany({ _id: { $in: ids } }, { deleted: true, deletedAt: new Date(), deletedBy: updatedBy });
+        await Song.updateMany(
+          { _id: { $in: ids } },
+          { deleted: true, deletedAt: new Date(), deletedBy: updatedBy },
+        );
         req.flash("success", `Đã xóa thành công ${ids.length} bài hát!`);
         break;
       default:
@@ -127,7 +138,9 @@ export const createPost = async (req: Request, res: Response) => {
       return res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
     }
 
-    let baseSlug = req.body.slug ? convertToSlug(req.body.slug.trim()) : convertToSlug(title);
+    let baseSlug = req.body.slug
+      ? convertToSlug(req.body.slug.trim())
+      : convertToSlug(title);
     let slug = baseSlug;
     let count = 1;
     while (await Song.exists({ slug: slug })) {
@@ -207,7 +220,9 @@ export const editPatch = async (req: Request, res: Response) => {
       return res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
     }
 
-    let baseSlug = req.body.slug ? convertToSlug(req.body.slug.trim()) : convertToSlug(title);
+    let baseSlug = req.body.slug
+      ? convertToSlug(req.body.slug.trim())
+      : convertToSlug(title);
     let slug = baseSlug;
     let count = 1;
     while (await Song.exists({ slug: slug, _id: { $ne: id } })) {
@@ -220,14 +235,18 @@ export const editPatch = async (req: Request, res: Response) => {
       slug: slug,
       topicId,
       singerId,
-      description: description ? sanitizeHtml(description, {
-        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
-        allowedAttributes: {
-          ...sanitizeHtml.defaults.allowedAttributes,
-          img: ['src', 'alt', 'width', 'height', 'style', 'class']
-        }
-      }) : "",
-      lyrics: lyrics ? sanitizeHtml(lyrics, { allowedTags: [], allowedAttributes: {} }) : "",
+      description: description
+        ? sanitizeHtml(description, {
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+            allowedAttributes: {
+              ...sanitizeHtml.defaults.allowedAttributes,
+              img: ["src", "alt", "width", "height", "style", "class"],
+            },
+          })
+        : "",
+      lyrics: lyrics
+        ? sanitizeHtml(lyrics, { allowedTags: [], allowedAttributes: {} })
+        : "",
       status: status || "inactive",
     };
 
@@ -253,7 +272,7 @@ export const editPatch = async (req: Request, res: Response) => {
       {
         ...payload,
         updatedBy: updatedSong,
-      }
+      },
     );
     req.flash("success", "Cập nhật bài hát thành công.");
     res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
@@ -301,10 +320,7 @@ export const changeStatus = async (req: Request, res: Response) => {
       updatedAt: new Date(),
     };
 
-    await Song.updateOne(
-      { _id: id },
-      { status, updatedBy: updatedSong },
-    );
+    await Song.updateOne({ _id: id }, { status, updatedBy: updatedSong });
     req.flash("success", "Cập nhật trạng thái thành công.");
     res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   } catch (error) {
@@ -321,10 +337,7 @@ export const deleteItem = async (req: Request, res: Response) => {
       accountId: res.locals.user ? res.locals.user._id : "mockId",
       deletedAt: new Date(),
     };
-    await Song.updateOne(
-      { _id: id },
-      { deleted: true, deletedBy: deletedBy },
-    );
+    await Song.updateOne({ _id: id }, { deleted: true, deletedBy: deletedBy });
     req.flash("success", "Bài hát đã được chuyển vào thùng rác.");
     res.redirect(`/${req.app.locals.prefixAdmin}/songs`);
   } catch (error) {

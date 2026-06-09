@@ -3,6 +3,7 @@ include ../../mixins/box-head.pug
 include ../../mixins/pagination.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/form-change-multi.pug
+include ../../mixins/search.pug
 
 block main
     .container-fluid.px-4.px-lg-5.my-3
@@ -11,40 +12,35 @@ block main
             .col-12
                 +box-head(pageTitle)
 
-        .card.mb-3
-            .card-header Bộ lọc và Tìm kiếm
+        .custom-list-card.mb-4
+            .card-header
+                i.fa-solid.fa-filter.mr-2
+                | Bộ lọc & Công cụ
             .card-body
-                .row
+                .row.mb-3
                     .col-4
                         +filter-status(filterStatus)
                     .col-8
                         form(id="form-search")
-                            .input-group
-                                select(name="role_id" class="form-select" style="max-width: 200px;")
+                            .d-flex.align-items-center.gap-2
+                                select(name="role_id" class="form-select custom-select-multi" style="max-width: 200px;")
                                     option(value="") -- Tất cả nhóm quyền --
                                     if roles
                                         each item in roles
                                             option(value=item.id selected=(item.id == roleId)) #{item.title}
-                                input(
-                                    type="text"
-                                    placeholder="Nhập từ khóa"
-                                    name="keyword"
-                                    class="form-control"
-                                    value=keyword
-                                )
-                                .input-group-append
+                                .search-form
+                                    input(
+                                        type="text"
+                                        placeholder="Nhập từ khóa..."
+                                        name="keyword"
+                                        value=keyword
+                                    )
                                     button(
-                                        class="btn btn-success"
+                                        class="btn-search"
                                         type="submit"
-                                    ) Tìm
-
-        .card.custom-list-card.mb-3
-            .card-header
-                | Danh sách tài khoản
-
-            .card-body
-
-                .row.mb-3
+                                    )
+                                        i.fa-solid.fa-magnifying-glass
+                .row
                     .col-8
                         +form-change-multi(`/${prefixAdmin}/users/change-multi?_method=PATCH`)
                     .col-4.text-right
@@ -58,6 +54,13 @@ block main
                         )
                             i.fa-solid.fa-trash-can.me-1
                             | Thùng rác
+
+        .custom-list-card
+            .card-header
+                i.fa-solid.fa-list.mr-2
+                | Danh sách tài khoản
+
+            .card-body
 
                 if users && users.length > 0
                     table.table.custom-table.table-hover(checkbox-multi)

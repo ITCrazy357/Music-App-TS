@@ -1,7 +1,8 @@
 mixin filter-status(filterStatus)
-    each item in filterStatus
-        button(
-            type="button"
-            class=`btn btn-sm ms-1 btn-outline-success ${item.class}`
-            button-status=item.status
-        ) #{item.name}
+    .filter-status
+        each item in filterStatus
+            button(
+                type="button"
+                class=`btn-filter ${item.class}`
+                button-status=item.status
+            ) #{item.name}

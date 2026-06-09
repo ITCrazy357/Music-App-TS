@@ -7,6 +7,21 @@
   border-radius: 8px;
 }
 
+.custom-select-multi {
+  padding: 8px 12px;
+  font-size: 14px;
+  height: 38px;
+  min-width: 180px;
+  background-image: none !important;
+  appearance: auto;
+  -webkit-appearance: auto;
+}
+
+.custom-select-multi option {
+  background: var(--dark-light);
+  color: #fff;
+}
+
 .form-control-file,
 .form-check-input,
 .form-check-label,

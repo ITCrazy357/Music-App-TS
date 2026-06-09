@@ -13,7 +13,7 @@ export const sendMail = (email: string, subject: string, html: string) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: "Subject",
+    subject: subject,
     html: html,
   };
 

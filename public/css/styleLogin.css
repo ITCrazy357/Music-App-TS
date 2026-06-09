@@ -198,3 +198,36 @@ body {
 .auth-register-link:hover {
   text-decoration: underline;
 }
+
+/* ===== Countdown Timer ===== */
+.auth-countdown {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.auth-countdown #countdown-time {
+  font-weight: 700;
+  font-size: 24px;
+  color: #fff;
+}
+
+/* ===== Resend Link ===== */
+.auth-resend {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-resend-link {
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.auth-resend-link:hover {
+  text-decoration: underline;
+  opacity: 1 !important;
+}

@@ -1,0 +1,14 @@
+mixin search(keyword)
+    form(id="form-search")
+        .search-form
+            input(
+                type="text"
+                placeholder="Nhập từ khóa..."
+                name="keyword"
+                value=keyword
+            )
+            button(
+                class="btn-search"
+                type="submit"
+            )
+                i.fa-solid.fa-magnifying-glass

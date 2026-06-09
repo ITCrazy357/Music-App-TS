@@ -131,8 +131,6 @@ export const forgotPassword = (req: Request, res: Response) => {
 };
 
 //[POST] /auth/forgot-password
-import { sendMail } from "../../helpers/sendMail";
-
 export const postForgotPassword = async (req: Request, res: Response) => {
   const email = req.body.email;
 
@@ -153,11 +151,14 @@ export const postForgotPassword = async (req: Request, res: Response) => {
     return;
   }
 
+  // Xóa các OTP cũ của email này để tránh bảng phình to
+  await ForgotPassword.deleteMany({ email: email });
+
   const otp = generateRandomNumber(6);
   const objectForgotPassword = {
     email: email,
     otp: otp,
-    expiresAt: new Date(Date.now() + 1 * 60 * 1000),
+    expiresAt: new Date(Date.now() + 60 * 1000), // 60 giây = TTL index
   };
 
   const forgotPassword = new ForgotPassword(objectForgotPassword);
@@ -195,13 +196,20 @@ export const postOtpPassword = async (req: Request, res: Response) => {
 
   if (!result) {
     req.flash("error", "Mã OTP không đúng hoặc đã hết hạn!");
-    res.redirect("/auth/forgot-password");
+    res.redirect("/auth/otp?email=" + email);
     return;
   }
 
   const user: any = await User.findOne({
     email: email,
+    deleted: false,
   });
+
+  if (!user) {
+    req.flash("error", "Tài khoản không tồn tại!");
+    res.redirect("/auth/forgot-password");
+    return;
+  }
 
   const token = jwt.sign(
     {

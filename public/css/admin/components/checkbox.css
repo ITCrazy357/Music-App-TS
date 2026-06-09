@@ -1,0 +1,42 @@
+/* ========== CHECKBOXES ========== */
+input[type="checkbox"][name="checkall"],
+input[type="checkbox"][name="id"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+}
+
+input[type="checkbox"][name="checkall"]:hover,
+input[type="checkbox"][name="id"]:hover {
+  border-color: var(--primary);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+input[type="checkbox"][name="checkall"]:checked,
+input[type="checkbox"][name="id"]:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+input[type="checkbox"][name="checkall"]:checked::after,
+input[type="checkbox"][name="id"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
