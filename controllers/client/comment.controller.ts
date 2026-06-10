@@ -147,3 +147,80 @@ export const dislikeComment = async (req: Request, res: Response) => {
     res.status(500).json({ code: 500, message: "Lỗi server" });
   }
 };
+
+// [PATCH] /comments/edit/:idComment
+export const editComment = async (req: Request, res: Response) => {
+  try {
+    const idComment = req.params.idComment;
+    const content = req.body.content;
+    const userId = res.locals.user.id;
+
+    if (!content || !content.trim()) {
+      return res
+        .status(400)
+        .json({ code: 400, message: "Nội dung không được để trống" });
+    }
+
+    const comment = await Comment.findOne({ _id: idComment, deleted: false });
+
+    if (!comment) {
+      return res
+        .status(404)
+        .json({ code: 404, message: "Không tìm thấy bình luận" });
+    }
+
+    if (String(comment.userId) !== String(userId)) {
+      return res
+        .status(403)
+        .json({
+          code: 403,
+          message: "Bạn không có quyền chỉnh sửa bình luận này",
+        });
+    }
+
+    comment.content = content.trim();
+    comment.edited = true;
+    comment.editedAt = new Date();
+
+    await comment.save();
+
+    const updated = await Comment.findById(comment._id)
+      .populate("userId", "fullName avatar")
+      .lean();
+
+    res.status(200).json({ code: 200, comment: updated });
+  } catch (error) {
+    res.status(500).json({ code: 500, message: "Lỗi server" });
+  }
+};
+
+// [DELETE] /comments/delete/:idComment
+export const deleteComment = async (req: Request, res: Response) => {
+  try {
+    const idComment = req.params.idComment;
+    const userId = res.locals.user.id;
+
+    const comment = await Comment.findOne({ _id: idComment, deleted: false });
+
+    if (!comment) {
+      return res
+        .status(404)
+        .json({ code: 404, message: "Không tìm thấy bình luận" });
+    }
+
+    if (String(comment.userId) !== String(userId)) {
+      return res
+        .status(403)
+        .json({ code: 403, message: "Bạn không có quyền xóa bình luận này" });
+    }
+
+    comment.deleted = true;
+    comment.deletedAt = new Date();
+
+    await comment.save();
+
+    res.status(200).json({ code: 200, message: "Xóa bình luận thành công" });
+  } catch (error) {
+    res.status(500).json({ code: 500, message: "Lỗi server" });
+  }
+};

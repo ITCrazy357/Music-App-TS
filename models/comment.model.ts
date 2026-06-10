@@ -37,6 +37,12 @@ const commentSchema = new mongoose.Schema(
       default: false,
     },
     deletedAt: Date,
+
+    edited: {
+      type: Boolean,
+      default: false,
+    },
+    editedAt: Date,
   },
   {
     timestamps: true,

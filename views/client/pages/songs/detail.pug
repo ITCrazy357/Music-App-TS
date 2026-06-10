@@ -100,14 +100,21 @@ block main
                                                     span.comment-time 
                                                         - const date = new Date(comment.createdAt)
                                                         | #{date.toLocaleString('vi-VN')}
+                                                        if comment.edited && comment.editedAt
+                                                            |  • đã chỉnh sửa
                                                     
-                                                    button.comment-action.btn-like(class=(comment.isLikedByUser ? "active" : "") button-like-comment=comment._id)
-                                                        i.fa-solid.fa-thumbs-up
-                                                        span.count #{comment.likeCount}
-                                                    
-                                                    button.comment-action.btn-dislike(class=(comment.isDislikedByUser ? "active" : "") button-dislike-comment=comment._id)
-                                                        i.fa-solid.fa-thumbs-down
-                                                        span.count #{comment.dislikeCount}
+                                                    if user && String(comment.userId._id) === String(user.id)
+                                                        .comment-owner-actions
+                                                            button.comment-action.btn-edit(type="button" button-edit-comment=comment._id) Chỉnh sửa
+                                                            button.comment-action.btn-delete(type="button" button-delete-comment=comment._id) Xóa
+                                                    else
+                                                        button.comment-action.btn-like(class=(comment.isLikedByUser ? "active" : "") button-like-comment=comment._id)
+                                                            i.fa-solid.fa-thumbs-up
+                                                            span.count #{comment.likeCount}
+                                                        
+                                                        button.comment-action.btn-dislike(class=(comment.isDislikedByUser ? "active" : "") button-dislike-comment=comment._id)
+                                                            i.fa-solid.fa-thumbs-down
+                                                            span.count #{comment.dislikeCount}
                                 else
                                     .no-comments
                                         p Chưa có bình luận nào. Hãy là người đầu tiên bình luận!

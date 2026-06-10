@@ -429,6 +429,158 @@ if (formComment) {
   });
 }
 
+// Comment Edit/Delete Actions (owner only)
+const commentEditButtons = document.querySelectorAll("[button-edit-comment]");
+const commentDeleteButtons = document.querySelectorAll(
+  "[button-delete-comment]",
+);
+
+if (commentEditButtons.length > 0) {
+  commentEditButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idComment = btn.getAttribute("button-edit-comment");
+      const commentItem = btn.closest(".comment-item");
+      if (!idComment || !commentItem) return;
+
+      const commentTextEl = commentItem.querySelector(".comment-text");
+      if (!commentTextEl) return;
+
+      const currentContent = commentTextEl.textContent || "";
+
+      commentItem.dataset.editing = "true";
+
+      commentTextEl.innerHTML = `
+        <textarea class="comment-edit-textarea" rows="3">${currentContent.replace(/</g, "<").replace(/>/g, ">")}</textarea>
+        <div class="comment-edit-actions" style="margin-top:8px; display:flex; gap:8px;">
+          <button class="btn btn-primary btn-comment-save" type="button">Lưu</button>
+          <button class="btn btn-outline-secondary btn-comment-cancel" type="button">Hủy</button>
+        </div>
+      `;
+
+      const btnSave = commentItem.querySelector(".btn-comment-save");
+      const btnCancel = commentItem.querySelector(".btn-comment-cancel");
+
+      if (btnCancel) {
+        btnCancel.addEventListener("click", () => {
+          commentItem.dataset.editing = "false";
+          commentTextEl.textContent = currentContent;
+        });
+      }
+
+      if (btnSave) {
+        btnSave.addEventListener("click", () => {
+          const textarea = commentItem.querySelector(".comment-edit-textarea");
+          const newContent = textarea ? textarea.value.trim() : "";
+          if (!newContent) return;
+
+          fetch(`/comments/edit/${idComment}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: newContent }),
+          })
+            .then((res) => {
+              if (res.status === 401) {
+                window.location.href = "/auth/login";
+                return null;
+              }
+              return res.json();
+            })
+            .then((data) => {
+              if (!data) return;
+              if (data.code === 200 && data.comment) {
+                const updated = data.comment;
+                commentItem.querySelector(".comment-text").textContent =
+                  updated.content || "";
+
+                const timeEl = commentItem.querySelector(".comment-time");
+                if (timeEl) {
+                  const timeText = timeEl.textContent || "";
+                  if (updated.edited && !timeText.includes("đã chỉnh sửa")) {
+                    timeEl.textContent = `${timeText} • đã chỉnh sửa`;
+                  }
+                }
+
+                commentItem.dataset.editing = "false";
+
+                // Re-render owner action buttons
+                const ownerActions = commentItem.querySelector(
+                  ".comment-owner-actions",
+                );
+                if (ownerActions) ownerActions.remove();
+
+                const meta = commentItem.querySelector(".comment-meta");
+                if (meta) {
+                  meta.insertAdjacentHTML(
+                    "beforeend",
+                    `
+                      <div class="comment-owner-actions">
+                        <button class="comment-action btn-edit" type="button" button-edit-comment="${updated._id}">Chỉnh sửa</button>
+                        <button class="comment-action btn-delete" type="button" button-delete-comment="${updated._id}">Xóa</button>
+                      </div>
+                    `,
+                  );
+
+                  const newEditBtn = meta.querySelector(
+                    "[button-edit-comment]",
+                  );
+                  if (newEditBtn) newEditBtn.click();
+                }
+              } else {
+                alert(data.message || "Có lỗi xảy ra, vui lòng thử lại.");
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              alert("Có lỗi xảy ra, vui lòng thử lại.");
+            });
+        });
+      }
+    });
+  });
+}
+
+if (commentDeleteButtons.length > 0) {
+  commentDeleteButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idComment = btn.getAttribute("button-delete-comment");
+      const commentItem = btn.closest(".comment-item");
+      if (!idComment || !commentItem) return;
+
+      const ok = confirm("Bạn có chắc muốn xóa bình luận này?");
+      if (!ok) return;
+
+      fetch(`/comments/delete/${idComment}`, { method: "DELETE" })
+        .then((res) => {
+          if (res.status === 401) {
+            window.location.href = "/auth/login";
+            return null;
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (!data) return;
+          if (data.code === 200) {
+            commentItem.remove();
+
+            const commentsList = document.querySelector(".comments-list");
+            if (commentsList) {
+              const items = commentsList.querySelectorAll(".comment-item");
+              if (!items || items.length === 0) {
+                commentsList.innerHTML = `<div class="no-comments"><p>Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</p></div>`;
+              }
+            }
+          } else {
+            alert(data.message || "Có lỗi xảy ra, vui lòng thử lại.");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("Có lỗi xảy ra, vui lòng thử lại.");
+        });
+    });
+  });
+}
+
 // Comment Like/Dislike Actions
 const commentLikeButtons = document.querySelectorAll("[button-like-comment]");
 const commentDislikeButtons = document.querySelectorAll(
