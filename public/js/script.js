@@ -358,9 +358,66 @@ if (formComment) {
       .then((res) => res.json())
       .then((data) => {
         if (data.code === 200) {
-          // Clear input and reload page to show new comment
           contentInput.value = "";
-          window.location.reload();
+
+          // Append new comment without reload
+          const commentsList = document.querySelector(".comments-list");
+          const commentsHeaderCount = document.querySelector(
+            ".comments-title span",
+          );
+
+          if (!commentsList || !data.comment) return;
+
+          // If currently no comments, replace placeholder
+          const noComments = commentsList.querySelector(".no-comments");
+
+          const comment = data.comment;
+          const user = comment.userId || {};
+
+          const newItem = document.createElement("div");
+          newItem.className = "comment-item";
+          newItem.innerHTML = `
+            <div class="comment-avatar">
+              <img src="${user.avatar || "/images/avatar.png"}" alt="${user.fullName || ""}" />
+            </div>
+            <div class="comment-content">
+              <div class="comment-author-name">${user.fullName || ""}</div>
+              <div class="comment-text">${comment.content || ""}</div>
+              <div class="comment-meta">
+                <span class="comment-time">${comment.createdAt ? new Date(comment.createdAt).toLocaleString("vi-VN") : ""}</span>
+
+                <button class="comment-action btn-like" button-like-comment="${comment._id}"${comment.isLikedByUser ? " active" : ""}>
+                  <i class="fa-solid fa-thumbs-up"></i>
+                  <span class="count">${comment.likeCount ?? 0}</span>
+                </button>
+
+                <button class="comment-action btn-dislike" button-dislike-comment="${comment._id}"${comment.isDislikedByUser ? " active" : ""}>
+                  <i class="fa-solid fa-thumbs-down"></i>
+                  <span class="count">${comment.dislikeCount ?? 0}</span>
+                </button>
+              </div>
+            </div>
+          `;
+
+          if (noComments) {
+            noComments.remove();
+          }
+
+          commentsList.appendChild(newItem);
+
+          // Update header count
+          if (commentsHeaderCount) {
+            const currentText = commentsHeaderCount.textContent || "";
+            const match = currentText.match(/\((\d+)\)/);
+            if (match) {
+              const n = parseInt(match[1], 10);
+              if (!Number.isNaN(n)) {
+                commentsHeaderCount.textContent = `Bình luận (${n + 1})`
+                  .replace(/^Bình luận\s*/, "")
+                  .trim();
+              }
+            }
+          }
         } else {
           alert(data.message || "Có lỗi xảy ra, vui lòng thử lại.");
         }
@@ -374,7 +431,9 @@ if (formComment) {
 
 // Comment Like/Dislike Actions
 const commentLikeButtons = document.querySelectorAll("[button-like-comment]");
-const commentDislikeButtons = document.querySelectorAll("[button-dislike-comment]");
+const commentDislikeButtons = document.querySelectorAll(
+  "[button-dislike-comment]",
+);
 
 if (commentLikeButtons.length > 0) {
   commentLikeButtons.forEach((btn) => {
@@ -386,8 +445,8 @@ if (commentLikeButtons.length > 0) {
         .then((res) => {
           // Check if response is 401 Unauthorized (not logged in) - might redirect or return error
           if (res.status === 401) {
-             window.location.href = '/auth/login';
-             return null;
+            window.location.href = "/auth/login";
+            return null;
           }
           return res.json();
         })
@@ -395,9 +454,12 @@ if (commentLikeButtons.length > 0) {
           if (data && data.code === 200) {
             // Update UI
             btn.querySelector(".count").textContent = data.likeCount;
-            const dislikeBtn = btn.parentElement.querySelector("[button-dislike-comment]");
+            const dislikeBtn = btn.parentElement.querySelector(
+              "[button-dislike-comment]",
+            );
             if (dislikeBtn) {
-              dislikeBtn.querySelector(".count").textContent = data.dislikeCount;
+              dislikeBtn.querySelector(".count").textContent =
+                data.dislikeCount;
             }
 
             if (data.isLiked) {
@@ -412,10 +474,11 @@ if (commentLikeButtons.length > 0) {
               dislikeBtn.classList.remove("active");
             }
           } else if (data && data.code !== 200) {
-            if (data.message === "Vui lòng đăng nhập!") { // assuming auth.middleware might send this
-                window.location.href = '/auth/login';
+            if (data.message === "Vui lòng đăng nhập!") {
+              // assuming auth.middleware might send this
+              window.location.href = "/auth/login";
             } else {
-                alert(data.message);
+              alert(data.message);
             }
           }
         });
@@ -431,9 +494,9 @@ if (commentDislikeButtons.length > 0) {
 
       fetch(link, { method: "PATCH" })
         .then((res) => {
-           if (res.status === 401) {
-             window.location.href = '/auth/login';
-             return null;
+          if (res.status === 401) {
+            window.location.href = "/auth/login";
+            return null;
           }
           return res.json();
         })
@@ -441,7 +504,9 @@ if (commentDislikeButtons.length > 0) {
           if (data && data.code === 200) {
             // Update UI
             btn.querySelector(".count").textContent = data.dislikeCount;
-            const likeBtn = btn.parentElement.querySelector("[button-like-comment]");
+            const likeBtn = btn.parentElement.querySelector(
+              "[button-like-comment]",
+            );
             if (likeBtn) {
               likeBtn.querySelector(".count").textContent = data.likeCount;
             }
@@ -458,10 +523,10 @@ if (commentDislikeButtons.length > 0) {
               likeBtn.classList.remove("active");
             }
           } else if (data && data.code !== 200) {
-             if (data.message === "Vui lòng đăng nhập!") {
-                window.location.href = '/auth/login';
+            if (data.message === "Vui lòng đăng nhập!") {
+              window.location.href = "/auth/login";
             } else {
-                alert(data.message);
+              alert(data.message);
             }
           }
         });

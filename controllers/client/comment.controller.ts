@@ -9,7 +9,9 @@ export const postComment = async (req: Request, res: Response) => {
     const user = res.locals.user;
 
     if (!content) {
-      return res.status(400).json({ code: 400, message: "Nội dung không được để trống" });
+      return res
+        .status(400)
+        .json({ code: 400, message: "Nội dung không được để trống" });
     }
 
     const comment = new Comment({
@@ -20,10 +22,14 @@ export const postComment = async (req: Request, res: Response) => {
 
     await comment.save();
 
+    const populatedComment = await Comment.findById(comment._id)
+      .populate("userId", "fullName avatar")
+      .lean();
+
     res.status(200).json({
       code: 200,
       message: "Đăng bình luận thành công!",
-      comment: comment
+      comment: populatedComment,
     });
   } catch (error) {
     res.status(500).json({ code: 500, message: "Lỗi server" });
@@ -39,7 +45,9 @@ export const likeComment = async (req: Request, res: Response) => {
     const comment = await Comment.findOne({ _id: idComment, deleted: false });
 
     if (!comment) {
-      return res.status(404).json({ code: 404, message: "Không tìm thấy bình luận" });
+      return res
+        .status(404)
+        .json({ code: 404, message: "Không tìm thấy bình luận" });
     }
 
     const isLiked = comment.likes.includes(userId);
@@ -51,14 +59,14 @@ export const likeComment = async (req: Request, res: Response) => {
         { _id: idComment },
         {
           $pull: { likes: userId },
-          $inc: { likeCount: -1 }
-        }
+          $inc: { likeCount: -1 },
+        },
       );
     } else {
       // Thêm Like
       const updateData: any = {
         $push: { likes: userId },
-        $inc: { likeCount: 1 }
+        $inc: { likeCount: 1 },
       };
 
       // Nếu đang Dislike thì bỏ Dislike
@@ -77,7 +85,7 @@ export const likeComment = async (req: Request, res: Response) => {
       likeCount: updatedComment?.likeCount,
       dislikeCount: updatedComment?.dislikeCount,
       isLiked: !isLiked,
-      isDisliked: false // Vì nếu vừa like thì chắc chắn không dislike
+      isDisliked: false, // Vì nếu vừa like thì chắc chắn không dislike
     });
   } catch (error) {
     res.status(500).json({ code: 500, message: "Lỗi server" });
@@ -93,7 +101,9 @@ export const dislikeComment = async (req: Request, res: Response) => {
     const comment = await Comment.findOne({ _id: idComment, deleted: false });
 
     if (!comment) {
-      return res.status(404).json({ code: 404, message: "Không tìm thấy bình luận" });
+      return res
+        .status(404)
+        .json({ code: 404, message: "Không tìm thấy bình luận" });
     }
 
     const isLiked = comment.likes.includes(userId);
@@ -105,14 +115,14 @@ export const dislikeComment = async (req: Request, res: Response) => {
         { _id: idComment },
         {
           $pull: { dislikes: userId },
-          $inc: { dislikeCount: -1 }
-        }
+          $inc: { dislikeCount: -1 },
+        },
       );
     } else {
       // Thêm Dislike
       const updateData: any = {
         $push: { dislikes: userId },
-        $inc: { dislikeCount: 1 }
+        $inc: { dislikeCount: 1 },
       };
 
       // Nếu đang Like thì bỏ Like
@@ -131,7 +141,7 @@ export const dislikeComment = async (req: Request, res: Response) => {
       likeCount: updatedComment?.likeCount,
       dislikeCount: updatedComment?.dislikeCount,
       isLiked: false, // Vì nếu vừa dislike thì chắc chắn không like
-      isDisliked: !isDisliked
+      isDisliked: !isDisliked,
     });
   } catch (error) {
     res.status(500).json({ code: 500, message: "Lỗi server" });
