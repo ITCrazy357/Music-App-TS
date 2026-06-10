@@ -69,7 +69,12 @@ block main
                                 span Bình luận (#{comments.length})
                             
                             .comments-filter
-                                select(name="sort" class="form-select form-select-sm" onchange="window.location.href='?sort=' + this.value")
+                                select(
+                                    name="sort"
+                                    id="comments-sort"
+                                    class="form-select form-select-sm"
+                                    data-song-id=song.id
+                                )
                                     option(value="newest" selected=(sortQuery === "newest" ? true : false)) Mới nhất
                                     option(value="oldest" selected=(sortQuery === "oldest" ? true : false)) Cũ nhất
                                     option(value="popular" selected=(sortQuery === "popular" ? true : false)) Phổ biến nhất

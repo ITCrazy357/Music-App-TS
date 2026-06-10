@@ -170,12 +170,10 @@ export const editComment = async (req: Request, res: Response) => {
     }
 
     if (String(comment.userId) !== String(userId)) {
-      return res
-        .status(403)
-        .json({
-          code: 403,
-          message: "Bạn không có quyền chỉnh sửa bình luận này",
-        });
+      return res.status(403).json({
+        code: 403,
+        message: "Bạn không có quyền chỉnh sửa bình luận này",
+      });
     }
 
     comment.content = content.trim();
@@ -222,5 +220,50 @@ export const deleteComment = async (req: Request, res: Response) => {
     res.status(200).json({ code: 200, message: "Xóa bình luận thành công" });
   } catch (error) {
     res.status(500).json({ code: 500, message: "Lỗi server" });
+  }
+};
+
+// [GET] /comments?songId=...&sort=newest|oldest|popular
+export const getCommentsBySongId = async (req: Request, res: Response) => {
+  try {
+    const idSong = req.query.songId as string;
+    const sortQuery = (req.query.sort as string) || "newest";
+
+    if (!idSong) {
+      return res
+        .status(400)
+        .json({ code: 400, message: "songId không hợp lệ" });
+    }
+
+    const sortOption: any = {};
+    if (sortQuery === "oldest") {
+      sortOption.createdAt = 1;
+    } else if (sortQuery === "popular") {
+      sortOption.likeCount = -1;
+    } else {
+      sortOption.createdAt = -1; // newest
+    }
+
+    const user = res.locals.user;
+
+    const comments = await Comment.find({ songId: idSong, deleted: false })
+      .populate("userId", "fullName avatar")
+      .sort(sortOption)
+      .lean();
+
+    const commentsWithInteraction = comments.map((comment: any) => {
+      return {
+        ...comment,
+        isLikedByUser: user ? comment.likes?.includes(user.id) : false,
+        isDislikedByUser: user ? comment.dislikes?.includes(user.id) : false,
+      };
+    });
+
+    return res.status(200).json({
+      code: 200,
+      comments: commentsWithInteraction,
+    });
+  } catch (error) {
+    return res.status(500).json({ code: 500, message: "Lỗi server" });
   }
 };

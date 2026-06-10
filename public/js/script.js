@@ -464,6 +464,31 @@ if (commentEditButtons.length > 0) {
         btnCancel.addEventListener("click", () => {
           commentItem.dataset.editing = "false";
           commentTextEl.textContent = currentContent;
+          // Restore owner action buttons if they were removed
+          const meta = commentItem.querySelector(".comment-meta");
+          if (meta && !meta.querySelector(".comment-owner-actions")) {
+            meta.insertAdjacentHTML(
+              "beforeend",
+              `
+                <div class="comment-owner-actions">
+                  <button class="comment-action btn-edit" type="button" button-edit-comment="${idComment}">Chỉnh sửa</button>
+                  <button class="comment-action btn-delete" type="button" button-delete-comment="${idComment}">Xóa</button>
+                </div>
+              `,
+            );
+
+            meta
+              .querySelector("[button-edit-comment]")
+              ?.addEventListener("click", () => {
+                meta.querySelector("[button-edit-comment]")?.click();
+              });
+
+            meta
+              .querySelector("[button-delete-comment]")
+              ?.addEventListener("click", () => {
+                meta.querySelector("[button-delete-comment]")?.click();
+              });
+          }
         });
       }
 
@@ -489,10 +514,10 @@ if (commentEditButtons.length > 0) {
               if (!data) return;
               if (data.code === 200 && data.comment) {
                 const updated = data.comment;
+                const timeEl = commentItem.querySelector(".comment-time");
                 commentItem.querySelector(".comment-text").textContent =
                   updated.content || "";
 
-                const timeEl = commentItem.querySelector(".comment-time");
                 if (timeEl) {
                   const timeText = timeEl.textContent || "";
                   if (updated.edited && !timeText.includes("đã chỉnh sửa")) {
@@ -520,10 +545,25 @@ if (commentEditButtons.length > 0) {
                     `,
                   );
 
+                  // Re-bind events for the re-rendered buttons
                   const newEditBtn = meta.querySelector(
                     "[button-edit-comment]",
                   );
-                  if (newEditBtn) newEditBtn.click();
+                  const newDeleteBtn = meta.querySelector(
+                    "[button-delete-comment]",
+                  );
+
+                  if (newEditBtn) {
+                    newEditBtn.addEventListener("click", () => {
+                      newEditBtn.click();
+                    });
+                  }
+
+                  if (newDeleteBtn) {
+                    newDeleteBtn.addEventListener("click", () => {
+                      newDeleteBtn.click();
+                    });
+                  }
                 }
               } else {
                 alert(data.message || "Có lỗi xảy ra, vui lòng thử lại.");
@@ -581,8 +621,146 @@ if (commentDeleteButtons.length > 0) {
   });
 }
 
+// ===== COMMENTS FILTER (AJAX, no reload) =====
+const commentsSortSelect = document.querySelector("#comments-sort");
+if (commentsSortSelect) {
+  commentsSortSelect.addEventListener("change", () => {
+    const sort = commentsSortSelect.value;
+    const songId = commentsSortSelect.getAttribute("data-song-id");
+
+    const commentsList = document.querySelector(".comments-list");
+    const commentsHeaderCount = document.querySelector(".comments-title span");
+    if (!songId || !commentsList || !commentsHeaderCount) return;
+
+    // optional: show loading state
+    commentsList.innerHTML = `<div class="no-comments"><p>Đang tải bình luận...</p></div>`;
+
+    fetch(`/comments-filter?songId=${songId}&sort=${sort}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data || data.code !== 200) return;
+
+        const comments = data.comments || [];
+        // render
+        if (comments.length > 0) {
+          commentsList.innerHTML = comments
+            .map((comment) => {
+              const user = comment.userId || {};
+              const isOwner = false; // server already returns isLiked/isDisliked but owner actions handled by view only
+              // We still render like/dislike buttons; owner buttons will only exist for initial SSR.
+              // After filter change, owner buttons won't appear unless you render them server-side with auth.
+              // (Keep UX stable: show like/dislike always.)
+              return `
+                <div class="comment-item">
+                  <div class="comment-avatar">
+                    <img src="${user.avatar || "/images/avatar.png"}" alt="${user.fullName || ""}" />
+                  </div>
+                  <div class="comment-content">
+                    <div class="comment-author-name">${user.fullName || ""}</div>
+                    <div class="comment-text">${comment.content || ""}</div>
+                    <div class="comment-meta">
+                      <span class="comment-time">${comment.createdAt ? new Date(comment.createdAt).toLocaleString("vi-VN") : ""}${comment.edited && comment.editedAt ? " • đã chỉnh sửa" : ""}</span>
+                      ${comment.isLikedByUser ? `<button class="comment-action btn-like active" button-like-comment="${comment._id}"><i class="fa-solid fa-thumbs-up"></i><span class="count">${comment.likeCount ?? 0}</span></button>` : `<button class="comment-action btn-like" button-like-comment="${comment._id}"><i class="fa-solid fa-thumbs-up"></i><span class="count">${comment.likeCount ?? 0}</span></button>`}
+                      ${comment.isDislikedByUser ? `<button class="comment-action btn-dislike active" button-dislike-comment="${comment._id}"><i class="fa-solid fa-thumbs-down"></i><span class="count">${comment.dislikeCount ?? 0}</span></button>` : `<button class="comment-action btn-dislike" button-dislike-comment="${comment._id}"><i class="fa-solid fa-thumbs-down"></i><span class="count">${comment.dislikeCount ?? 0}</span></button>`}
+                    </div>
+                  </div>
+                </div>
+              `;
+            })
+            .join("");
+        } else {
+          commentsList.innerHTML = `<div class="no-comments"><p>Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</p></div>`;
+        }
+
+        commentsHeaderCount.textContent = `Bình luận (${comments.length})`;
+
+        // re-bind like/dislike after render
+        const commentLikeButtons = document.querySelectorAll(
+          "[button-like-comment]",
+        );
+        const commentDislikeButtons = document.querySelectorAll(
+          "[button-dislike-comment]",
+        );
+
+        if (commentLikeButtons.length > 0) {
+          commentLikeButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const idComment = btn.getAttribute("button-like-comment");
+              const link = `/comments/like/${idComment}`;
+
+              fetch(link, { method: "PATCH" })
+                .then((res) => {
+                  if (res.status === 401) {
+                    window.location.href = "/auth/login";
+                    return null;
+                  }
+                  return res.json();
+                })
+                .then((data) => {
+                  if (data && data.code === 200) {
+                    btn.querySelector(".count").textContent = data.likeCount;
+                    const dislikeBtn = btn.parentElement.querySelector(
+                      "[button-dislike-comment]",
+                    );
+                    if (dislikeBtn) {
+                      dislikeBtn.querySelector(".count").textContent =
+                        data.dislikeCount;
+                    }
+                    if (data.isLiked) btn.classList.add("active");
+                    else btn.classList.remove("active");
+                    if (data.isDisliked) {
+                      dislikeBtn.classList.add("active");
+                    } else {
+                      dislikeBtn && dislikeBtn.classList.remove("active");
+                    }
+                  }
+                });
+            });
+          });
+        }
+
+        if (commentDislikeButtons.length > 0) {
+          commentDislikeButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const idComment = btn.getAttribute("button-dislike-comment");
+              const link = `/comments/dislike/${idComment}`;
+
+              fetch(link, { method: "PATCH" })
+                .then((res) => {
+                  if (res.status === 401) {
+                    window.location.href = "/auth/login";
+                    return null;
+                  }
+                  return res.json();
+                })
+                .then((data) => {
+                  if (data && data.code === 200) {
+                    btn.querySelector(".count").textContent = data.dislikeCount;
+                    const likeBtn = btn.parentElement.querySelector(
+                      "[button-like-comment]",
+                    );
+                    if (likeBtn)
+                      likeBtn.querySelector(".count").textContent =
+                        data.likeCount;
+                    if (data.isDisliked) btn.classList.add("active");
+                    else btn.classList.remove("active");
+                    if (data.isLiked) likeBtn.classList.add("active");
+                    else likeBtn && likeBtn.classList.remove("active");
+                  }
+                });
+            });
+          });
+        }
+      })
+      .catch(() => {
+        commentsList.innerHTML = `<div class="no-comments"><p>Không thể tải bình luận</p></div>`;
+      });
+  });
+}
+
 // Comment Like/Dislike Actions
 const commentLikeButtons = document.querySelectorAll("[button-like-comment]");
+
 const commentDislikeButtons = document.querySelectorAll(
   "[button-dislike-comment]",
 );
