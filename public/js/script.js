@@ -335,3 +335,136 @@ if (uploadAudioInput && uploadAudioPreview) {
     }
   });
 }
+
+// ===== COMMENTS SYSTEM =====
+// Comment Form Submit
+const formComment = document.querySelector("#form-comment");
+if (formComment) {
+  formComment.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const action = formComment.getAttribute("action");
+    const contentInput = formComment.querySelector("textarea[name='content']");
+    const content = contentInput.value.trim();
+
+    if (!content) return;
+
+    fetch(action, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.code === 200) {
+          // Clear input and reload page to show new comment
+          contentInput.value = "";
+          window.location.reload();
+        } else {
+          alert(data.message || "Có lỗi xảy ra, vui lòng thử lại.");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Có lỗi xảy ra, vui lòng thử lại.");
+      });
+  });
+}
+
+// Comment Like/Dislike Actions
+const commentLikeButtons = document.querySelectorAll("[button-like-comment]");
+const commentDislikeButtons = document.querySelectorAll("[button-dislike-comment]");
+
+if (commentLikeButtons.length > 0) {
+  commentLikeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idComment = btn.getAttribute("button-like-comment");
+      const link = `/comments/like/${idComment}`;
+
+      fetch(link, { method: "PATCH" })
+        .then((res) => {
+          // Check if response is 401 Unauthorized (not logged in) - might redirect or return error
+          if (res.status === 401) {
+             window.location.href = '/auth/login';
+             return null;
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (data && data.code === 200) {
+            // Update UI
+            btn.querySelector(".count").textContent = data.likeCount;
+            const dislikeBtn = btn.parentElement.querySelector("[button-dislike-comment]");
+            if (dislikeBtn) {
+              dislikeBtn.querySelector(".count").textContent = data.dislikeCount;
+            }
+
+            if (data.isLiked) {
+              btn.classList.add("active");
+            } else {
+              btn.classList.remove("active");
+            }
+
+            if (data.isDisliked) {
+              dislikeBtn.classList.add("active");
+            } else {
+              dislikeBtn.classList.remove("active");
+            }
+          } else if (data && data.code !== 200) {
+            if (data.message === "Vui lòng đăng nhập!") { // assuming auth.middleware might send this
+                window.location.href = '/auth/login';
+            } else {
+                alert(data.message);
+            }
+          }
+        });
+    });
+  });
+}
+
+if (commentDislikeButtons.length > 0) {
+  commentDislikeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idComment = btn.getAttribute("button-dislike-comment");
+      const link = `/comments/dislike/${idComment}`;
+
+      fetch(link, { method: "PATCH" })
+        .then((res) => {
+           if (res.status === 401) {
+             window.location.href = '/auth/login';
+             return null;
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (data && data.code === 200) {
+            // Update UI
+            btn.querySelector(".count").textContent = data.dislikeCount;
+            const likeBtn = btn.parentElement.querySelector("[button-like-comment]");
+            if (likeBtn) {
+              likeBtn.querySelector(".count").textContent = data.likeCount;
+            }
+
+            if (data.isDisliked) {
+              btn.classList.add("active");
+            } else {
+              btn.classList.remove("active");
+            }
+
+            if (data.isLiked) {
+              likeBtn.classList.add("active");
+            } else {
+              likeBtn.classList.remove("active");
+            }
+          } else if (data && data.code !== 200) {
+             if (data.message === "Vui lòng đăng nhập!") {
+                window.location.href = '/auth/login';
+            } else {
+                alert(data.message);
+            }
+          }
+        });
+    });
+  });
+}

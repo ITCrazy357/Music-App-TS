@@ -3,6 +3,7 @@ import Topic from "../../models/topic.model";
 import Song from "../../models/song.model";
 import Singer from "../../models/singer.model";
 import FavoriteSong from "../../models/favorite-song.model";
+import Comment from "../../models/comment.model";
 
 //[GET] /songs/list
 export const list = async (req: Request, res: Response) => {
@@ -78,13 +79,45 @@ export const detail = async (req: Request, res: Response) => {
     deleted: false,
   }).select("-status -deleted");
 
-  const isLiked = song.likes.includes(res.locals.user.id);
-  const isFavorite = await FavoriteSong.exists({
-    songId: song.id,
-    userId: res.locals.user.id,
-  });
+  const user = res.locals.user;
+  const isLiked = user ? song.likes.includes(user.id) : false;
+  let isFavorite = false;
+  
+  if (user) {
+    const favorite = await FavoriteSong.exists({
+      songId: song.id,
+      userId: user.id,
+    });
+    isFavorite = !!favorite;
+  }
 
-  (song as any).isFavorite = !!isFavorite;
+  (song as any).isFavorite = isFavorite;
+
+  // Lấy danh sách comments
+  const sortOption: any = {};
+  const sortQuery = req.query.sort || "newest"; // newest, oldest, popular
+  
+  if (sortQuery === "oldest") {
+    sortOption.createdAt = 1;
+  } else if (sortQuery === "popular") {
+    sortOption.likeCount = -1;
+  } else {
+    sortOption.createdAt = -1; // newest
+  }
+
+  const comments = await Comment.find({ songId: song.id, deleted: false })
+    .populate("userId", "fullName avatar")
+    .sort(sortOption)
+    .lean();
+
+  // Đánh dấu các comment mà user đã like/dislike
+  const commentsWithInteraction = comments.map((comment: any) => {
+    return {
+      ...comment,
+      isLikedByUser: user ? comment.likes?.includes(user.id) : false,
+      isDislikedByUser: user ? comment.dislikes?.includes(user.id) : false,
+    };
+  });
 
   res.render("client/pages/songs/detail", {
     pageTitle: "Bài hát đang phát",
@@ -93,6 +126,8 @@ export const detail = async (req: Request, res: Response) => {
     topic: topic,
     isLiked: isLiked,
     isFavorite: isFavorite,
+    comments: commentsWithInteraction,
+    sortQuery: sortQuery
   });
 };
 

@@ -4,6 +4,38 @@ import Role from "../../models/role.model";
 import jwt from "jsonwebtoken";
 import { systemConfig } from "../../config/system";
 
+export const injectUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const token = req.cookies.token;
+
+  if (token) {
+    try {
+      const decodedToken: any = jwt.verify(
+        token,
+        process.env.JWT_SECRET as string,
+      );
+      const user: any = await User.findById(decodedToken.id);
+
+      if (user && user.status === "active") {
+        let role = null;
+        if (user.role_id) {
+          role = await Role.findById(user.role_id);
+        }
+
+        res.locals.user = user;
+        res.locals.role = role;
+      }
+    } catch (error) {
+      // Ignore error if token is invalid or expired
+    }
+  }
+
+  next();
+};
+
 export const requireAuth = async (
   req: Request,
   res: Response,

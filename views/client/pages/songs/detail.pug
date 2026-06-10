@@ -58,3 +58,56 @@ block main
                             span Lời bài hát
                         .lyrics-content(id="lyrics-container" data-lyrics=song.lyrics || "")
                             // Lyrics will be rendered here by JS
+
+            // Bottom Row: Comments
+            .row.mt-4
+                .col-12
+                    .comments-panel
+                        .comments-header
+                            .comments-title 
+                                i(class="fa-solid fa-comments mr-2")
+                                span Bình luận (#{comments.length})
+                            
+                            .comments-filter
+                                select(name="sort" class="form-select form-select-sm" onchange="window.location.href='?sort=' + this.value")
+                                    option(value="newest" selected=(sortQuery === "newest" ? true : false)) Mới nhất
+                                    option(value="oldest" selected=(sortQuery === "oldest" ? true : false)) Cũ nhất
+                                    option(value="popular" selected=(sortQuery === "popular" ? true : false)) Phổ biến nhất
+
+                        .comments-body
+                            if user
+                                .comment-form
+                                    .comment-avatar
+                                        img(src=(user.avatar || "/images/avatar.png") alt=user.fullName)
+                                    form(id="form-comment" action=`/comments/post/${song.id}`)
+                                        textarea(name="content" placeholder="Nhập bình luận của bạn..." required rows="2")
+                                        button(type="submit" class="btn btn-primary") Gửi bình luận
+                            else
+                                .comment-login-prompt
+                                    p Vui lòng đăng nhập để bình luận
+                                    a.btn.btn-primary(href="/auth/login") Đăng nhập
+
+                            .comments-list
+                                if comments.length > 0
+                                    each comment in comments
+                                        .comment-item
+                                            .comment-avatar
+                                                img(src=(comment.userId.avatar || "/images/avatar.png") alt=comment.userId.fullName)
+                                            .comment-content
+                                                .comment-author-name #{comment.userId.fullName}
+                                                .comment-text #{comment.content}
+                                                .comment-meta
+                                                    span.comment-time 
+                                                        - const date = new Date(comment.createdAt)
+                                                        | #{date.toLocaleString('vi-VN')}
+                                                    
+                                                    button.comment-action.btn-like(class=(comment.isLikedByUser ? "active" : "") button-like-comment=comment._id)
+                                                        i.fa-solid.fa-thumbs-up
+                                                        span.count #{comment.likeCount}
+                                                    
+                                                    button.comment-action.btn-dislike(class=(comment.isDislikedByUser ? "active" : "") button-dislike-comment=comment._id)
+                                                        i.fa-solid.fa-thumbs-down
+                                                        span.count #{comment.dislikeCount}
+                                else
+                                    .no-comments
+                                        p Chưa có bình luận nào. Hãy là người đầu tiên bình luận!
