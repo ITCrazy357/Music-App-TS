@@ -41,3 +41,8 @@
           a(href=`/${prefixAdmin}/roles/permissions`)
             i.fa-solid.fa-key
             span Phân quyền
+      if role && (role.title === "superAdmin" || role.title === "Admin")
+        li
+          a(href=`/${prefixAdmin}/settings/general`)
+            i.fa-solid.fa-gear
+            span Cài đặt chung

@@ -3,7 +3,7 @@ header.header
     .row.align-items-center
       .col-3
         .inner-logo
-          a.d-flex.align-items-center.gap-2(href=`/topics`)
+          a.d-flex.align-items-center.gap-2(href=`/home`)
             img(
               src="/images/logo.png",
               alt="Music Streaming Logo",
@@ -16,7 +16,7 @@ header.header
           if user
             .dropdown
               a.dropdown-toggle.header-user(
-                href="#"
+                href=`/${prefixAdmin}/profile`
                 data-bs-toggle="dropdown"
               )
                 i.fa-solid.fa-user.user-icon

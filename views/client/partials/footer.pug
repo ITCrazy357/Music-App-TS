@@ -2,10 +2,9 @@ footer.footer.py-5
   .container
     .row.g-4
       .col-lg-4.col-md-6
-        h4.footer-title Music Streaming
+        h4.footer-title #{settingGeneral && settingGeneral.websiteName ? settingGeneral.websiteName : "Music Streaming"}
         p.footer-desc
-          | Nền tảng nghe nhạc trực tuyến hiện đại, giúp người dùng khám phá,
-          | thưởng thức và lưu trữ những bản nhạc yêu thích mọi lúc mọi nơi.
+          | #{settingGeneral && settingGeneral.shortDescription ? settingGeneral.shortDescription : "Nền tảng nghe nhạc trực tuyến hiện đại, giúp người dùng khám phá, thưởng thức và lưu trữ những bản nhạc yêu thích mọi lúc mọi nơi."}
 
       .col-lg-2.col-md-6
         h5.footer-subtitle Khám phá
@@ -36,28 +35,44 @@ footer.footer.py-5
         ul.footer-contact
           li
             i.fa-solid.fa-envelope.me-2
-            | support@musicstream.com
+            | #{settingGeneral && settingGeneral.email ? settingGeneral.email : "support@musicstream.com"}
           li
             i.fa-solid.fa-phone.me-2
-            | +84 123 456 789
+            | #{settingGeneral && settingGeneral.phone ? settingGeneral.phone : "+84 123 456 789"}
           li
             i.fa-solid.fa-location-dot.me-2
-            | Việt Nam
+            | #{settingGeneral && settingGeneral.address ? settingGeneral.address : "Việt Nam"}
 
     hr.my-4
 
     .row.align-items-center
       .col-md-6
         p.mb-0
-          | © 2026 Music Streaming. All rights reserved.
+          | #{settingGeneral && settingGeneral.copyright ? settingGeneral.copyright : "© 2026 Music Streaming. All rights reserved."}
 
       .col-md-6.text-md-end
         .social-links
-          a(href="#")
-            i.fa-brands.fa-facebook-f
-          a(href="#")
-            i.fa-brands.fa-instagram
-          a(href="#")
-            i.fa-brands.fa-youtube
-          a(href="#")
-            i.fa-brands.fa-tiktok
+          if settingGeneral && settingGeneral.facebook
+            a(href=settingGeneral.facebook, target="_blank")
+              i.fa-brands.fa-facebook-f
+          else
+            a(href="#")
+              i.fa-brands.fa-facebook-f
+          if settingGeneral && settingGeneral.instagram
+            a(href=settingGeneral.instagram, target="_blank")
+              i.fa-brands.fa-instagram
+          else
+            a(href="#")
+              i.fa-brands.fa-instagram
+          if settingGeneral && settingGeneral.youtube
+            a(href=settingGeneral.youtube, target="_blank")
+              i.fa-brands.fa-youtube
+          else
+            a(href="#")
+              i.fa-brands.fa-youtube
+          if settingGeneral && settingGeneral.tiktok
+            a(href=settingGeneral.tiktok, target="_blank")
+              i.fa-brands.fa-tiktok
+          else
+            a(href="#")
+              i.fa-brands.fa-tiktok

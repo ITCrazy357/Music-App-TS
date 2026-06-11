@@ -3,20 +3,20 @@ header.header.py-3
     .row.align-items-center
       .col-lg-2.col-md-4.col-6
         .inner-logo
-          a.d-flex.align-items-center.gap-2(href="/topics")
+          a.d-flex.align-items-center.gap-2(href="/home")
             img(
-              src="/images/logo.png",
-              alt="Music Streaming Logo",
+              src=(settingGeneral && settingGeneral.logo ? settingGeneral.logo : "/images/logo.png"),
+              alt=(settingGeneral && settingGeneral.websiteName ? settingGeneral.websiteName : "Music Streaming Logo"),
               width="50"
             )
 
-            span.logo-text Music Streaming
+            span.logo-text #{settingGeneral && settingGeneral.websiteName ? settingGeneral.websiteName : "Music Streaming"}
 
       .col-lg-6.d-none.d-lg-block
         nav.inner-menu
           ul.d-flex.align-items-center.justify-content-center.gap-4.mb-0
             li
-              a(href="/topics") Trang chủ
+              a(href="/home") Trang chủ
 
             li
               a(href="/songs") Bài hát
@@ -31,7 +31,7 @@ header.header.py-3
               a(href="/favorite-songs") Bài hát yêu thích
 
             li
-              a(href="/ranking") BXH
+              a(href="/rankings") BXH
 
       .col-lg-4.col-md-8.col-6
         .header-actions.d-flex.align-items-center.justify-content-end.gap-3 

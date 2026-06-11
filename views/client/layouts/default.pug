@@ -4,6 +4,8 @@ html(lang="vi")
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title #{pageTitle}
+        if settingGeneral && settingGeneral.favicon
+            link(rel="icon", href=settingGeneral.favicon)
 
         //====== Auth ====
         link(href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css", rel="stylesheet")

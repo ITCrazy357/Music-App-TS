@@ -46,6 +46,10 @@ app.use((req: Request, res: Response, next) => {
 app.set("views", "./views");
 app.set("view engine", "pug");
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
+
+import { settingGeneral } from "./middlewares/clients/setting.middleware";
+app.use(settingGeneral);
+
 //client router
 clientRoutes(app);
 //admin router

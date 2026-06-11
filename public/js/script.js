@@ -348,16 +348,22 @@ if (boxSearch) {
 }
 
 // Admin - Preview Image
-const uploadImageInput = document.querySelector(".upload-image-input");
-const uploadImagePreview = document.querySelector(".upload-image-preview");
+const uploadImageInputs = document.querySelectorAll(".upload-image-input");
 
-if (uploadImageInput && uploadImagePreview) {
-  uploadImageInput.addEventListener("change", (e) => {
-    if (e.target.files.length) {
-      const image = URL.createObjectURL(e.target.files[0]);
-      uploadImagePreview.src = image;
-      uploadImagePreview.style.display = "block";
-    }
+if (uploadImageInputs.length > 0) {
+  uploadImageInputs.forEach(input => {
+    input.addEventListener("change", (e) => {
+      if (e.target.files.length) {
+        const image = URL.createObjectURL(e.target.files[0]);
+        // Find the preview element
+        const parent = input.closest(".form-group") || input.parentElement;
+        const preview = parent.querySelector(".upload-image-preview");
+        if(preview) {
+          preview.src = image;
+          preview.style.display = "block";
+        }
+      }
+    });
   });
 }
 

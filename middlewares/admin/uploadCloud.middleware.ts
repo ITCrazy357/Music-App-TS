@@ -25,6 +25,14 @@ export const uploadFields = async (req: Request, res: Response, next: NextFuncti
         const resultAudio = await uploadToCloudinary(files['audio'][0].buffer, "video");
         req.body.audio = resultAudio;
       }
+      if (files['logo'] && files['logo'][0]) {
+        const resultLogo = await uploadToCloudinary(files['logo'][0].buffer, "image");
+        req.body.logo = resultLogo;
+      }
+      if (files['favicon'] && files['favicon'][0]) {
+        const resultFavicon = await uploadToCloudinary(files['favicon'][0].buffer, "image");
+        req.body.favicon = resultFavicon;
+      }
     } catch (error) {
       console.log(error);
     }
