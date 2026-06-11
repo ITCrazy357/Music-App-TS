@@ -81,3 +81,37 @@ block main
                             p.inactive-count
                                 i.fa-solid.fa-circle-xmark.me-2
                                 | Dừng hoạt động: #{statistic.User.inactive}
+
+            .col-xl-3.col-md-6
+                .card.dashboard-card
+                    .card-header
+                        i.fa-solid.fa-bullhorn.me-2
+                        | Quảng cáo
+
+                    .card-body
+                        .dashboard-number #{statistic.Ad.total}
+
+                        .dashboard-stats
+                            p.active-count
+                                i.fa-solid.fa-circle-check.me-2
+                                | Đang chạy: #{statistic.Ad.active}
+                            
+                            p.text-warning.mb-2
+                                i.fa-solid.fa-file-lines.me-2
+                                | Bản nháp: #{statistic.Ad.draft}
+
+                            p.inactive-count
+                                i.fa-solid.fa-clock-rotate-left.me-2
+                                | Hết hạn: #{statistic.Ad.expired}
+
+                            p.mb-2
+                                i.fa-solid.fa-hand-pointer.me-2
+                                | Lượt click: #{statistic.Ad.clicks}
+
+                            p.mb-2
+                                i.fa-solid.fa-eye.me-2
+                                | Lượt hiển thị: #{statistic.Ad.views}
+                            
+                            p.mb-0.text-info
+                                i.fa-solid.fa-percent.me-2
+                                | CTR: #{statistic.Ad.ctr}%

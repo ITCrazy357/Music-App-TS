@@ -50,8 +50,16 @@ block main
                                 .inner-label Mô tả
                                 .inner-text !{song.description}
 
+                        if globalAds && globalAds.banner_sidebar
+                            .mt-4
+                                +ad-banner(globalAds.banner_sidebar)
+
                 // Right Column: Lyrics
                 .col-lg-7
+                    if globalAds && globalAds.banner_song_detail
+                        .mb-3
+                            +ad-banner(globalAds.banner_song_detail)
+
                     .lyrics-panel
                         .lyrics-header 
                             i(class="fa-solid fa-align-left mr-2")

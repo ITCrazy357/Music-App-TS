@@ -15,6 +15,12 @@
           a(href=`/${prefixAdmin}/topics`)
             i.fa-solid.fa-icons
             span Chủ đề
+      if role && (role.permissions.includes("ads_view") || role.title === "superAdmin")
+        li
+          a(href=`/${prefixAdmin}/ads`)
+            i.fa-solid.fa-bullhorn
+            span Quảng cáo
+
       if role && (role.permissions.includes("singers_view") || role.title === "superAdmin")
         li
           a(href=`/${prefixAdmin}/singers`)

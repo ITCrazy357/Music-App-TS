@@ -1,6 +1,6 @@
 /* ========== TABLES ========== */
 .table {
-  color: rgba(0, 0, 0, 0.2);
+  color: var(--text);
   border-color: var(--border) !important;
   background: transparent !important;
 }
@@ -11,12 +11,13 @@
   vertical-align: middle;
   padding: 12px 15px !important;
   background: transparent !important;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .table thead th {
   background: rgba(255, 255, 255, 0.05) !important;
-  color: #050404;
+  color: var(--text);
   font-weight: 600;
   border-bottom: 2px solid var(--border) !important;
 }
@@ -28,7 +29,7 @@
 
 .table tbody tr:hover {
   background: rgba(255, 255, 255, 0.08) !important;
-  color: #ccc5c5;
+  color: #ffffff;
 }
 
 .table .badge {

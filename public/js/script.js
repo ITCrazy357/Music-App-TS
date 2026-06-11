@@ -173,6 +173,51 @@ if (showAlerts.length > 0) {
   });
 }
 
+// Ads View Tracking & Slider Logic
+const adSwiperContainers = document.querySelectorAll(".ads-swiper-container");
+if (adSwiperContainers.length > 0) {
+  const adObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const adId = entry.target.getAttribute("data-ad-id");
+        if (adId && !entry.target.hasAttribute("data-tracked")) {
+          fetch(`/ads/view/${adId}`, { method: "POST" })
+            .catch(err => console.error("Ad view tracking error"));
+          entry.target.setAttribute("data-tracked", "true");
+        }
+      }
+    });
+  }, { threshold: 0.5 });
+
+  adSwiperContainers.forEach(container => {
+    const banners = container.querySelectorAll(".ad-banner-container");
+    
+    // Track views
+    banners.forEach(ad => {
+      adObserver.observe(ad);
+    });
+
+    // Initialize Swiper
+    new Swiper(container, {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      loop: banners.length > 1,
+      autoplay: banners.length > 1 ? {
+        delay: 3000,
+        disableOnInteraction: false,
+      } : false,
+      breakpoints: {
+        768: {
+          slidesPerView: Math.min(2, banners.length)
+        },
+        992: {
+          slidesPerView: Math.min(3, banners.length)
+        }
+      }
+    });
+  });
+}
+
 //Like
 const listButtonLike = document.querySelectorAll("[button-like]");
 if (listButtonLike.length > 0) {

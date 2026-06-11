@@ -166,6 +166,38 @@ block main
                                         td.text-center
                                             input(type="checkbox")
 
+                                //- Ads
+                                tr(data-name="ads_view")
+                                    td Xem quảng cáo
+                                    each item in roles
+                                        td.text-center
+                                            input(type="checkbox")
+
+                                tr(data-name="ads_create")
+                                    td Tạo quảng cáo
+                                    each item in roles
+                                        td.text-center
+                                            input(type="checkbox")
+
+                                tr(data-name="ads_edit")
+                                    td Chỉnh sửa quảng cáo
+                                    each item in roles
+                                        td.text-center
+                                            input(type="checkbox")
+
+                                tr(data-name="ads_delete")
+                                    td Xóa quảng cáo
+                                    each item in roles
+                                        td.text-center
+                                            input(type="checkbox")
+
+                                tr(data-name="ads_statistics")
+                                    td Thống kê quảng cáo
+                                    each item in roles
+                                        td.text-center
+                                            input(type="checkbox")
+
+
             form(
                 id="form-change-permissions"
                 method="POST"

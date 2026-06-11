@@ -17,12 +17,24 @@ html(lang="vi")
         // ===== AP Player =====
         link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css")
         
+        // ===== Swiper =====
+        link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css")
+        
 
     body 
+        include ../mixins/ad-banner.pug
         include ../partials/header.pug
 
         .main
+            if globalAds && globalAds.banner_top
+                .container.mt-3
+                    +ad-banner(globalAds.banner_top)
+
             block main
+
+            if globalAds && globalAds.footer_banner
+                .container.mb-3
+                    +ad-banner(globalAds.footer_banner)
 
         include ../partials/footer.pug
 
@@ -33,5 +45,33 @@ html(lang="vi")
         // ===== AP Player =====
         script(src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js") 
         
+        // ===== Swiper =====
+        script(src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js")
+
         // ===== JS (main) =====
         script(src="/js/script.js")
+
+        if globalAds && globalAds.popup && globalAds.popup.length > 0
+            // Popup Ad Modal
+            .modal.fade#adPopupModal(tabindex="-1" aria-labelledby="adPopupModalLabel" aria-hidden="true")
+                .modal-dialog.modal-dialog-centered
+                    .modal-content(style="background: transparent; border: none;")
+                        .modal-body.p-0.position-relative
+                            button.close(type="button" data-dismiss="modal" aria-label="Close" style="position: absolute; right: -15px; top: -15px; background: rgba(0,0,0,0.8); color: white; border-radius: 50%; width: 30px; height: 30px; z-index: 1000;")
+                                span(aria-hidden="true") &times;
+                            +ad-banner([globalAds.popup[0]])
+            
+            script.
+                $(document).ready(function() {
+                    // Check session storage to avoid spamming the user on every page load
+                    if (!sessionStorage.getItem('adPopupShown')) {
+                        setTimeout(() => {
+                            $('#adPopupModal').modal('show');
+                            sessionStorage.setItem('adPopupShown', 'true');
+                            
+                            // Trigger view tracking manually since it might not intersect normally
+                            const popupAdId = '#{globalAds.popup[0]._id}';
+                            fetch(`/ads/view/${popupAdId}`, { method: 'POST' }).catch(e => console.log(e));
+                        }, 2000); // show after 2s
+                    }
+                });

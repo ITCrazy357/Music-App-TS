@@ -7,6 +7,10 @@ block main
             .col-12 
                 +box-head(pageTitle)
 
+        if globalAds && globalAds.home_banner
+            .row.mb-4
+                .col-12
+                    +ad-banner(globalAds.home_banner)
 
         .row
             each topic in topics

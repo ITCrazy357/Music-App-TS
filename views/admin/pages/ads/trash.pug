@@ -1,0 +1,46 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/pagination.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+        .row
+            .col-12
+                +box-head(pageTitle)
+
+        .row
+            .col-12
+                .card
+                    .card-header
+                        i.fa-solid.fa-trash-can.me-2
+                        | Danh sách thùng rác
+
+                    .card-body
+                        if ads.length > 0
+                            table.table.table-hover
+                                thead
+                                    tr
+                                        th STT
+                                        th Tiêu đề
+                                        th Trạng thái
+                                        th Thao tác
+                                tbody
+                                    each item, index in ads
+                                        tr
+                                            td #{index + 1}
+                                            td
+                                                a(href=`/${prefixAdmin}/ads/detail/${item.id}`) #{item.title}
+                                            td
+                                                span.badge.badge-secondary Trash
+                                            td
+                                                a.btn.btn-success.btn-sm.mr-2(
+                                                    href=`/${prefixAdmin}/ads/restore/${item.id}?_method=PATCH`
+                                                )
+                                                    | Khôi phục
+                                                form(action=`/${prefixAdmin}/ads/delete-permanent/${item.id}?_method=DELETE` method="POST" style="display:inline")
+                                                    button.btn.btn-danger.btn-sm(type="submit" onclick="return confirm('Xóa vĩnh viễn?')") Xóa vĩnh viễn
+                        else
+                            .alert.alert-secondary - Không có dữ liệu
+
+        +pagination(pagination)
+

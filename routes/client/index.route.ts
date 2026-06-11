@@ -6,13 +6,16 @@ import {
   requireAuth,
   injectUser,
 } from "../../middlewares/clients/auth.middleware";
+import { injectAds } from "../../middlewares/clients/ad.middleware";
 import { favoriteSongRoutes } from "./favorite.route";
 import { searchRoutes } from "./search.route";
 import { commentRoutes } from "./comment.route";
 import { commentFilterRoutes } from "./comment.filter.route";
+import { adRoutes } from "./ad.route";
 
 const clientRoutes = (app: Express): void => {
   app.use(injectUser); // Inject user globally for all client routes
+  app.use(injectAds); // Inject ads globally
 
   app.use("/auth", authRoutes);
   app.use("/topics", topicRoutes);
@@ -21,6 +24,7 @@ const clientRoutes = (app: Express): void => {
   app.use("/search", searchRoutes);
   app.use("/comments", commentRoutes);
   app.use("/comments-filter", commentFilterRoutes);
+  app.use("/ads", adRoutes);
 };
 
 export default clientRoutes;

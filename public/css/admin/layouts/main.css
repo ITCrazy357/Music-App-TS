@@ -1,0 +1,25 @@
+/* ========== MAIN LAYOUT ========== */
+.body-layout {
+  display: flex;
+  min-height: 100vh;
+  padding-top: var(--header-height);
+}
+
+.main {
+  flex: 1;
+  margin-left: var(--sider-width);
+  width: calc(100% - var(--sider-width));
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+@media (max-width: 991px) {
+  .body-layout {
+    flex-direction: column;
+  }
+  .main {
+    margin-left: 0;
+    width: 100%;
+    padding: 10px;
+  }
+}

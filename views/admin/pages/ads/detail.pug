@@ -1,0 +1,76 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+        .row
+            .col-12
+                +box-head(pageTitle)
+
+        .row
+            .col-lg-10
+                .card
+                    .card-header
+                        i.fa-solid.fa-circle-info.me-2
+                        | Thông tin quảng cáo
+
+                    .card-body
+                        .row
+                            .col-md-4
+                                if ad.image
+                                    img(src=ad.image alt=ad.title style="width:100%;border-radius:12px;object-fit:cover")
+                                else
+                                    .alert.alert-secondary -
+                            .col-md-8
+                                h3.mb-2 #{ad.title}
+                                p.text-muted.mb-2 Slug: #{ad.slug}
+                                p.mb-2 #{ad.description}
+
+                        hr
+
+                        .row
+                            .col-md-6
+                                p.mb-1
+                                    b Vị trí:
+                                    |  #{ad.positions ? ad.positions.join(', ') : ''}
+                                p.mb-1
+                                    strong Loại:
+                                    |  #{ad.type}
+                                p.mb-1
+                                    strong Trạng thái:
+                                    |  #{ad.status}
+                                p.mb-1
+                                    strong Draft:
+                                    |  #{ad.isDraft ? 'true' : 'false'}
+                                p.mb-1
+                                    strong Priority:
+                                    |  #{ad.priority}
+                                p.mb-1
+                                    strong Sponsor level:
+                                    |  #{ad.sponsorLevel || '-'}
+
+                            .col-md-6
+                                p.mb-1
+                                    strong Click:
+                                    |  #{ad.clickCount}
+                                p.mb-1
+                                    strong View:
+                                    |  #{ad.viewCount}
+                                p.mb-1
+                                    strong Start:
+                                    |  #{ad.startDate}
+                                p.mb-1
+                                    strong End:
+                                    |  #{ad.endDate}
+                                p.mb-1
+                                    strong Target URL:
+                                    a(href=ad.targetUrl target="_blank") #{ad.targetUrl}
+
+                        .mt-4.text-right
+                            a.btn.btn-warning.mr-2(href=`/${prefixAdmin}/ads/edit/${ad.id}`)
+                                i.fa-solid.fa-pen.me-2
+                                | Sửa
+                            a.btn.btn-outline-secondary(href=`/${prefixAdmin}/ads`)
+                                i.fa-solid.fa-arrow-left.me-2
+                                | Quay lại
+

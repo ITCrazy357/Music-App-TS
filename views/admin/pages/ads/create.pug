@@ -1,0 +1,101 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+        .row
+            .col-12
+                +box-head(pageTitle)
+
+        .row
+            .col-lg-10
+                .card
+                    .card-header
+                        i.fa-solid.fa-plus.me-2
+                        | Tạo quảng cáo
+
+                    .card-body
+                        form#form-create(
+                            action=`/${prefixAdmin}/ads/create`
+                            method="POST"
+                        )
+
+                            .form-row
+                                .form-group.col-md-6
+                                    label Tiêu đề
+                                    input.form-control(type="text" name="title" required)
+
+                                .form-group.col-md-6
+                                    label Slug
+                                    input.form-control(type="text" name="slug")
+
+                            .form-group
+                                label Mô tả
+                                textarea.form-control(name="description" rows="3")
+
+                            .form-row
+                                .form-group.col-md-6
+                                    label Ảnh (URL)
+                                    input.form-control(type="text" name="image")
+
+                                .form-group.col-md-6
+                                    label URL đích
+                                    input.form-control(type="url" name="targetUrl" required)
+
+                            .form-group
+                                label Vị trí
+                                div.d-flex.flex-wrap.gap-3
+                                    - const positionsList = [{val: "banner_top", label: "Banner Top"}, {val: "banner_sidebar", label: "Banner Sidebar"}, {val: "banner_song_detail", label: "Banner Song Detail"}, {val: "popup", label: "Popup"}, {val: "home_banner", label: "Home Banner"}, {val: "footer_banner", label: "Footer Banner"}];
+                                    each item in positionsList
+                                        div.form-check.mr-3
+                                            input.form-check-input(type="checkbox" name="positions" value=item.val id=`pos-${item.val}`)
+                                            label.form-check-label(for=`pos-${item.val}`) #{item.label}
+
+                            .form-row
+                                .form-group.col-md-6
+                                    label Loại
+                                    select.form-control(name="type" required)
+                                        option(value="banner") Banner
+                                        option(value="sidebar") Sidebar
+                                        option(value="song_detail_banner") Song Detail Banner
+                                        option(value="popup") Popup
+                                        option(value="home") Home
+                                        option(value="footer") Footer
+
+                                .form-group.col-md-4
+                                    label Trạng thái
+                                    select.form-control(name="status")
+                                        option(value="active") active
+                                        option(value="inactive") inactive
+
+                            .form-row
+                                .form-group.col-md-4
+                                    label Ưu tiên (priority)
+                                    input.form-control(type="number" name="priority" value="1")
+
+                                .form-group.col-md-4
+                                    label Sponsor level
+                                    input.form-control(type="text" name="sponsorLevel")
+
+                                .form-group.col-md-4
+                                    label Draft?
+                                    select.form-control(name="isDraft")
+                                        option(value="false" selected) false
+                                        option(value="true") true
+
+                            .form-row
+                                .form-group.col-md-6
+                                    label Ngày bắt đầu
+                                    input.form-control(type="date" name="startDate" required)
+
+                                .form-group.col-md-6
+                                    label Ngày kết thúc
+                                    input.form-control(type="date" name="endDate" required)
+
+                            .text-right.mt-3
+                                button.btn.btn-primary(type="submit")
+                                    i.fa-solid.fa-floppy-disk.me-2
+                                    | Lưu
+                                a.btn.btn-outline-secondary.ml-2(href=`/${prefixAdmin}/ads`) Quay lại
+
