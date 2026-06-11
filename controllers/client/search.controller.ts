@@ -33,6 +33,7 @@ export const results = async (req: Request, res: Response): Promise<void> => {
         title: song.title,
         avatar: song.avatar,
         likes: song.likes,
+        listen: song.listen,
         slug: song.slug,
         infoSinger: {
           fullName: infoSinger ? infoSinger.fullName : "",

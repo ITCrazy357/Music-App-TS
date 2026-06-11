@@ -1,0 +1,58 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/pagination.pug
+
+block main 
+    .container.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .row.mb-4
+            .col-md-6
+                form(action="/songs", method="GET", class="d-flex")
+                    input.form-control.me-2(
+                        type="text"
+                        name="keyword"
+                        placeholder="Tìm kiếm bài hát..."
+                        value=keyword
+                    )
+                    if sort
+                        input(type="hidden" name="sort" value=sort)
+                    button.btn.btn-primary.ms-2(type="submit") Tìm
+            .col-md-6.text-md-end.mt-3.mt-md-0
+                form(action="/songs", method="GET", id="form-sort")
+                    if keyword
+                        input(type="hidden" name="keyword" value=keyword)
+                    select.form-select.w-auto.d-inline-block(name="sort" onchange="document.getElementById('form-sort').submit()")
+                        option(value="newest" selected=(sort === "newest")) Mới nhất
+                        option(value="oldest" selected=(sort === "oldest")) Cũ nhất
+                        option(value="popular" selected=(sort === "popular")) Nhiều lượt nghe nhất
+                        option(value="az" selected=(sort === "az")) A-Z
+
+        .row
+            each song in songs
+                .col-6.col-md-4.col-lg-3.mb-3
+                    div(class="song-item")
+                        div(class="inner-image")
+                            a(href=`/songs/detail/${song.slug}`)
+                                img(src=`${song.avatar}` alt=`${song.title}`) 
+
+                        div(class="inner-content")
+                            div(class="inner-title")
+                                a(href=`/songs/detail/${song.slug}`) #{song.title}
+
+                            div(class="inner-singer")
+                                i(class="fa-solid fa-microphone-lines")
+                                |  #{song.infoSinger ? song.infoSinger.fullName : 'Chưa rõ'}
+
+                            div(class="inner-listen")
+                                i(class="fa-solid fa-headphones")
+                                |  #{song.listen || 0} lượt nghe
+                            
+                            div(class=`inner-like ${song.isLiked ? 'active' : ''}` button-like=song._id)
+                                i(class="fa-solid fa-thumbs-up")
+                                span  #{song.likes ? song.likes.length : 0} thích
+
+        if pagination.totalPage > 1
+            +pagination(pagination, originalUrl)

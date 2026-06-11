@@ -10,7 +10,7 @@ block main
         if (songs.length > 0)
             .row
                 each song in songs
-                    .col-6.mb-3
+                    .col-6.col-md-4.col-lg-3.mb-3
                         div(class="song-item")
                             div(class="inner-image")
                                 a(href=`/songs/detail/${song.slug}`)
@@ -24,17 +24,13 @@ block main
                                     i(class="fa-solid fa-microphone-lines")
                                     |  #{song.infoSinger.fullName}
 
+                                div(class="inner-listen")
+                                    i(class="fa-solid fa-headphones")
+                                    |  #{song.listen || 0} lượt nghe
+                                
                                 div(class=`inner-like ${song.isLiked ? 'active' : ''}` button-like=song._id)
                                     i(class="fa-solid fa-thumbs-up")
-                                    span  #{song.likes ? song.likes.length : 0} lượt thích
-
-                                div(class=`inner-heart ${song.isFavorite ? 'active' : ''}` button-favorite=song._id)
-                                    i(class="fa-solid fa-heart")
-                                    span Yêu thích
-
-                                div(class="inner-time")
-                                    i(class="fa-regular fa-clock")
-                                    |  Hôm nay
+                                    span  #{song.likes ? song.likes.length : 0} thích
         else
             .row
                 .col-12

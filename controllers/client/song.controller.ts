@@ -4,8 +4,87 @@ import Song from "../../models/song.model";
 import Singer from "../../models/singer.model";
 import FavoriteSong from "../../models/favorite-song.model";
 import Comment from "../../models/comment.model";
+import { pagination } from "../../helpers/pagination";
 
-//[GET] /songs/list
+//[GET] /songs
+export const index = async (req: Request, res: Response) => {
+  const find: any = {
+    status: "active",
+    deleted: false,
+  };
+
+  // Search
+  if (req.query.keyword) {
+    const keyword = String(req.query.keyword);
+    const regex = new RegExp(keyword, "i");
+    find.title = regex;
+  }
+
+  // Sort
+  const sort: any = {};
+  if (req.query.sort) {
+    switch (req.query.sort) {
+      case "newest":
+        sort.createdAt = -1;
+        break;
+      case "oldest":
+        sort.createdAt = 1;
+        break;
+      case "popular":
+        sort.listen = -1;
+        break;
+      case "az":
+        sort.title = 1;
+        break;
+      default:
+        sort.createdAt = -1;
+    }
+  } else {
+    sort.createdAt = -1;
+  }
+
+  // Pagination
+  const countSongs = await Song.countDocuments(find);
+  const objectPagination = pagination(
+    {
+      currentPage: 1,
+      limitItems: 12,
+    },
+    req.query,
+    countSongs
+  );
+
+  const songs = await Song.find(find)
+    .sort(sort)
+    .limit(objectPagination.limitItems)
+    .skip(objectPagination.skip)
+    .select("avatar title slug singerId likes listen createdAt")
+    .lean();
+
+  const user = res.locals.user;
+
+  for (const song of songs as any[]) {
+    const infoSinger = await Singer.findOne({
+      _id: song.singerId,
+      status: "active",
+      deleted: false,
+    });
+
+    song.infoSinger = infoSinger;
+    song.isLiked = user ? song.likes?.includes(user.id) : false;
+  }
+
+  res.render("client/pages/songs/index", {
+    pageTitle: "Tất cả bài hát",
+    songs: songs,
+    keyword: req.query.keyword ? String(req.query.keyword) : "",
+    sort: req.query.sort ? String(req.query.sort) : "newest",
+    pagination: objectPagination,
+    originalUrl: req.originalUrl,
+  });
+};
+
+//[GET] /songs/topic/:slugTopic
 export const list = async (req: Request, res: Response) => {
   const topic = await Topic.findOne({
     slug: req.params.slugTopic,

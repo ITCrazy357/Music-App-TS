@@ -4,7 +4,9 @@ import { requireAuth } from "../../middlewares/clients/auth.middleware";
 
 const router: Router = Router();
 
-router.get("/:slugTopic", controller.list);
+router.get("/", controller.index);
+
+router.get("/topic/:slugTopic", controller.list);
 
 router.get("/detail/:slugSong", controller.detail);
 

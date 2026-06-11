@@ -17,9 +17,9 @@ block main
                 .col-6.mb-3
                     div(class="topic-item")
                         div(class="inner-image")
-                            a(href=`/songs/${topic.slug}`)
+                            a(href=`/songs/topic/${topic.slug}`)
                                 img(src=topic.avatar alt=topic.title)
                         div(class="inner-content")
                             h3(class="inner-title")
-                                a(href=`/songs/${topic.slug}`) #{topic.title}
+                                a(href=`/songs/topic/${topic.slug}`) #{topic.title}
                             div(class="inner-description") !{topic.description}

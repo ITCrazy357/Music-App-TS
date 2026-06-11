@@ -2,6 +2,7 @@ import { Express } from "express";
 import { authRoutes } from "./auth.route";
 import { topicRoutes } from "./topic.route";
 import { songRoutes } from "./song.route";
+import { singerRoutes } from "./singer.route";
 import {
   requireAuth,
   injectUser,
@@ -23,6 +24,7 @@ const clientRoutes = (app: Express): void => {
   app.use("/auth", authRoutes);
   app.use("/topics", topicRoutes);
   app.use("/songs", songRoutes);
+  app.use("/singers", singerRoutes);
   app.use("/favorite-songs", requireAuth, favoriteSongRoutes);
   app.use("/search", searchRoutes);
   app.use("/comments", commentRoutes);
