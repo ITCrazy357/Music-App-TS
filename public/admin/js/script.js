@@ -33,6 +33,17 @@ if (buttonsDelete.length > 0) {
                     const id = button.getAttribute("data-id");
                     const action = path + `/${id}?_method=DELETE`;
                     formDeleteItem.action = action;
+                    
+                    // Add hidden input for method-override
+                    let hiddenInput = formDeleteItem.querySelector('input[name="_method"]');
+                    if (!hiddenInput) {
+                        hiddenInput = document.createElement("input");
+                        hiddenInput.type = "hidden";
+                        hiddenInput.name = "_method";
+                        formDeleteItem.appendChild(hiddenInput);
+                    }
+                    hiddenInput.value = "DELETE";
+
                     formDeleteItem.submit();
                 }
             });

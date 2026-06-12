@@ -1,0 +1,141 @@
+/* ========== SONG & TOPIC ITEM ========== */
+.song-item,
+.topic-item {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+.song-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+}
+.topic-item {
+  overflow: hidden;
+  height: 100%;
+}
+.song-item:hover {
+  transform: translateY(-4px);
+  border-color: var(--border);
+}
+.topic-item:hover {
+  transform: translateY(-6px);
+}
+
+.song-item .inner-image,
+.topic-item .inner-image {
+  overflow: hidden;
+}
+.song-item .inner-image {
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+  margin-right: 18px;
+  border-radius: 12px;
+}
+
+.song-item .inner-image img,
+.topic-item .inner-image img {
+  width: 100%;
+  object-fit: cover;
+  background: rgba(0, 0, 0, 0.2);
+  transition: transform 0.4s ease;
+}
+.song-item .inner-image img {
+  height: 100%;
+}
+.topic-item .inner-image img {
+  aspect-ratio: 16 / 9;
+}
+.song-item:hover .inner-image img,
+.topic-item:hover .inner-image img {
+  transform: scale(1.08);
+}
+
+.song-item .inner-content {
+  flex: 1;
+}
+.topic-item .inner-content {
+  padding: 18px;
+}
+
+.song-item .inner-title,
+.topic-item .inner-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.song-item .inner-title a {
+  color: rgb(252, 252, 252);
+  transition: color 0.3s ease;
+}
+.topic-item .inner-title a {
+  color: var(--white);
+  transition: color 0.3s ease;
+}
+.song-item .inner-title a:hover,
+.topic-item .inner-title a:hover {
+  color: var(--primary);
+}
+.topic-item .inner-description {
+  color: var(--border);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.song-item .inner-singer,
+.song-item .inner-like,
+.song-item .inner-time,
+.song-item .inner-heart {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--white);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.song-item .inner-singer i,
+.song-item .inner-like i,
+.song-item .inner-time i,
+.song-item .inner-heart i {
+  font-size: 15px;
+}
+.song-item .inner-like,
+.song-item .inner-heart {
+  width: fit-content;
+  cursor: pointer;
+  user-select: none;
+}
+.song-item .inner-like:hover {
+  color: var(--primary);
+  transform: translateX(2px);
+}
+.song-item .inner-heart:hover {
+  color: var(--danger);
+  transform: translateX(2px);
+}
+
+.song-item .inner-like i,
+.song-item .inner-like span,
+.song-item .inner-heart i,
+.song-item .inner-heart span {
+  transition: all 0.3s ease;
+}
+.song-item .inner-like.active,
+.song-item .inner-like.active i,
+.song-item .inner-like.active span {
+  color: #0d6efd;
+}
+.song-item .inner-heart.active,
+.song-item .inner-heart.active i,
+.song-item .inner-heart.active span {
+  color: var(--danger);
+}
+.song-item .inner-like.active i,
+.song-item .inner-heart.active i {
+  font-weight: 900;
+}

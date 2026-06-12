@@ -51,7 +51,6 @@ block main
                                             th Hình ảnh
                                             th Tiêu đề
                                             th Vị trí
-                                            th Loại
                                             th Trạng thái
                                             th Ưu tiên
                                             th Hành động
@@ -76,7 +75,6 @@ block main
                                                             span.badge.badge-info.mr-1.mb-1 #{pos}
                                                     else
                                                         | -
-                                                td #{item.type}
 
                                                 td
                                                     if item.isDraft
@@ -98,8 +96,9 @@ block main
 
                                                     if role && role.permissions.includes("ads_delete")
                                                         //- Xóa: dùng form thủ công theo pattern project
-                                                        a.btn.btn-danger.btn-sm(
-                                                            href=`${prefixAdmin}/ads/delete/${item.id}`
+                                                        button.btn.btn-danger.btn-sm(
+                                                            button-delete
+                                                            data-id=item.id
                                                         )
                                                             | Xóa
                         else
@@ -108,4 +107,11 @@ block main
 
                     .card-footer.d-flex.justify-content-center
                         +pagination(pagination)
+
+        form(
+            action=""
+            method="POST"
+            id="form-delete-item"
+            data-path=`/${prefixAdmin}/ads/delete`
+        )
 

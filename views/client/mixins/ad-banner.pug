@@ -6,6 +6,7 @@ mixin ad-banner(adsList)
         margin-bottom: 1.5rem;
         border-radius: 8px;
         overflow: hidden;
+        position: relative;
       }
       .ads-banner-inner {
         position: relative;
@@ -20,6 +21,34 @@ mixin ad-banner(adsList)
         flex-direction: column;
         justify-content: center;
       }
+      .ads-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 20;
+        transition: background 0.3s;
+      }
+      .ads-nav-btn:hover {
+        background: rgba(0, 0, 0, 0.8);
+      }
+      .ads-nav-prev { left: 10px; }
+      .ads-nav-next { right: 10px; }
+      @media (max-width: 768px) {
+        .ads-nav-btn {
+          width: 28px;
+          height: 28px;
+        }
+      }
 
     .swiper.ads-swiper-container
       .swiper-wrapper
@@ -27,12 +56,16 @@ mixin ad-banner(adsList)
           .swiper-slide
             .ads-banner-inner.ad-banner-container(data-ad-id=ad._id)
               if ad.sponsorLevel
-                span.badge.badge-warning.position-absolute(style="top: 10px; left: 10px; z-index: 10;") #{ad.sponsorLevel} Tài Trợ
+                span.badge.badge-warning.position-absolute(style="top: 10px; left: 10px; z-index: 10; padding: 4px 8px; max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block;") Tài Trợ
               a(href=`/ads/click/${ad._id}` target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none; height: 100%;")
                 if ad.image
-                  img.img-fluid(src=ad.image alt=ad.title style="max-height: 250px; width: 100%; object-fit: cover; height: 100%;")
+                  img.img-fluid(src=ad.image alt=ad.title style="max-height: 250px; width: 100%; object-fit: cover; height: 100%; border-radius: 8px;")
                 else
                   .p-4.text-white
                     h5.mb-2(style="color: var(--primary-color, #18b283);") #{ad.title}
                     if ad.description
                       p.mb-0.text-muted !{ad.description}
+      button.ads-nav-btn.ads-nav-prev
+        i.fa-solid.fa-chevron-left
+      button.ads-nav-btn.ads-nav-next
+        i.fa-solid.fa-chevron-right

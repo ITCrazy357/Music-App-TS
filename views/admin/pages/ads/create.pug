@@ -54,35 +54,25 @@ block main
 
                             .form-row
                                 .form-group.col-md-6
-                                    label Loại
-                                    select.form-control(name="type" required)
-                                        option(value="banner") Banner
-                                        option(value="sidebar") Sidebar
-                                        option(value="song_detail_banner") Song Detail Banner
-                                        option(value="popup") Popup
-                                        option(value="home") Home
-                                        option(value="footer") Footer
-
-                                .form-group.col-md-4
                                     label Trạng thái
                                     select.form-control(name="status")
                                         option(value="active") active
                                         option(value="inactive") inactive
 
-                            .form-row
-                                .form-group.col-md-4
-                                    label Ưu tiên (priority)
-                                    input.form-control(type="number" name="priority" value="1")
-
-                                .form-group.col-md-4
-                                    label Sponsor level
-                                    input.form-control(type="text" name="sponsorLevel")
-
-                                .form-group.col-md-4
+                                .form-group.col-md-6
                                     label Draft?
                                     select.form-control(name="isDraft")
                                         option(value="false" selected) false
                                         option(value="true") true
+
+                            .form-row
+                                .form-group.col-md-6
+                                    label Ưu tiên (priority)
+                                    input.form-control(type="number" name="priority" value="1")
+
+                                .form-group.col-md-6
+                                    label Sponsor level
+                                    input.form-control(type="text" name="sponsorLevel")
 
                             .form-row
                                 .form-group.col-md-6

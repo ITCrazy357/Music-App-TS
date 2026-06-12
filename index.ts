@@ -17,11 +17,11 @@ database.connect();
 const app: Express = express();
 const port: number | string = process.env.PORT || 3000;
 
-app.use(methodOverride("_method"));
-
 // Cấu hình middleware để đọc dữ liệu từ req.body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(methodOverride("_method"));
 
 app.use(express.static("public"));
 app.use(cookieParser());

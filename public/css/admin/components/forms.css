@@ -22,6 +22,11 @@
   color: #fff;
 }
 
+select option {
+  background-color: var(--dark-light) !important;
+  color: #fff !important;
+}
+
 .form-control-file,
 .form-check-input,
 .form-check-label,

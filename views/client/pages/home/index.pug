@@ -20,12 +20,12 @@ block main
                             div(class="inner-title")
                                 a(href=`/songs/detail/${song.slug}`) #{song.title}
 
-                            div(class="inner-singer")
-                                i(class="fa-solid fa-microphone-lines")
+                            div(class="inner-singer" style="color: #ffffff;")
+                                i(class="fa-solid fa-microphone-lines" style="color: #ffffff;")
                                 |  #{song.singerInfo ? song.singerInfo.fullName : 'Chưa rõ'}
 
-                            div(class="inner-listen")
-                                i(class="fa-solid fa-headphones")
+                            div(class="inner-listen" style="color: #ffffff;")
+                                i(class="fa-solid fa-headphones" style="color: #ffffff;")
                                 |  #{song.listen} lượt nghe
 
         //- Bài hát nổi bật
@@ -45,12 +45,12 @@ block main
                             div(class="inner-title")
                                 a(href=`/songs/detail/${song.slug}`) #{song.title}
 
-                            div(class="inner-singer")
-                                i(class="fa-solid fa-microphone-lines")
+                            div(class="inner-singer" style="color: #ffffff;")
+                                i(class="fa-solid fa-microphone-lines" style="color: #ffffff;")
                                 |  #{song.singerInfo ? song.singerInfo.fullName : 'Chưa rõ'}
 
-                            div(class="inner-listen")
-                                i(class="fa-solid fa-headphones")
+                            div(class="inner-listen" style="color: #ffffff;")
+                                i(class="fa-solid fa-headphones" style="color: #ffffff;")
                                 |  #{song.listen} lượt nghe
 
         //- Chủ đề nổi bật
@@ -83,4 +83,4 @@ block main
                                 img(src=singer.avatar alt=singer.fullName style="border-radius: 50%; width: 100%; aspect-ratio: 1/1; object-fit: cover;")
                         div(class="inner-content mt-2")
                             h3(class="inner-title" style="font-size: 1.2rem; font-weight: 600;")
-                                a(href=`#`) #{singer.fullName}
+                                a(href=`#` style="color: #ffffff;") #{singer.fullName}

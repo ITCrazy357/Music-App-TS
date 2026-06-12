@@ -102,7 +102,6 @@ export const createPost = async (req: Request, res: Response) => {
       targetUrl,
       image,
       positions,
-      type,
       status,
       priority,
       sponsorLevel,
@@ -111,10 +110,10 @@ export const createPost = async (req: Request, res: Response) => {
       isDraft,
     } = req.body;
 
-    if (!title || !targetUrl || !positions || !type) {
+    if (!title || !targetUrl || !positions) {
       req.flash(
         "error",
-        "Thiếu dữ liệu bắt buộc (title/targetUrl/positions/type). ",
+        "Thiếu dữ liệu bắt buộc (title/targetUrl/positions). ",
       );
       return res.redirect(`/${req.app.locals.prefixAdmin}/ads`);
     }
@@ -122,7 +121,7 @@ export const createPost = async (req: Request, res: Response) => {
     // Ensure positions is an array
     const positionsArray = Array.isArray(positions) ? positions : [positions];
 
-    const baseSlug = typeof slug === "string" ? slug.trim() : String(title);
+    const baseSlug = typeof slug === "string" && slug ? slug.trim() : String(title);
     const finalSlug = await buildSlugUnique(finalSlugSafe(baseSlug));
 
     const payload: any = {
@@ -140,7 +139,6 @@ export const createPost = async (req: Request, res: Response) => {
       targetUrl: String(targetUrl).trim(),
       image: image || "",
       positions: positionsArray,
-      type,
       status: status || "inactive",
       priority: priority ? Number(priority) : 1,
       sponsorLevel: sponsorLevel || "",
@@ -212,7 +210,6 @@ export const editPatch = async (req: Request, res: Response) => {
       targetUrl,
       image,
       positions,
-      type,
       status,
       priority,
       sponsorLevel,
@@ -221,10 +218,10 @@ export const editPatch = async (req: Request, res: Response) => {
       isDraft,
     } = req.body;
 
-    if (!title || !targetUrl || !positions || !type) {
+    if (!title || !targetUrl || !positions) {
       req.flash(
         "error",
-        "Thiếu dữ liệu bắt buộc (title/targetUrl/positions/type). ",
+        "Thiếu dữ liệu bắt buộc (title/targetUrl/positions). ",
       );
       return res.redirect(`/${req.app.locals.prefixAdmin}/ads`);
     }
@@ -254,7 +251,6 @@ export const editPatch = async (req: Request, res: Response) => {
       targetUrl: String(targetUrl).trim(),
       image: image || "",
       positions: positionsArray,
-      type,
       status: status || "inactive",
       priority: priority ? Number(priority) : 1,
       sponsorLevel: sponsorLevel || "",

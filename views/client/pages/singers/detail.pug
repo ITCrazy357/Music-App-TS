@@ -39,8 +39,8 @@ block main
                                     i(class="fa-solid fa-microphone-lines")
                                     |  #{singer.fullName}
 
-                                div(class="inner-listen")
-                                    i(class="fa-solid fa-headphones")
+                                div(class="inner-listen" style="color: #ffffff;")
+                                    i(class="fa-solid fa-headphones" style="color: #ffffff;")
                                     |  #{song.listen || 0} lượt nghe
                                 
                                 div(class=`inner-like ${song.isLiked ? 'active' : ''}` button-like=song._id)

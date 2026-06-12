@@ -202,17 +202,14 @@ if (adSwiperContainers.length > 0) {
       slidesPerView: 1,
       spaceBetween: 20,
       loop: banners.length > 1,
+      speed: 800,
       autoplay: banners.length > 1 ? {
-        delay: 3000,
+        delay: 4000,
         disableOnInteraction: false,
       } : false,
-      breakpoints: {
-        768: {
-          slidesPerView: Math.min(2, banners.length)
-        },
-        992: {
-          slidesPerView: Math.min(3, banners.length)
-        }
+      navigation: {
+        nextEl: container.querySelector('.ads-nav-next'),
+        prevEl: container.querySelector('.ads-nav-prev'),
       }
     });
   });
@@ -454,7 +451,11 @@ if (formComment) {
             noComments.remove();
           }
 
-          commentsList.appendChild(newItem);
+          if (commentsList.firstChild) {
+            commentsList.insertBefore(newItem, commentsList.firstChild);
+          } else {
+            commentsList.appendChild(newItem);
+          }
 
           // Update header count
           if (commentsHeaderCount) {

@@ -8,14 +8,6 @@ export type AdPosition =
   | "home_banner"
   | "footer_banner";
 
-export type AdType =
-  | "banner"
-  | "sidebar"
-  | "song_detail_banner"
-  | "popup"
-  | "home"
-  | "footer";
-
 const adSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
@@ -26,7 +18,6 @@ const adSchema = new mongoose.Schema(
     targetUrl: { type: String, default: "" },
 
     positions: { type: [String], default: ["banner_top"], index: true },
-    type: { type: String, default: "banner", index: true },
 
     status: { type: String, default: "inactive", index: true },
 

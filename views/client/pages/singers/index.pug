@@ -10,14 +10,17 @@ block main
 
         .row.mb-4
             .col-md-6
-                form(action="/singers", method="GET", class="d-flex")
-                    input.form-control.me-2(
-                        type="text"
-                        name="keyword"
-                        placeholder="Tìm kiếm ca sĩ..."
-                        value=keyword
-                    )
-                    button.btn.btn-primary.ms-2(type="submit") Tìm
+                .box-search
+                    form.search-form.d-flex(action="/singers", method="GET")
+                        input.form-control(
+                            type="text"
+                            name="keyword"
+                            placeholder="Tìm kiếm ca sĩ..."
+                            value=keyword
+                            style="border-radius: 20px 0 0 20px;"
+                        )
+                        button.btn.btn-primary(type="submit" style="border-radius: 0 20px 20px 0;")
+                            i.fa-solid.fa-magnifying-glass
 
         .row
             each singer in singers
