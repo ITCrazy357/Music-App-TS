@@ -1,0 +1,304 @@
+/* ========== HEADER ========== */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  padding: 18px 0;
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    transform 0.4s ease,
+    background 0.3s ease,
+    padding 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Khi scroll */
+.header.header-scroll {
+  padding: 12px 0;
+  background: rgba(10, 15, 30, 0.85);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Ẩn / Hiện */
+.header.hide {
+  transform: translateY(-100%);
+}
+.header.show {
+  transform: translateY(0);
+}
+
+.header .row {
+  align-items: center;
+}
+
+/* ========== LOGO ========== */
+.header .inner-logo {
+  display: flex;
+  align-items: center;
+}
+.header .inner-logo a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.header .inner-logo img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+.header .logo-text {
+  color: var(--white);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* ========== MENU ========== */
+.header .inner-menu {
+  display: flex;
+  justify-content: center;
+}
+.header .inner-menu ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+}
+.header .inner-menu ul li a {
+  position: relative;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+.header .inner-menu ul li a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+.header .inner-menu ul li a:hover {
+  color: var(--white);
+}
+.header .inner-menu ul li a:hover::after {
+  width: 100%;
+}
+
+/* ========== HEADER ACTIONS ========== */
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+}
+
+/* ========== USER INFO ========== */
+/* =========================
+   USER DROPDOWN
+========================= */
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 12px;
+  transition: all 0.25s ease;
+}
+
+.header-user:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.header-user .user-icon {
+  color: var(--primary);
+  font-size: 18px;
+}
+
+.header-user .user-name {
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* =========================
+   DROPDOWN
+========================= */
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  text-decoration: none;
+}
+
+.dropdown-toggle::after {
+  margin-left: 8px;
+  vertical-align: middle;
+  transition: transform 0.3s ease;
+}
+
+.dropdown:hover .dropdown-toggle::after {
+  transform: rotate(180deg);
+}
+
+/* =========================
+   MENU
+========================= */
+
+.dropdown-menu {
+  min-width: 200px;
+
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+
+  padding: 8px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  margin-top: 10px;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+
+  transition: all 0.25s ease;
+}
+
+/* Hover xổ menu */
+
+.dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  display: block;
+}
+
+.dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+}
+
+/* =========================
+   ITEM
+========================= */
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 500;
+
+  padding: 10px 14px;
+  border-radius: 10px;
+
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.dropdown-item i {
+  width: 18px;
+  text-align: center;
+}
+
+/* Divider */
+
+.dropdown-divider {
+  border-color: rgba(255, 255, 255, 0.08);
+  margin: 6px 0;
+}
+
+/* ========== BUTTONS ========== */
+.header .btn {
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.header .btn-outline-light {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  background: transparent;
+}
+.header .btn-outline-light:hover {
+  background: var(--white);
+  color: var(--dark);
+}
+.header .btn-primary {
+  border: none;
+  background: var(--primary);
+  color: var(--white);
+}
+.header .btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+/* ========== RESPONSIVE HEADER ========== */
+@media (max-width: 1199.98px) {
+  .header .inner-menu ul {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .header {
+    padding: 14px 0;
+  }
+  .header .inner-menu {
+    display: none;
+  }
+  .header .logo-text {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .header-actions {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .header .logo-text {
+    display: none;
+  }
+}

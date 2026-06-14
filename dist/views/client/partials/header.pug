@@ -1,0 +1,82 @@
+header.header.py-3
+  .container-fluid.px-4.px-lg-5
+    .row.align-items-center
+      .col-lg-2.col-md-4.col-6
+        .inner-logo
+          a.d-flex.align-items-center.gap-2(href="/home")
+            img(
+              src=(settingGeneral && settingGeneral.logo ? settingGeneral.logo : "/images/logo.png"),
+              alt=(settingGeneral && settingGeneral.websiteName ? settingGeneral.websiteName : "Music Streaming Logo"),
+              width="50"
+            )
+
+            span.logo-text #{settingGeneral && settingGeneral.websiteName ? settingGeneral.websiteName : "Music Streaming"}
+
+      .col-lg-6.d-none.d-lg-block
+        nav.inner-menu
+          ul.d-flex.align-items-center.justify-content-center.gap-4.mb-0
+            li
+              a(href="/home") Trang chủ
+
+            li
+              a(href="/songs") Bài hát
+
+            li
+              a(href="/topics") Chủ đề
+
+            li
+              a(href="/singers") Ca sĩ
+
+            li
+              a(href="/favorite-songs") Bài hát yêu thích
+
+            li
+              a(href="/rankings") BXH
+
+      .col-lg-4.col-md-8.col-6
+        .header-actions.d-flex.align-items-center.justify-content-end.gap-3 
+          .box-search
+            form.search-form.d-none.d-md-flex(action="/search/results", method="GET")
+              input.form-control(
+                type="text",
+                name="keyword",
+                placeholder="Tìm kiếm bài hát..."
+                value=keyword
+              )
+
+              button.btn.btn-primary(type="submit")
+                i.fa-solid.fa-magnifying-glass
+            .inner-suggest
+              .inner-list
+
+          if user
+            .dropdown
+              a.dropdown-toggle.header-user(
+                href="#"
+                data-toggle="dropdown"
+              )
+                i.fa-solid.fa-user.user-icon
+                span.user-name #{user.fullName}
+
+              ul.dropdown-menu.dropdown-menu-end
+                if(role && role.title === 'Admin' || role && role.title === 'Content' || role && role.title === 'Account')
+                  li
+                    hr.dropdown-divider
+
+                  li 
+                    a.dropdown-item(href=`/${prefixAdmin}/dashboard`)
+                      i.fa-solid.fa-user-shield
+                      span Dashboard quản trị
+
+                li
+                  hr.dropdown-divider
+
+                li
+                  a.dropdown-item(href="/auth/logout")
+                    i.fa-solid.fa-right-from-bracket
+                    span Đăng xuất
+          else
+            a(href="/auth/login", class="inner-actions__item", title="Đăng nhập")
+              i.fa-solid.fa-user
+            a(href="/auth/register", class="inner-actions__item", title="Đăng ký")
+              i.fa-solid.fa-user-plus

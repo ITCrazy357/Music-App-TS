@@ -1,0 +1,81 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+
+        .row
+            .col-12
+                +box-head(pageTitle)
+
+        .card.custom-list-card.mb-3
+            .card-header
+                | Thùng rác tài khoản
+
+            .card-body
+                .custom-actions.mb-3
+                    a.btn.btn-secondary(
+                        href=`/${prefixAdmin}/users`
+                    )
+                        i.fa-solid.fa-arrow-left.me-1
+                        | Quay lại danh sách
+
+                if users && users.length > 0
+                    table.table.custom-table.table-hover
+                        thead
+                            tr
+                                th STT
+                                th Hình ảnh
+                                th Họ tên
+                                th Email
+                                th Hành động
+
+                        tbody
+                            each item, index in users
+                                tr
+                                    td #{index + 1}
+
+                                    td
+                                        img.custom-avatar(
+                                            src=(item.avatar ? item.avatar : "/admin/images/avatar-default.jpg")
+                                            alt=item.fullName
+                                        )
+
+                                    td.custom-title
+                                        = item.fullName
+
+                                    td.custom-listen
+                                        = item.email
+
+                                    td
+                                        .custom-actions-group
+                                            button.btn.btn-success.btn-sm.mr-1(
+                                                button-restore
+                                                data-id=item.id
+                                            ) 
+                                                i.fa-solid.fa-rotate-left
+                                                span Khôi phục
+
+                                            button.btn.btn-danger.btn-sm(
+                                                button-delete-permanent
+                                                data-id=item.id
+                                            ) 
+                                                i.fa-solid.fa-trash
+                                                span Xóa vĩnh viễn
+
+                else
+                    .custom-empty.mt-3 Thùng rác trống.
+
+        form(
+            id="form-restore-item"
+            method="POST"
+            action=""
+            data-path=`/${prefixAdmin}/users/restore`
+        ) 
+
+        form(
+            id="form-delete-permanent-item"
+            method="POST"
+            action=""
+            data-path=`/${prefixAdmin}/users/delete-permanent`
+        )

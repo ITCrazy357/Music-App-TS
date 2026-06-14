@@ -1,0 +1,33 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+    .container.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .row
+            .col-12
+                .ranking-list
+                    each song, index in rankingSongs
+                        - var rankClass = index === 0 ? "rank-1" : index === 1 ? "rank-2" : index === 2 ? "rank-3" : "rank-other";
+                        - var rankIcon = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `#${index + 1}`;
+                        
+                        .ranking-item(class=rankClass style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px;")
+                            .ranking-number(style="font-size: 2rem; font-weight: bold; width: 60px; text-align: center; color: var(--color-primary);") #{rankIcon}
+                            
+                            .ranking-image(style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; margin-right: 20px;")
+                                a(href=`/songs/detail/${song.slug}`)
+                                    img(src=song.avatar alt=song.title style="width: 100%; height: 100%; object-fit: cover;")
+                            
+                            .ranking-info(style="flex: 1;")
+                                h3.ranking-title(style="margin: 0 0 5px 0; font-size: 1.2rem;")
+                                    a(href=`/songs/detail/${song.slug}` style="color: white; text-decoration: none;") #{song.title}
+                                p.ranking-singer(style="margin: 0; color: #aaa; font-size: 0.9rem;")
+                                    i(class="fa-solid fa-microphone-lines")
+                                    |  #{song.singerInfo ? song.singerInfo.fullName : 'Chưa rõ'}
+                            
+                            .ranking-stats(style="text-align: right; color: #aaa;")
+                                div(style="font-size: 1.1rem; font-weight: bold; color: var(--color-primary);") #{song.listen} 
+                                div(style="font-size: 0.8rem;") lượt nghe

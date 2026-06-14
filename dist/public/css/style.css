@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+/* ========== LAYOUT ========== */
+@import "client/layout/base.css";
+@import "client/layout/header.css";
+@import "client/layout/footer.css";
+
+/* ========== COMPONENTS ========== */
+@import "client/components/search.css";
+@import "client/components/cards.css";
+@import "client/components/comments.css";
+@import "client/components/empty.css";
+
+/* ========== PAGES ========== */
+@import "client/pages/song-detail.css";

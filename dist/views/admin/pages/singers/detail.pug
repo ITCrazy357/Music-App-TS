@@ -1,0 +1,40 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .custom-detail-card.mb-3
+            .card-header 
+                i.fa-solid.fa-circle-info.mr-2
+                | Chi tiết ca sĩ
+            .card-body
+                .row
+                    .col-lg-4
+                        if singer.avatar
+                            img(src=singer.avatar alt=singer.fullName class="img-fluid rounded mb-3" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);")
+                    .col-lg-8
+                        .mb-3
+                            h3.text-white #{singer.fullName}
+                        if singer.status
+                            p
+                                strong Trạng thái: 
+                                if singer.status === "active"
+                                    span.badge.badge-success Hoạt động
+                                else
+                                    span.badge.badge-danger Dừng hoạt động
+                        if singer.description
+                            .mt-3
+                                h5.text-white Mô tả
+                                div.text-light !{singer.description}
+                        
+                        .mt-4
+                            a(href=`/${prefixAdmin}/singers/edit/${singer.id}` class="btn btn-warning mr-2")
+                                i.fa-solid.fa-pen-to-square.mr-1
+                                | Chỉnh sửa
+                            a(href=`/${prefixAdmin}/singers` class="btn btn-secondary")
+                                i.fa-solid.fa-arrow-left.mr-1
+                                | Quay lại

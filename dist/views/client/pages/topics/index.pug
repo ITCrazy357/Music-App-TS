@@ -1,0 +1,25 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+    .container.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        if globalAds && globalAds.home_banner
+            .row.mb-4
+                .col-12
+                    +ad-banner(globalAds.home_banner)
+
+        .row
+            each topic in topics
+                .col-6.mb-3
+                    div(class="topic-item")
+                        div(class="inner-image")
+                            a(href=`/songs/topic/${topic.slug}`)
+                                img(src=topic.avatar alt=topic.title)
+                        div(class="inner-content")
+                            h3(class="inner-title")
+                                a(href=`/songs/topic/${topic.slug}`) #{topic.title}
+                            div(class="inner-description") !{topic.description}

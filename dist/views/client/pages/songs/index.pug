@@ -1,0 +1,71 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/pagination.pug
+
+block main 
+    .container.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .row.mb-4.align-items-center
+            .col-12
+                .d-flex.flex-wrap.gap-3.align-items-center.justify-content-between.p-3(style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);")
+                    //- Form tìm kiếm
+                    form(action="/songs", method="GET", class="d-flex flex-grow-1" style="max-width: 400px;")
+                        if sort
+                            input(type="hidden" name="sort" value=sort)
+                        .input-group
+                            input.form-control(
+                                type="text"
+                                name="keyword"
+                                placeholder="Tìm kiếm bài hát..."
+                                value=keyword
+                                style="border-radius: 20px 0 0 20px; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); border-right: none;"
+                            )
+                            button.btn.btn-primary(type="submit" style="border-radius: 0 20px 20px 0; border: 1px solid rgba(255, 255, 255, 0.2); border-left: none;") 
+                                i.fa-solid.fa-magnifying-glass
+
+                    //- Form lọc
+                    form(action="/songs", method="GET", id="form-sort", class="d-flex align-items-center gap-2")
+                        if keyword
+                            input(type="hidden" name="keyword" value=keyword)
+                        label.text-white.mb-0(style="white-space: nowrap;")
+                            i.fa-solid.fa-filter.me-1
+                            | Lọc:
+                        select.form-select.w-auto(
+                            name="sort" 
+                            onchange="document.getElementById('form-sort').submit()"
+                            style="background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; outline: none; cursor: pointer;"
+                        )
+                            option(value="newest" selected=(sort === "newest") style="background: #1e293b; color: white;") Mới nhất
+                            option(value="oldest" selected=(sort === "oldest") style="background: #1e293b; color: white;") Cũ nhất
+                            option(value="popular" selected=(sort === "popular") style="background: #1e293b; color: white;") Nhiều lượt nghe nhất
+                            option(value="az" selected=(sort === "az") style="background: #1e293b; color: white;") A-Z
+
+        .row
+            each song in songs
+                .col-6.col-md-4.col-lg-3.mb-3
+                    div(class="song-item")
+                        div(class="inner-image")
+                            a(href=`/songs/detail/${song.slug}`)
+                                img(src=`${song.avatar}` alt=`${song.title}`) 
+
+                        div(class="inner-content")
+                            div(class="inner-title")
+                                a(href=`/songs/detail/${song.slug}`) #{song.title}
+
+                            div(class="inner-singer")
+                                i(class="fa-solid fa-microphone-lines")
+                                |  #{song.infoSinger ? song.infoSinger.fullName : 'Chưa rõ'}
+
+                            div(class="inner-listen text-white")
+                                i(class="fa-solid fa-headphones" style="color: #ffffff;")
+                                |  #{song.listen || 0} lượt nghe
+                            
+                            div(class=`inner-like ${song.isLiked ? 'active' : ''}` button-like=song._id)
+                                i(class="fa-solid fa-thumbs-up")
+                                span  #{song.likes ? song.likes.length : 0} thích
+
+        if pagination.totalPage > 1
+            +pagination(pagination, originalUrl)

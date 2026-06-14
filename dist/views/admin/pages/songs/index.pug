@@ -1,0 +1,138 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/pagination.pug
+include ../../mixins/filter-status.pug
+include ../../mixins/form-change-multi.pug
+include ../../mixins/search.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+
+        .row
+            .col-12
+                +box-head(pageTitle)
+
+        .song-list-card.mb-4
+            .card-header
+                i.fa-solid.fa-filter.mr-2
+                | Bộ lọc & Công cụ
+            .card-body
+                .row.mb-3
+                    .col-6
+                        +filter-status(filterStatus)
+                    .col-6
+                        +search(keyword)
+                .row
+                    .col-8 
+                        if role && (role.permissions.includes("songs_edit") || role.title === "Admin" || role.title === "Content")
+                            +form-change-multi(`/${prefixAdmin}/songs/change-multi?_method=PATCH`)
+                    .col-4.text-right 
+                        if role && (role.permissions.includes("songs_create") || role.title === "Admin" || role.title === "Content")
+                            a.btn.btn-outline-success.mr-2(
+                                href=`/${prefixAdmin}/songs/create`
+                            )
+                                i.fa-solid.fa-plus.me-1
+                                | Thêm mới
+                        if role && (role.permissions.includes("delete_songs") || role.title === "Admin")
+                            a.btn.btn-outline-danger(
+                                href=`/${prefixAdmin}/songs/trash`
+                            )
+                                i.fa-solid.fa-trash-can.me-1
+                                | Thùng rác
+
+        .song-list-card
+            .card-header
+                i.fa-solid.fa-list.mr-2
+                | Danh sách bài hát
+
+            .card-body
+
+                if songs.length > 0
+
+                    table.table.song-table.table-hover(checkbox-multi)
+                        thead
+                            tr
+                                th
+                                    input(type="checkbox" name="checkall")
+                                th STT
+                                th Hình ảnh
+                                th Tiêu đề
+                                th Trạng thái
+                                th Hành động
+
+                        tbody
+                            each item, index in songs
+                                tr
+                                    td
+                                        input(
+                                            type="checkbox"
+                                            name="id"
+                                            value=item.id
+                                        )
+                                    td #{index + 1}
+
+                                    td
+                                        img.song-avatar(
+                                            src=item.avatar
+                                            alt=item.title
+                                            style="width: 100px; height: auto; border-radius: 8px;"
+                                        )
+
+                                    td.song-title
+                                        = item.title
+
+                                    td
+                                        if item.status === "active"
+                                            a.badge.badge-success(
+                                                href="javascript:;"
+                                                data-status="active"
+                                                data-id=item.id
+                                                button-change-status
+                                            )
+                                                | Hoạt động
+                                        else
+                                            a.badge.badge-danger(
+                                                href="javascript:;"
+                                                data-status="inactive"
+                                                data-id=item.id
+                                                button-change-status
+                                            )
+                                                | Dừng hoạt động
+
+                                    td
+                                        .song-actions-group
+
+                                            a.btn.btn-secondary.btn-sm.mr-1(
+                                                href=`/${prefixAdmin}/songs/detail/${item.id}`
+                                            ) Chi tiết
+                                            if role && (role.permissions.includes("songs_edit") || role.title === "Admin" || role.title === "Content")
+                                                a.btn.btn-warning.btn-sm.mr-1(
+                                                    href=`/${prefixAdmin}/songs/edit/${item.id}`
+                                                ) Sửa
+
+                                            if role && (role.permissions.includes("delete_songs") || role.title === "Admin")
+                                                button.btn.btn-danger.btn-sm(
+                                                    button-delete
+                                                    data-id=item.id
+                                                ) Xóa
+
+                else
+
+                    .song-empty.mt-3.alert.alert-secondary
+                        | Không có bài hát nào.
+
+        +pagination(pagination)
+
+        form(
+            action=""
+            method="POST"
+            id="form-change-status"
+            data-path=`/${prefixAdmin}/songs/change-status`
+        )
+
+        form(
+            action=""
+            method="POST"
+            id="form-delete-item"
+            data-path=`/${prefixAdmin}/songs/delete`
+        )

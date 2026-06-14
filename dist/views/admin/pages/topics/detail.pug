@@ -1,0 +1,73 @@
+extends ../../layouts/default.pug
+
+include ../../mixins/box-head.pug
+
+block main
+    .topic-detail-page
+
+        .row.mb-4
+            .col-12
+                +box-head(pageTitle)
+
+        .topic-detail-card
+
+            .topic-detail-header
+                i.fa-solid.fa-folder-open
+                span Chi tiết chủ đề
+
+            .topic-detail-body
+
+                .row
+
+                    .col-lg-4
+
+                        if topic.avatar
+                            .topic-detail-image
+                                img(
+                                    src=topic.avatar
+                                    alt=topic.title
+                                )
+
+                    .col-lg-8
+
+                        .topic-info
+
+                            .topic-info-item
+                                .label Tiêu đề
+                                .value #{topic.title}
+
+                            .topic-info-item
+                                .label Trạng thái
+
+                                if topic.status === "active"
+                                    span.status-active
+                                        i.fa-solid.fa-circle-check
+                                        | Hoạt động
+                                else
+                                    span.status-inactive
+                                        i.fa-solid.fa-circle-xmark
+                                        | Dừng hoạt động
+
+                if topic.description
+                    .topic-description-box
+
+                        .description-title
+                            i.fa-solid.fa-file-lines
+                            span Mô tả chủ đề
+
+                        .description-content
+                            != topic.description || 'Không có mô tả nào cho chủ đề này.'
+
+                .topic-actions
+
+                    a.btn-edit(
+                        href=`/${prefixAdmin}/topics/edit/${topic.id}`
+                    )
+                        i.fa-solid.fa-pen
+                        span Chỉnh sửa
+
+                    a.btn-back(
+                        href=`/${prefixAdmin}/topics`
+                    )
+                        i.fa-solid.fa-arrow-left
+                        span Quay lại

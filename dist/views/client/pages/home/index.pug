@@ -1,0 +1,86 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+    .container.my-3
+        //- Bài hát mới nhất
+        .row 
+            .col-12 
+                +box-head("Bài hát mới nhất")
+
+        .row
+            each song in latestSongs
+                .col-6.col-md-4.col-lg-3.mb-3
+                    div(class="song-item")
+                        div(class="inner-image")
+                            a(href=`/songs/detail/${song.slug}`)
+                                img(src=`${song.avatar}` alt=`${song.title}`) 
+
+                        div(class="inner-content")
+                            div(class="inner-title")
+                                a(href=`/songs/detail/${song.slug}`) #{song.title}
+
+                            div(class="inner-singer" style="color: #ffffff;")
+                                i(class="fa-solid fa-microphone-lines" style="color: #ffffff;")
+                                |  #{song.singerInfo ? song.singerInfo.fullName : 'Chưa rõ'}
+
+                            div(class="inner-listen" style="color: #ffffff;")
+                                i(class="fa-solid fa-headphones" style="color: #ffffff;")
+                                |  #{song.listen} lượt nghe
+
+        //- Bài hát nổi bật
+        .row.mt-4 
+            .col-12 
+                +box-head("Bài hát nổi bật")
+
+        .row
+            each song in featuredSongs
+                .col-6.col-md-4.col-lg-3.mb-3
+                    div(class="song-item")
+                        div(class="inner-image")
+                            a(href=`/songs/detail/${song.slug}`)
+                                img(src=`${song.avatar}` alt=`${song.title}`) 
+
+                        div(class="inner-content")
+                            div(class="inner-title")
+                                a(href=`/songs/detail/${song.slug}`) #{song.title}
+
+                            div(class="inner-singer" style="color: #ffffff;")
+                                i(class="fa-solid fa-microphone-lines" style="color: #ffffff;")
+                                |  #{song.singerInfo ? song.singerInfo.fullName : 'Chưa rõ'}
+
+                            div(class="inner-listen" style="color: #ffffff;")
+                                i(class="fa-solid fa-headphones" style="color: #ffffff;")
+                                |  #{song.listen} lượt nghe
+
+        //- Chủ đề nổi bật
+        .row.mt-4 
+            .col-12 
+                +box-head("Chủ đề nổi bật")
+
+        .row
+            each topic in featuredTopics
+                .col-6.col-md-4.col-lg-3.mb-3
+                    div(class="topic-item")
+                        div(class="inner-image")
+                            a(href=`/songs/topic/${topic.slug}`)
+                                img(src=topic.avatar alt=topic.title)
+                        div(class="inner-content")
+                            h3(class="inner-title")
+                                a(href=`/songs/topic/${topic.slug}`) #{topic.title}
+
+        //- Ca sĩ nổi bật
+        .row.mt-4 
+            .col-12 
+                +box-head("Ca sĩ nổi bật")
+
+        .row
+            each singer in featuredSingers
+                .col-6.col-md-4.col-lg-3.mb-3
+                    div(class="singer-item text-center")
+                        div(class="inner-image")
+                            a(href=`#`)
+                                img(src=singer.avatar alt=singer.fullName style="border-radius: 50%; width: 100%; aspect-ratio: 1/1; object-fit: cover;")
+                        div(class="inner-content mt-2")
+                            h3(class="inner-title" style="font-size: 1.2rem; font-weight: 600;")
+                                a(href=`#` style="color: #ffffff;") #{singer.fullName}

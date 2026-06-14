@@ -1,0 +1,40 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+    .container.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        if (songs.length > 0)
+            .row
+                each song in songs
+                    .col-6.col-md-4.col-lg-3.mb-3
+                        div(class="song-item")
+                            div(class="inner-image")
+                                a(href=`/songs/detail/${song.slug}`)
+                                    img(src=`${song.avatar}` alt=`${song.title}`) 
+
+                            div(class="inner-content")
+                                div(class="inner-title")
+                                    a(href=`/songs/detail/${song.slug}`) #{song.title}
+
+                                div(class="inner-singer")
+                                    i(class="fa-solid fa-microphone-lines")
+                                    |  #{song.infoSinger.fullName}
+
+                                div(class="inner-listen" style="color: #ffffff;")
+                                    i(class="fa-solid fa-headphones" style="color: #ffffff;")
+                                    |  #{song.listen} lượt nghe
+                                
+                                div(class=`inner-like ${song.isLiked ? 'active' : ''}` button-like=song._id)
+                                    i(class="fa-solid fa-thumbs-up")
+                                    span  #{song.likes ? song.likes.length : 0} thích
+        else
+            .row
+                .col-12
+                    div(class="box-no-results")
+                        i(class="fa-solid fa-magnifying-glass-minus")
+                        div(class="inner-title") Không tìm thấy kết quả cho "#{keyword}"
+                        div(class="inner-desc") Vui lòng thử lại với một từ khóa khác hoặc kiểm tra lỗi chính tả.

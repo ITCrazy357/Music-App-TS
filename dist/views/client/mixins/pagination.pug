@@ -1,0 +1,38 @@
+mixin pagination(pagination, originalUrl)
+    if pagination.totalPage > 1
+        nav.mt-4
+            ul.pagination.justify-content-center
+                - var getUrl = function(page) {
+                -   var url = new URL("http://dummy.com" + originalUrl);
+                -   url.searchParams.set("page", page);
+                -   return url.pathname + url.search;
+                - }
+
+                li(class=`page-item ${pagination.currentPage == 1 ? "disabled" : ""}`)
+                    a.page-link(href=getUrl(1))
+                        i.fa-solid.fa-angles-left
+                li(class=`page-item ${pagination.currentPage == 1 ? "disabled" : ""}`)
+                    a.page-link(href=getUrl(pagination.currentPage - 1))
+                        i.fa-solid.fa-angle-left
+                
+                - var startPage = Math.max(1, pagination.currentPage - 2)
+                - var endPage = Math.min(pagination.totalPage, pagination.currentPage + 2)
+                
+                if startPage > 1
+                    li.page-item.disabled
+                        span.page-link ...
+                        
+                - for(var i = startPage; i <= endPage; i++)
+                    li(class=`page-item ${pagination.currentPage == i ? "active" : ""}`)
+                        a.page-link(href=getUrl(i)) #{i}
+                
+                if endPage < pagination.totalPage
+                    li.page-item.disabled
+                        span.page-link ...
+
+                li(class=`page-item ${pagination.currentPage == pagination.totalPage ? "disabled" : ""}`)
+                    a.page-link(href=getUrl(pagination.currentPage + 1))
+                        i.fa-solid.fa-angle-right
+                li(class=`page-item ${pagination.currentPage == pagination.totalPage ? "disabled" : ""}`)
+                    a.page-link(href=getUrl(pagination.totalPage))
+                        i.fa-solid.fa-angles-right

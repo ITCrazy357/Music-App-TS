@@ -1,0 +1,20 @@
+mixin alert-success(time)
+  //- Kiểm tra mảng có tồn tại và có phần tử không
+  - if (success && success.length > 0)
+    div(
+      class="alert alert-success"
+      show-alert
+      data-time=time
+    )
+      | #{success[0]} 
+      span(close-alert) x
+
+mixin alert-error(time)
+  - if (error && error.length > 0)
+    div(
+      class="alert alert-danger"
+      show-alert
+      data-time=time
+    )
+      | #{error[0]}
+      span(close-alert) x

@@ -1,0 +1,130 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/pagination.pug
+include ../../mixins/filter-status.pug
+include ../../mixins/form-change-multi.pug
+include ../../mixins/search.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+
+        .row
+            .col-12
+                +box-head(pageTitle)
+
+        .custom-list-card.mb-4
+            .card-header
+                i.fa-solid.fa-filter.mr-2
+                | Bộ lọc & Công cụ
+            .card-body
+                .row.mb-3
+                    .col-8
+                        +filter-status(filterStatus)
+                    .col-4
+                        +search(keyword)
+                .row
+                    .col-8
+                        +form-change-multi(`/${prefixAdmin}/roles/change-multi?_method=PATCH`)
+                    .col-4.text-right
+                        a.btn.btn-outline-success.mr-2(
+                            href=`/${prefixAdmin}/roles/create`
+                        )
+                            i.fa-solid.fa-plus.me-1
+                            | Thêm mới
+                        a.btn.btn-outline-danger(
+                            href=`/${prefixAdmin}/roles/trash`
+                        )
+                            i.fa-solid.fa-trash-can.me-1
+                            | Thùng rác
+
+        .custom-list-card
+            .card-header
+                i.fa-solid.fa-list.mr-2
+                | Danh sách nhóm quyền
+
+            .card-body
+
+                if roles && roles.length > 0
+                    table.table.custom-table.table-hover(checkbox-multi)
+                        thead
+                            tr
+                                th
+                                    input(type="checkbox" name="checkall")
+                                th STT
+                                th Tiêu đề
+                                th Mô tả
+                                th Trạng thái
+                                th Hành động
+
+                        tbody
+                            each item, index in roles
+                                tr
+                                    td
+                                        input(
+                                            type="checkbox"
+                                            name="id"
+                                            value=item.id
+                                        )
+                                    td #{index + 1}
+
+                                    td.custom-title
+                                        = item.title
+
+                                    td.custom-listen
+                                        = item.description
+
+                                    td
+                                        if (item.status === "active")
+                                            a.badge.badge-success(
+                                                href="javascript:;"
+                                                button-change-status
+                                                data-status="active"
+                                                data-id=item.id
+                                            ) Hoạt động
+                                        else
+                                            a.badge.badge-danger(
+                                                href="javascript:;"
+                                                button-change-status
+                                                data-status="inactive"
+                                                data-id=item.id
+                                            ) Dừng hoạt động
+
+                                    td
+                                        .custom-actions-group
+                                            a.btn.btn-secondary.btn-sm.mr-1(
+                                                href=`/${prefixAdmin}/roles/detail/${item.id}`
+                                            ) 
+                                                i.fa-solid.fa-circle-info
+                                                span Chi tiết
+
+                                            a.btn.btn-warning.btn-sm.mr-1(
+                                                href=`/${prefixAdmin}/roles/edit/${item.id}`
+                                            ) 
+                                                i.fa-solid.fa-pen-to-square
+                                                span Sửa
+
+                                            button.btn.btn-danger.btn-sm(
+                                                button-delete
+                                                data-id=item.id
+                                            ) 
+                                                i.fa-solid.fa-trash
+                                                span Xóa
+
+                else
+                    .custom-empty.mt-3.alert.alert-secondary Không có nhóm quyền nào.
+
+        +pagination(pagination)
+
+        form(
+            id="form-change-status"
+            method="POST"
+            action=""
+            data-path=`/${prefixAdmin}/roles/change-status`
+        ) 
+
+        form(
+            id="form-delete-item"
+            method="POST"
+            action=""
+            data-path=`/${prefixAdmin}/roles/delete`
+        )

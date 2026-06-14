@@ -1,0 +1,40 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/pagination.pug
+
+block main 
+    .container.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .row.mb-4
+            .col-md-6
+                .box-search
+                    form.search-form.d-flex(action="/singers", method="GET")
+                        input.form-control(
+                            type="text"
+                            name="keyword"
+                            placeholder="Tìm kiếm ca sĩ..."
+                            value=keyword
+                            style="border-radius: 20px 0 0 20px;"
+                        )
+                        button.btn.btn-primary(type="submit" style="border-radius: 0 20px 20px 0;")
+                            i.fa-solid.fa-magnifying-glass
+
+        .row
+            each singer in singers
+                .col-6.col-md-4.col-lg-3.mb-4
+                    div(class="singer-item text-center")
+                        div(class="inner-image mb-2")
+                            a(href=`/singers/detail/${singer.slug}`)
+                                img(src=singer.avatar alt=singer.fullName style="border-radius: 50%; width: 100%; aspect-ratio: 1/1; object-fit: cover; border: 2px solid rgba(255,255,255,0.1);")
+                        div(class="inner-content")
+                            h3(class="inner-title" style="font-size: 1.2rem; font-weight: 600; margin-bottom: 5px;")
+                                a(href=`/singers/detail/${singer.slug}` style="color: white; text-decoration: none;") #{singer.fullName}
+                            div(class="inner-songs" style="color: #aaa; font-size: 0.9rem;")
+                                i.fa-solid.fa-music
+                                |  #{singer.totalSongs} bài hát
+
+        if pagination.totalPage > 1
+            +pagination(pagination, originalUrl)

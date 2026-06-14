@@ -1,0 +1,32 @@
+/* ========== FILTERS ========== */
+.filter-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.filter-status .btn-filter {
+  padding: 6px 14px;
+  border-radius: 20px; /* Pill shape */
+  font-size: 13px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.filter-status .btn-filter:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.filter-status .btn-filter.active {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+}

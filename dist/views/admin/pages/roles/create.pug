@@ -1,0 +1,40 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .card.admin-form-card
+            .card-header 
+                i.fa-solid.fa-plus.mr-2
+                | Thêm mới nhóm quyền
+            .card-body
+                form.admin-form(action=`/${prefixAdmin}/roles/create` method="POST")
+                    .form-group
+                        label Tiêu đề
+                        input.form-control(type="text" name="title" required)
+                        
+                    .form-group
+                        label Mô tả
+                        textarea.form-control(name="description" rows="3")
+                            
+                    .form-group
+                        label Trạng thái
+                        .d-flex.align-items-center
+                            .form-check.form-check-inline
+                                input.form-check-input(type="radio" id="statusActive" name="status" value="active" checked)
+                                label.form-check-label(for="statusActive") Hoạt động
+                            .form-check.form-check-inline.ml-3
+                                input.form-check-input(type="radio" id="statusInactive" name="status" value="inactive")
+                                label.form-check-label(for="statusInactive") Dừng hoạt động
+                                
+                    .form-group.mt-4
+                        button(type="submit" class="btn btn-success")
+                            i.fa-solid.fa-plus.mr-1
+                            | Tạo mới
+                        a(href=`/${prefixAdmin}/roles` class="btn btn-secondary ml-2")
+                            i.fa-solid.fa-arrow-left.mr-1
+                            | Quay lại

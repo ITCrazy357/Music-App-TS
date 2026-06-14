@@ -1,0 +1,60 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .custom-detail-card.mb-3
+            .card-header 
+                i.fa-solid.fa-user.mr-2
+                | Thông tin cá nhân
+            .card-body
+                .row
+                    .col-lg-3.text-center
+                        if user.avatar
+                            img(src=user.avatar alt=user.fullName class="img-fluid rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.2);")
+                        else
+                            div.bg-secondary.text-white.d-flex.align-items-center.justify-content-center.rounded-circle.mx-auto.mb-3(style="width: 200px; height: 200px; font-size: 64px;")
+                                i.fa-solid.fa-user
+                    .col-lg-9
+                        .mb-3
+                            h3.text-white #{user.fullName}
+                        if user.username
+                            p
+                                strong Username: 
+                                span.text-light #{user.username}
+                        p
+                            strong Email: 
+                            span.text-light #{user.email}
+                        if user.phone
+                            p
+                                strong Số điện thoại: 
+                                span.text-light #{user.phone}
+
+                        p
+                            strong Nhóm quyền: 
+                            span.badge.badge-info #{role ? role.title : "Không có"}
+                        if role && role.permissions.length > 0
+                            p
+                                strong Quyền hiện tại: 
+                                span.text-light #{role.permissions.join(', ')}
+                        p
+                            strong Trạng thái: 
+                            if user.status === "active"
+                                span.badge.badge-success Hoạt động
+                            else
+                                span.badge.badge-danger Dừng hoạt động
+                        p
+                            strong Ngày tạo: 
+                            span.text-light #{new Date(user.createdAt).toLocaleString('vi-VN')}
+                        p
+                            strong Cập nhật gần nhất: 
+                            span.text-light #{new Date(user.updatedAt).toLocaleString('vi-VN')}
+                        
+                        .mt-4
+                            a(href=`/${prefixAdmin}/users/edit/${user.id}` class="btn btn-warning mr-2")
+                                i.fa-solid.fa-pen-to-square.mr-1
+                                | Chỉnh sửa

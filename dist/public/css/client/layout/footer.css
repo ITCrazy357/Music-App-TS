@@ -1,0 +1,106 @@
+/* ========== FOOTER ========== */
+.footer {
+  position: relative;
+  width: 100%;
+  margin-top: 80px;
+  padding: 70px 0 25px;
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.footer::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 300px;
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.25) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+.footer .container {
+  position: relative;
+  z-index: 2;
+}
+.footer .footer-title {
+  color: var(--white);
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.footer .footer-desc {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.8;
+  font-size: 15px;
+}
+.footer .footer-subtitle {
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.footer .footer-links li {
+  margin-bottom: 12px;
+}
+.footer .footer-links li a {
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
+}
+.footer .footer-links li a:hover {
+  color: var(--white);
+  padding-left: 6px;
+}
+.footer .footer-contact li {
+  margin-bottom: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+.footer .footer-contact i {
+  color: var(--primary);
+}
+.footer hr {
+  border-color: rgba(255, 255, 255, 0.08);
+  margin: 35px 0 25px;
+}
+.footer p {
+  color: rgba(255, 255, 255, 0.6);
+}
+.footer .social-links {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.footer .social-links a {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  transition: all 0.3s ease;
+}
+.footer .social-links a:hover {
+  background: var(--primary);
+  transform: translateY(-4px) scale(1.05);
+}
+
+/* ========== RESPONSIVE FOOTER ========== */
+@media (max-width: 991.98px) {
+  .footer .social-links {
+    justify-content: flex-start;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .footer {
+    text-align: left;
+  }
+}

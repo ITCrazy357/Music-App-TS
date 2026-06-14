@@ -1,0 +1,74 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main 
+    .container-fluid.px-4.px-lg-5.my-3
+    .song-trash-page
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+        .card.mb-3
+        .topic-trash-card
+            .card-header Thùng rác chủ đề
+            .card-body
+                .row 
+                    .col-12.text-right.mb-3 
+                        a(
+                            href=`/${prefixAdmin}/topics`
+                            class="btn btn-outline-secondary"
+                        ) Quay lại
+
+                if (topics.length > 0)
+                    table(
+                        class="table table-hover table-sm mt-3"
+                    )
+                        thead
+                            tr
+                                th STT
+                                th Hình ảnh
+                                th Tiêu đề
+                                th Hành động
+                        tbody
+                            each item, index in topics
+                                tr 
+                                    td #{index + 1}
+                                    td
+                                        img(
+                                            src=item.avatar
+                                            alt=item.title
+                                            width="100px"
+                                            height="auto"
+                                            style="border-radius: 8px;"
+                                        )
+                                    td #{item.title}
+                                    td
+                                        button(
+                                            class="btn btn-success btn-sm mr-1"
+                                            button-restore
+                                            data-id=item.id
+                                        )
+                                            i.fa-solid.fa-rotate-left.mr-1
+                                            | Khôi phục
+                                        button(
+                                            class="btn btn-danger btn-sm"
+                                            button-delete-permanent
+                                            data-id=item.id
+                                        )
+                                            i.fa-solid.fa-trash-xmark.mr-1
+                                            | Xóa vĩnh viễn
+                else 
+                    div.alert.alert-secondary Không có bản ghi nào trong thùng rác
+
+        form(
+            action=""
+            method="POST"
+            id="form-restore-item"
+            data-path=`/${prefixAdmin}/topics/restore`
+        )
+
+        form(
+            action=""
+            method="POST"
+            id="form-delete-permanent-item"
+            data-path=`/${prefixAdmin}/topics/delete-permanent`
+        )

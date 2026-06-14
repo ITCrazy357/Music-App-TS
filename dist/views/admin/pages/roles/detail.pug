@@ -1,0 +1,34 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .custom-detail-card.mb-3
+            .card-header 
+                i.fa-solid.fa-circle-info.mr-2
+                | Chi tiết nhóm quyền
+            .card-body
+                h3.text-white #{role.title}
+                if role.description
+                    p
+                        strong Mô tả: 
+                        span.text-light #{role.description}
+                if role.status
+                    p
+                        strong Trạng thái: 
+                        if role.status === "active"
+                            span.badge.badge-success Hoạt động
+                        else
+                            span.badge.badge-danger Dừng hoạt động
+                
+                .mt-4
+                    a(href=`/${prefixAdmin}/roles/edit/${role.id}` class="btn btn-warning mr-2")
+                        i.fa-solid.fa-pen-to-square.mr-1
+                        | Chỉnh sửa
+                    a(href=`/${prefixAdmin}/roles` class="btn btn-secondary")
+                        i.fa-solid.fa-arrow-left.mr-1
+                        | Quay lại

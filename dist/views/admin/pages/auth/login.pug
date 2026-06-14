@@ -1,0 +1,68 @@
+extends ../../layouts/default.auth.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main
+    +alert-error(5000)
+    +alert-success(5000)
+
+    .auth.auth-login
+        .auth-container
+            .auth-wrapper.wrapper
+                form.auth-form(
+                    action="/auth/login"
+                    method="POST"
+                )
+                    
+                    //- Tiêu đề
+                    .auth-header
+                        +box-head(pageTitle)
+
+                    //- Email
+                    .auth-group.input-box
+                        .auth-input-group.inner-email
+                            input.auth-input(
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                required
+                            )
+
+                            i.bx.bxs-user.auth-icon
+
+                    //- Password
+                    .auth-group.input-box
+                        .auth-input-group.inner-password
+                            input.auth-input(
+                                type="password"
+                                name="password"
+                                placeholder="Mật khẩu"
+                                required
+                            )
+
+                            i.bx.bxs-lock-alt.auth-icon
+
+                    //- Remember + Forgot
+                    .auth-options.remember-forgot
+                        label.auth-remember
+                            input.auth-checkbox(type="checkbox")
+                            |  Lưu mật khẩu
+
+                        a.auth-forgot-password(
+                            href="/auth/forgot-password"
+                        ) Quên mật khẩu?
+
+                    //- Button login
+                    .auth-action
+                        button.auth-button.btn(
+                            type="submit"
+                        ) Đăng nhập
+
+                    //- Register link
+                    .auth-footer.register-link
+                        p.auth-text
+                            | Bạn chưa có tài khoản?
+                            
+                            a.auth-register-link(
+                                href="/auth/register"
+                            )  Đăng ký

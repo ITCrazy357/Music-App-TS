@@ -1,0 +1,81 @@
+/* ===== Alert Container ===== */
+.alert[show-alert] {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  left: auto;
+  z-index: 9999;
+  margin: 0;
+
+  width: clamp(260px, 32vw, 360px);
+  padding: 12px 16px;
+  border-radius: 8px;
+
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.4s ease;
+}
+
+/* ===== Success ===== */
+.alert[show-alert].alert-success {
+  background: #e6f9f0;
+  color: #0f5132;
+  border-left: 5px solid #198754;
+}
+
+/* ===== Error ===== */
+.alert[show-alert].alert-danger {
+  background: #fdecea;
+  color: #842029;
+  border-left: 5px solid #dc3545;
+}
+
+/* ===== Close Button ===== */
+[show-alert] [close-alert] {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: inherit;
+  opacity: 0.6;
+  transition: 0.2s;
+}
+
+[show-alert] [close-alert]:hover {
+  opacity: 1;
+}
+
+/* ===== Animation hiện ===== */
+@keyframes slideIn {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ===== Animation ẩn ===== */
+.alert[show-alert].alert-hidden {
+  animation: slideOut 0.4s ease forwards;
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+/* ===== End Show Alert ===== */

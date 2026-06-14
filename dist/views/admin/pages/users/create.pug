@@ -1,0 +1,59 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+        .row 
+            .col-12 
+                +box-head(pageTitle)
+
+        .card.admin-form-card
+            .card-header 
+                i.fa-solid.fa-plus.mr-2
+                | Thêm mới tài khoản
+            .card-body
+                form.admin-form(action=`/${prefixAdmin}/users/create` method="POST" enctype="multipart/form-data")
+                    .row
+                        .col-md-8
+                            .form-group
+                                label Họ tên
+                                input.form-control(type="text" name="fullName" required)
+                                
+                            .form-group
+                                label Email
+                                input.form-control(type="email" name="email" required)
+                                
+                            .form-group
+                                label Mật khẩu
+                                input.form-control(type="password" name="password" required)
+                                
+                            .form-group
+                                label Nhóm quyền
+                                select.form-control(name="role_id")
+                                    option(value="" disabled selected) -- Chọn nhóm quyền --
+                                    if roles && roles.length > 0
+                                        each item in roles
+                                            option(value=item.id) #{item.title}
+                                    
+                            .form-group
+                                label Trạng thái
+                                .d-flex.align-items-center
+                                    .form-check.form-check-inline
+                                        input.form-check-input(type="radio" id="statusActive" name="status" value="active" checked)
+                                        label.form-check-label(for="statusActive") Hoạt động
+                                    .form-check.form-check-inline.ml-3
+                                        input.form-check-input(type="radio" id="statusInactive" name="status" value="inactive")
+                                        label.form-check-label(for="statusInactive") Dừng hoạt động
+                        .col-md-4
+                            .form-group
+                                label Ảnh đại diện
+                                input.form-control-file.upload-image-input(type="file" name="avatar" accept="image/*")
+                                img.admin-preview-image.upload-image-preview(src="" style="max-width: 200px; margin-top: 10px; display: none; border-radius: 8px;")
+                                
+                    .form-group.mt-4
+                        button(type="submit" class="btn btn-success")
+                            i.fa-solid.fa-plus.mr-1
+                            | Tạo mới
+                        a(href=`/${prefixAdmin}/users` class="btn btn-secondary ml-2")
+                            i.fa-solid.fa-arrow-left.mr-1
+                            | Quay lại

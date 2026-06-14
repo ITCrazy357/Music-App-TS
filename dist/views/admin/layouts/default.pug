@@ -1,0 +1,53 @@
+doctype html
+html(lang="vi")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title #{pageTitle}
+
+        //====== Auth ====
+        link(href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css", rel="stylesheet")
+        // Bootstrap & FontAwesome
+        link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css")
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css")
+        // ===== CSS =====
+        link(rel="stylesheet", href="/css/admin/styleAdmin.css")
+        link(rel="stylesheet", href="/css/styleLogin.css")
+        link(rel="stylesheet", href="/css/alert.css")
+        // ===== AP Player =====
+        link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css")
+        
+
+    body 
+        include ../partials/header.pug
+        include ../mixins/alert.pug
+
+        if success
+            +alert-success(5000)
+
+        if error
+            +alert-error(5000)
+
+        .body-layout
+            include ../partials/sider.pug
+
+            .main
+                block main
+
+        include ../partials/footer.pug
+
+        // ===== CORE JS (phụ thuộc) =====
+        script(src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js")
+        script(src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js")
+        
+        // ===== AP Player =====
+        script(src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js") 
+        
+        // ===== TinyMCE =====
+        script(src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js")
+        script(src="/admin/js/tinymce-config.js")
+
+        // ===== JS (main) =====
+        script(src="/js/script.js")
+        script(src="/admin/js/script.js")
+        script(src="/admin/js/roles.js")

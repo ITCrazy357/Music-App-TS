@@ -1,0 +1,117 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/pagination.pug
+include ../../mixins/filter-status.pug
+include ../../mixins/search.pug
+include ../../mixins/form-change-multi.pug
+
+block main
+    .container-fluid.px-4.px-lg-5.my-3
+
+        .row
+            .col-12
+                +box-head(pageTitle)
+
+        .row.g-4
+            .col-12
+                .card.mb-3
+                    .card-header
+                        i.fa-solid.fa-list.me-2
+                        | Quản lý quảng cáo
+
+                    .card-body
+                        .row.mb-3
+                            .col-6
+                                +filter-status(filterStatus)
+                            .col-6
+                                +search(keyword)
+
+                        .row.mb-4
+                            .col-8
+                                if role && (role.permissions.includes("ads_edit") || role.title === "Admin" || role.title === "Content")
+                                    //- form-change-multi uses form-change-multi mixin for bulk actions
+                                    +form-change-multi(`/${prefixAdmin}/ads/change-multi?_method=PATCH`)
+
+                            .col-4.text-right
+                                if role && (role.permissions.includes("ads_create") || role.title === "Admin" || role.title === "Content")
+                                    a.btn.btn-outline-success.mr-2(href=`/${prefixAdmin}/ads/create`)
+                                        i.fa-solid.fa-plus.me-1
+                                        | Thêm mới
+                                if role && role.permissions.includes("ads_delete")
+                                    a.btn.btn-outline-danger(href=`/${prefixAdmin}/ads/trash`)
+                                        i.fa-solid.fa-trash-can.me-1
+                                        | Thùng rác
+
+                        if ads.length > 0
+                            .table-responsive
+                                table.table.table-hover
+                                    thead
+                                        tr
+                                            th STT
+                                            th Hình ảnh
+                                            th Tiêu đề
+                                            th Vị trí
+                                            th Trạng thái
+                                            th Ưu tiên
+                                            th Hành động
+
+                                    tbody
+                                        each item, index in ads
+                                            tr
+                                                td #{index + 1}
+                                                td
+                                                    if item.image
+                                                        img(style="width: 90px; height: auto; border-radius: 8px;" src=item.image alt=item.title)
+                                                    else
+                                                        | -
+
+                                                td
+                                                    a(href=`/${prefixAdmin}/ads/detail/${item.id}`)
+                                                        | #{item.title}
+
+                                                td
+                                                    if item.positions && item.positions.length > 0
+                                                        each pos in item.positions
+                                                            span.badge.badge-info.mr-1.mb-1 #{pos}
+                                                    else
+                                                        | -
+
+                                                td
+                                                    if item.isDraft
+                                                        span.badge.badge-secondary Draft
+                                                    else if item.status === "active"
+                                                        span.badge.badge-success Hoạt động
+                                                    else
+                                                        span.badge.badge-danger Dừng
+
+                                                td #{item.priority}
+
+                                                td
+                                                    a.btn.btn-secondary.btn-sm.mr-1(href=`/${prefixAdmin}/ads/detail/${item.id}`)
+                                                        | Chi tiết
+
+                                                    if role && (role.permissions.includes("ads_edit") || role.title === "Admin" || role.title === "Content")
+                                                        a.btn.btn-warning.btn-sm.mr-1(href=`/${prefixAdmin}/ads/edit/${item.id}`)
+                                                            | Sửa
+
+                                                    if role && role.permissions.includes("ads_delete")
+                                                        //- Xóa: dùng form thủ công theo pattern project
+                                                        button.btn.btn-danger.btn-sm(
+                                                            button-delete
+                                                            data-id=item.id
+                                                        )
+                                                            | Xóa
+                        else
+                            .alert.alert-secondary.mt-3
+                                | Không có quảng cáo nào.
+
+                    .card-footer.d-flex.justify-content-center
+                        +pagination(pagination)
+
+        form(
+            action=""
+            method="POST"
+            id="form-delete-item"
+            data-path=`/${prefixAdmin}/ads/delete`
+        )
+
