@@ -120,19 +120,27 @@ export const index = async (req: Request, res: Response) => {
 
   const adStats = await Ad.aggregate([
     { $match: { deleted: false } },
-    { $group: { _id: null, totalClicks: { $sum: "$clickCount" }, totalViews: { $sum: "$viewCount" } } }
+    {
+      $group: {
+        _id: null,
+        totalClicks: { $sum: "$clickCount" },
+        totalViews: { $sum: "$viewCount" },
+      },
+    },
   ]);
-  
+
   if (adStats.length > 0) {
     statistic.Ad.clicks = adStats[0].totalClicks;
     statistic.Ad.views = adStats[0].totalViews;
     if (statistic.Ad.views > 0) {
-      statistic.Ad.ctr = Number(((statistic.Ad.clicks / statistic.Ad.views) * 100).toFixed(2));
+      statistic.Ad.ctr = Number(
+        ((statistic.Ad.clicks / statistic.Ad.views) * 100).toFixed(2),
+      );
     }
   }
 
   res.render("admin/pages/dashboard/index", {
-    pageTitle: "Trang chủ",
+    pageTitle: "Dashboard",
     statistic: statistic,
   });
 };

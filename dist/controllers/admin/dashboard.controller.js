@@ -113,7 +113,13 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
     const adStats = yield ad_model_1.default.aggregate([
         { $match: { deleted: false } },
-        { $group: { _id: null, totalClicks: { $sum: "$clickCount" }, totalViews: { $sum: "$viewCount" } } }
+        {
+            $group: {
+                _id: null,
+                totalClicks: { $sum: "$clickCount" },
+                totalViews: { $sum: "$viewCount" },
+            },
+        },
     ]);
     if (adStats.length > 0) {
         statistic.Ad.clicks = adStats[0].totalClicks;
@@ -123,7 +129,7 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     res.render("admin/pages/dashboard/index", {
-        pageTitle: "Trang chủ",
+        pageTitle: "Dashboard",
         statistic: statistic,
     });
 });
