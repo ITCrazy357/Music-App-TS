@@ -23,7 +23,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(methodOverride("_method"));
 
-app.use(express.static("public"));
+app.use(express.static(`${__dirname}/public`));
+
 app.use(cookieParser());
 app.use(
   session({
@@ -43,7 +44,7 @@ app.use((req: Request, res: Response, next) => {
   next();
 });
 
-app.set("views", "./views");
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 

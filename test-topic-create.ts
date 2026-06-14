@@ -1,1 +1,0 @@
-import express from 'express'; import { adRoutes } from './routes/admin/ad.route'; const app = express(); app.locals.prefixAdmin = 'admin'; app.use('/admin/ads', adRoutes); console.log(app._router.stack.filter((l: any) => l.name==='router').map((l: any) => l.regexp));
