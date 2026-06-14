@@ -59,8 +59,8 @@ block main
                                 i(class="fa-solid fa-microphone-lines")
                                 |  #{song.infoSinger ? song.infoSinger.fullName : 'Chưa rõ'}
 
-                            div(class="inner-listen")
-                                i(class="fa-solid fa-headphones")
+                            div(class="inner-listen text-white")
+                                i(class="fa-solid fa-headphones" style="color: #ffffff;")
                                 |  #{song.listen || 0} lượt nghe
                             
                             div(class=`inner-like ${song.isLiked ? 'active' : ''}` button-like=song._id)

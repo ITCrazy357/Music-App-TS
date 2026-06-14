@@ -20,11 +20,8 @@ router.patch(
   controller.changeStatus,
 );
 
-router.delete(
-  "/delete/:id",
-  requirePermission("ads_delete"),
-  controller.deleteItem,
-);
+router.delete("/delete/:id", requirePermission("ads_delete"), controller.deleteItem);
+router.post("/delete/:id", requirePermission("ads_delete"), controller.deleteItem);
 
 router.get("/trash", requirePermission("ads_delete"), controller.trash);
 router.patch(

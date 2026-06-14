@@ -1,1 +1,23 @@
-import express from 'express'; import { adRoutes } from './routes/admin/ad.route'; const app = express(); app.locals.prefixAdmin = 'admin'; app.use('/admin/ads', adRoutes); const req = { method: 'DELETE', url: '/admin/ads/delete/123' }; app.handle(req, { end: () => console.log('Not matched'), send: (msg) => console.log('Sent:', msg), setHeader: () => {} }, () => console.log('Done'));
+const express = require('express');
+const http = require('http');
+
+const app = express();
+app.use((req, res, next) => {
+  res.status(404).send(`Cannot ${req.method} ${req.originalUrl}`);
+});
+
+const server = app.listen(0, () => {
+  const req = http.request({
+    port: server.address().port,
+    path: '/test?q=1',
+    method: 'POST'
+  }, (res) => {
+    let data = '';
+    res.on('data', c => data += c);
+    res.on('end', () => {
+      console.log(data);
+      server.close();
+    });
+  });
+  req.end();
+});
