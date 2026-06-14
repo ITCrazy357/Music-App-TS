@@ -37,5 +37,5 @@ exports.homeRoutes = void 0;
 const express_1 = require("express");
 const controller = __importStar(require("../../controllers/client/home.controller"));
 const router = (0, express_1.Router)();
-router.get("/home", controller.index);
+router.get("/", controller.index);
 exports.homeRoutes = router;
