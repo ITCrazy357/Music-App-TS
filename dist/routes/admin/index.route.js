@@ -1,0 +1,28 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const dashboard_route_1 = require("./dashboard.route");
+const system_1 = require("../../config/system");
+const topic_route_1 = require("./topic.route");
+const song_route_1 = require("./song.route");
+const singer_route_1 = require("./singer.route");
+const user_route_1 = require("./user.route");
+const role_route_1 = require("./role.route");
+const profile_route_1 = require("./profile.route");
+const auth_middleware_1 = require("../../middlewares/clients/auth.middleware");
+const upload_route_1 = require("./upload.route");
+const ad_route_1 = require("./ad.route");
+const setting_route_1 = require("./setting.route");
+const adminRouter = (app) => {
+    const PATH_ADMIN = `/${system_1.systemConfig.prefixAdmin}`;
+    app.use(PATH_ADMIN + "/dashboard", auth_middleware_1.requireAuth, auth_middleware_1.requireAdmin, dashboard_route_1.dashboardRoutes);
+    app.use(PATH_ADMIN + "/topics", auth_middleware_1.requireAuth, auth_middleware_1.requireAdmin, topic_route_1.topicRoutes);
+    app.use(PATH_ADMIN + "/songs", auth_middleware_1.requireAuth, auth_middleware_1.requireAdmin, song_route_1.songRoutes);
+    app.use(PATH_ADMIN + "/upload", auth_middleware_1.requireAuth, auth_middleware_1.requireAdmin, upload_route_1.uploadRoutes);
+    app.use(PATH_ADMIN + "/singers", auth_middleware_1.requireAuth, auth_middleware_1.requireAdmin, singer_route_1.singerRoutes);
+    app.use(PATH_ADMIN + "/users", auth_middleware_1.requireAuth, auth_middleware_1.requireAdmin, user_route_1.userRoutes);
+    app.use(PATH_ADMIN + "/roles", auth_middleware_1.requireAuth, auth_middleware_1.requireAdmin, role_route_1.roleRoutes);
+    app.use(PATH_ADMIN + "/profile", auth_middleware_1.requireAuth, auth_middleware_1.requireAdmin, profile_route_1.profileRoutes);
+    app.use(PATH_ADMIN + "/ads", auth_middleware_1.requireAuth, auth_middleware_1.requireAdmin, ad_route_1.adRoutes);
+    app.use(PATH_ADMIN + "/settings", auth_middleware_1.requireAuth, auth_middleware_1.requireAdmin, setting_route_1.settingRoutes);
+};
+exports.default = adminRouter;
