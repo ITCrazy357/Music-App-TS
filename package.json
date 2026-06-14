@@ -9,8 +9,15 @@
   "scripts": {
     "start": "nodemon index.ts",
     "build": "tsc && node copy-dir.js",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.10.0",
@@ -45,6 +52,7 @@
     "express-session": "^1.19.0",
     "fs-extra": "^11.3.5",
     "nodemon": "^3.1.14",
+    "pre-commit": "^2.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
     "unidecode": "^1.1.0"
