@@ -120,7 +120,7 @@ export const postRegister = async (req: Request, res: Response) => {
 export const logout = (req: Request, res: Response) => {
   res.clearCookie("token");
   req.flash("success", "Đăng xuất thành công");
-  res.redirect("/auth/login");
+  res.redirect("/");
 };
 
 //[GET] /auth/forgot-password

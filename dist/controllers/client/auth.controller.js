@@ -142,7 +142,7 @@ exports.postRegister = postRegister;
 const logout = (req, res) => {
     res.clearCookie("token");
     req.flash("success", "Đăng xuất thành công");
-    res.redirect("/auth/login");
+    res.redirect("/");
 };
 exports.logout = logout;
 const forgotPassword = (req, res) => {
