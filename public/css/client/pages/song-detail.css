@@ -350,7 +350,29 @@
     padding-bottom: 0;
   }
   .singer-detail.modern-player .inner-avatar {
+    width: 250px;
+    height: 250px;
+    max-width: 100%;
+  }
+}
+@media (max-width: 767.98px) {
+  .singer-detail.modern-player .inner-avatar {
     width: 200px;
     height: 200px;
+  }
+  .singer-detail .song-info-panel .inner-title {
+    font-size: 24px;
+  }
+  .singer-detail .inner-actions {
+    gap: 10px;
+  }
+}
+@media (max-width: 575.98px) {
+  .singer-detail.modern-player .inner-avatar {
+    width: 150px;
+    height: 150px;
+  }
+  .singer-detail {
+    padding: 15px;
   }
 }

@@ -1,7 +1,7 @@
 header.header.py-3
   .container-fluid.px-4.px-lg-5
     .row.align-items-center
-      .col-lg-2.col-md-4.col-6
+      .col-lg-2.col-md-4.col-8
         .inner-logo
           a.d-flex.align-items-center.gap-2(href="/")
             img(
@@ -33,7 +33,7 @@ header.header.py-3
             li
               a(href="/rankings") BXH
 
-      .col-lg-4.col-md-8.col-6
+      .col-lg-4.col-md-8.col-4
         .header-actions.d-flex.align-items-center.justify-content-end.gap-3 
           .box-search
             form.search-form.d-none.d-md-flex(action="/search/results", method="GET")
@@ -50,7 +50,7 @@ header.header.py-3
               .inner-list
 
           if user
-            .dropdown
+            .dropdown.d-none.d-md-block
               a.dropdown-toggle.header-user(
                 href="#"
                 data-toggle="dropdown"
@@ -76,7 +76,49 @@ header.header.py-3
                     i.fa-solid.fa-right-from-bracket
                     span Đăng xuất
           else
-            a(href="/auth/login", class="inner-actions__item", title="Đăng nhập")
-              i.fa-solid.fa-user
-            a(href="/auth/register", class="inner-actions__item", title="Đăng ký")
-              i.fa-solid.fa-user-plus
+            .d-none.d-md-flex.align-items-center.gap-3
+              a(href="/auth/login", class="inner-actions__item", title="Đăng nhập")
+                i.fa-solid.fa-user
+              a(href="/auth/register", class="inner-actions__item", title="Đăng ký")
+                i.fa-solid.fa-user-plus
+                
+          button.btn.btn-outline-light.d-lg-none.mobile-menu-toggle(type="button" data-toggle="collapse" data-target="#mobileMenu" aria-expanded="false" aria-controls="mobileMenu")
+            i.fa-solid.fa-bars
+
+  // Mobile Menu Collapse
+  .collapse.mobile-menu#mobileMenu
+    .container-fluid.px-4.py-3
+      form.search-form.d-flex.d-md-none.mb-3(action="/search/results", method="GET")
+        input.form-control(
+          type="text",
+          name="keyword",
+          placeholder="Tìm kiếm..."
+          value=keyword
+        )
+        button.btn.btn-primary.ml-2(type="submit")
+          i.fa-solid.fa-magnifying-glass
+          
+      nav.mobile-nav
+        ul.list-unstyled.mb-0
+          li.mb-2: a(href="/") Trang chủ
+          li.mb-2: a(href="/songs") Bài hát
+          li.mb-2: a(href="/topics") Chủ đề
+          li.mb-2: a(href="/singers") Ca sĩ
+          li.mb-2: a(href="/favorite-songs") Bài hát yêu thích
+          li.mb-2: a(href="/rankings") BXH
+          
+      hr.border-secondary
+      
+      if user
+        .mobile-user
+          .d-flex.align-items-center.gap-2.mb-3
+            i.fa-solid.fa-user.text-primary
+            span.text-white #{user.fullName}
+          ul.list-unstyled.mb-0
+            if(role && role.title === 'Admin' || role && role.title === 'Content' || role && role.title === 'Account')
+              li.mb-2: a(href=`/${prefixAdmin}/dashboard`) Dashboard quản trị
+            li: a(href="/auth/logout") Đăng xuất
+      else
+        .mobile-auth.d-flex.flex-column.gap-2
+          a.btn.btn-outline-light.w-100(href="/auth/login") Đăng nhập
+          a.btn.btn-primary.w-100(href="/auth/register") Đăng ký

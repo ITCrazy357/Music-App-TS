@@ -1,17 +1,19 @@
 header.header
   .container-fluid.px-4
     .row.align-items-center
-      .col-3
-        .inner-logo
+      .col-6.col-md-3
+        .inner-logo.d-flex.align-items-center.gap-2
+          button.btn.btn-outline-light.d-lg-none.mr-2#adminSidebarToggle(type="button" style="padding: 4px 8px; border: none;")
+            i.fa-solid.fa-bars
           a.d-flex.align-items-center.gap-2(href=`/`)
             img(
               src="/images/logo.png",
               alt="Music Streaming Logo",
               width="45"
             )
-            span.logo-text Trang chủ
+            span.logo-text.d-none.d-sm-inline Trang chủ
 
-      .col-9
+      .col-6.col-md-9
         .header-actions.d-flex.align-items-center.justify-content-end.gap-3 
           if user
             .dropdown
@@ -20,7 +22,7 @@ header.header
                 data-bs-toggle="dropdown"
               )
                 i.fa-solid.fa-user.user-icon
-                span.user-name #{user.fullName}
+                span.user-name.d-none.d-sm-inline #{user.fullName}
 
               ul.dropdown-menu.dropdown-menu-end
                 li

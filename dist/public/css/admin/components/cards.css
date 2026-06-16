@@ -26,4 +26,5 @@
 .card-body {
   padding: 25px 20px;
   background: transparent;
+  overflow-x: auto;
 }

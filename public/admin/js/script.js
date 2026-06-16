@@ -194,7 +194,7 @@ if (formChangeMulti) {
         e.preventDefault();
         const checkboxMulti = document.querySelector('[checkbox-multi]');
         const inputsChecked = checkboxMulti.querySelectorAll('input[name="id"]:checked');
-        
+
         if (inputsChecked.length > 0) {
             let ids = [];
             inputsChecked.forEach(input => {
@@ -205,7 +205,18 @@ if (formChangeMulti) {
             inputIds.value = ids.join(', ');
             formChangeMulti.submit();
         } else {
-            alert('Vui l�ng ch?n �t nh?t m?t b?n ghi!');
+            alert('Vui lòng chọn ít nhất một bản ghi!');
+        }
+    });
+}
+
+// Admin Sidebar Toggle Mobile
+const adminSidebarToggle = document.getElementById('adminSidebarToggle');
+if (adminSidebarToggle) {
+    adminSidebarToggle.addEventListener('click', () => {
+        const sider = document.querySelector('.sider');
+        if (sider) {
+            sider.classList.toggle('show');
         }
     });
 }
